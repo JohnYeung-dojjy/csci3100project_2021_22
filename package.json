@@ -1,0 +1,25 @@
+{
+  "name": "csci3100project_2021_22",
+  "version": "1.0.0",
+  "description": "packages for csci3100 project",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.3",
+    "jquery": "^3.6.0",
+    "mongoose": "^6.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnYeung-dojjy/csci3100project_2021_22.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohnYeung-dojjy/csci3100project_2021_22/issues"
+  },
+  "homepage": "https://github.com/JohnYeung-dojjy/csci3100project_2021_22#readme"
+}
