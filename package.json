@@ -5,12 +5,14 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.3",
+    "express-generator": "^4.16.1",
     "jquery": "^3.6.0",
-    "mongoose": "^6.2.2"
+    "mongoose": "^6.2.2",
+    "react": "^17.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
