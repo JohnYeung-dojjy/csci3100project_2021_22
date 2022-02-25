@@ -1,18 +1,34 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-
+const fs = require('fs');
+const url = require('url');
+const path = require('path');
+app.use('/static', express.static(__dirname + '/public'));
+/* 
+try to understand the concept in this way:
+Running the node.js,your computer become the server,not a user
+if you access the web through http://localhost:3000/, you are a user 
+'res.sendFile(__dirname + '/pages/login/login.html')' the content of html file in the server to user
+the user computer become the compiler of this file, but the file is not at the user computer!!!
+if 'login.html' file involve sth like <a href="./1234.jpeg">, 
+then the user cannot even find the location of login.html as the file is only in the server but not user's machine
+The pic cannot be loaded
+The function above will pre-process the url in the file you send and give the user the access right to the server
+if the url in file starts with 'static', it will be redirect to the __dirname+'public' in server.
+So,all files can be seen by the user should be under the public
+*/
 app.get('/', (req, res) => {
-    // send the file 'index.html. in the folder of the current script
-    res.sendFile(__dirname + '/login/login.html');
+    /* let realpath = url.fileURLToPath(''); */
+    res.sendFile(__dirname + '/pages/login/login.html');
 });
 
 app.get('/game', (req, res) => {
-    res.sendFile(__dirname + '/game/game.html');
-});
+    res.sendFile(__dirname + '/pages/game/game.html');
+})
 
 app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/login/login.html');
-});
+    res.sendFile(__dirname + '/pages/login/login.html');
+})
 
 const server = app.listen(3000);
