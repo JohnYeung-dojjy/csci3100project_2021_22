@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration and Login</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="static/js/sweetalert.js"></script>
 </head>
 <style>
     * {
@@ -14,17 +16,17 @@
         outline: none;
         border: none;
         font-size: 100%;
-        /* 設定full screen */
+        /* set full screen */
     }
 
     body {
         height: 100vh;
-        /* 100%高 */
+        /* 100%high */
         display: flex;
         justify-content: center;
-        /* div的所有item置中,x軸*/
+        /*all elements align in the x-center */
         align-items: center;
-        /* 每個子元素佔據中心,y軸*/
+        /* all sub elements align in the y-center/
         /* background-color: rgb(31, 32, 41); */
         background: url('static/img/RadioactiveHeat.jpg');
     }
@@ -37,32 +39,30 @@
         justify-content: space-evenly;
         align-items: center;
         perspective: 1000px;
-        /* 透視值,數字越小透視感越強 */
-        /* 给最外层加上一个透视，否则接下去的翻转会没有3d的效果 */
+        /* affect the effect of flipping */
     }
 
     .top {
-        /* 轉換sign up 和 sign in 的欄 */
+        /* switch bar for sign-in and sign up */
         width: 80%;
         height: 15%;
         display: flex;
-        /* 利用flex將sign in，sign up和轉換按鈕並排 */
+        /* use flex to allow to block assign in the same line  */
         justify-content: space-evenly;
         align-items: center;
-        /* 使item 鋪滿400px的寬度空間 */
+        /* allow the elements distributed evenly in the div */
     }
 
     .off,
     .on {
         color: #fff;
-        /* 白色 */
         transition: 0.1s;
         font: 300 20px;
     }
 
     .on {
         opacity: .5;
-        /* 一開始將opacity 設置成0.5，將sign up設置成灰色，突出sign in 效果,越高則越透明 */
+        /* originally get the opacity 0.5, to emphasize the state */
     }
 
     .button {
@@ -92,20 +92,16 @@
         /* background-image: url(./background.png); */
         background: inherit;
         transform-style: preserve-3d;
-        /* 使元素呈现出3D效果 */
+        /* have 3-d effect */
         box-shadow: inset 0 0 0 3000px rgba(255, 255, 255, 0.3);
-        /* 3000px向內延伸量，越小則向內延伸越少 */
-        /* 
-        加上邊緣霧化的box , 0.8為透明度，數值越高越不透明 ，加入inset之後，第一，第二個值為陰影的向內壓縮量
-        可能會導致背景在上而內容被覆蓋的問題
-        */
+        /* 3000px inset shadow */
         /* filter: blur(10px); */
         position: relative;
-        /* 有無position relative 不重要？ */
+        /* seem relative is not important */
         transition: 1s;
-        /* 登錄，註冊動畫轉換時間 */
+        /*the action for switch takes 1s in total */
         border-radius: 40px;
-        /* 決定box的邊緣圓滑程度 */
+        /* the box will be a little bit round-shape */
     }
 
     .bottom>div {
@@ -121,7 +117,7 @@
         font-size: 100%;
         text-align: center;
         text-shadow: 0.25em 0.2em 0.2em grey;
-        /* 文字陰影效果 */
+        /* shadaw of text */
     }
 
     .bottom>div input {
@@ -146,7 +142,7 @@
         transition: .3s;
         margin-bottom: 10px;
         cursor: pointer;
-        /* 食指mouse */
+        /* hand-pointer mouse */
         box-shadow: 0 0 10px rgb(255, 235, 167);
     }
 
@@ -161,12 +157,12 @@
         position: absolute;
         top: 0;
         left: 0;
-        /* 將正反面固定在一起 */
+        /* fix the two side in the same position */
         transform: translateZ(-80px) rotateY(180deg);
-        /*ROTATE Y 實現沿著X軸翻轉的效果，通過bottom中的transition屬性控制*/
+        /*ROTATE Y flip along the y axix，flip time is controlled by transition*/
         display: none;
         visibility: hidden;
-        /* TranslateZ 為距離*/
+        /* TranslateZ is the distance of the text above the */
     }
 
     .titlesize {
@@ -195,7 +191,7 @@
                     <h2>Sign in</h2>
                 </div>
                 <input type="text" placeholder="Username">
-                <input type="text" placeholder="Password">
+                <input type="password" placeholder="Password">
                 <button>GO</button>
             </div>
             <div class="signUp">
@@ -203,53 +199,59 @@
                     <h2>Sign up</h2>
                 </div>
                 <input type="text" placeholder="Username">
-                <input type="text" placeholder="Password">
-                <input type="text" placeholder="Confirm Email">
+                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Confirm password">
                 <input type="text" placeholder="Email">
                 <button>GO</button>
             </div>
         </div>
     </div>
 
-    <script>
-        let button = document.querySelector('.button');
-        let ball = document.querySelector('.ball');
-        let bottom = document.querySelector('.bottom');
-        let off = document.querySelector('.off');
-        let on = document.querySelector('.on');
-        let signUp = document.querySelector('.signUp');
-        let signIn = document.querySelector('.signIn');
-        let side = 0;
-        let input = document.querySelectorAll('input');
-        button.onclick = function () {
-            if (side == 0) {/* sign in 頁面 */
-                side = 1;
-                ball.style.left = '60%';
-                /* 100%會超出，因為要求右邊與bar對齊 */
-                on.style.opacity = 1;
-                off.style.opacity = .5;
-                /* ON OFF 變色,轉到sign up*/
-                bottom.style.transform = "rotateY(180deg)";
-                signIn.style.display = "none";
-                signIn.style.visibility = "hidden";
-                signUp.style.display = "flex"
-                signUp.style.visibility = "visible";
-            } else {
-                side = 0;
-                ball.style.left = 0;
-                on.style.opacity = .5;
-                off.style.opacity = 1;
-                bottom.style.transform = "rotateY(0deg)";
-                signUp.style.display = "none";
-                signUp.style.visibility = "hidden";
-                signIn.style.display = "flex"
-                signIn.style.visibility = "visible";
-            }
-            for (let i = 0; i < input.length; i++) {
-                input[i].value = "";
-            }
-        }
-    </script>
+
 </body>
+<script>
+    let button = document.querySelector('.button');
+    let ball = document.querySelector('.ball');
+    let bottom = document.querySelector('.bottom');
+    let off = document.querySelector('.off');
+    let on = document.querySelector('.on');
+    let signUp = document.querySelector('.signUp');
+    let signIn = document.querySelector('.signIn');
+    let side = 0;
+    /* let input = document.querySelectorAll('input'); */
+    button.onclick = function () {
+        if (side == 0) {/* sign in state */
+            side = 1;
+            ball.style.left = '60%';
+            /* the ball will overflow if it is set to the 100%*/
+            on.style.opacity = 1;
+            off.style.opacity = .5;
+            /* ON OFF  change color,switch to sign up*/
+            bottom.style.transform = "rotateY(180deg)";
+            signIn.style.display = "none";
+            signIn.style.visibility = "hidden";
+            signUp.style.display = "flex"
+            signUp.style.visibility = "visible";
+        } else {
+            side = 0;
+            ball.style.left = 0;
+            on.style.opacity = .5;
+            off.style.opacity = 1;
+            bottom.style.transform = "rotateY(0deg)";
+            signUp.style.display = "none";
+            signUp.style.visibility = "hidden";
+            signIn.style.display = "flex"
+            signIn.style.visibility = "visible";
+        }
+        for (let i = 0; i < input.length; i++) {
+            input[i].value = "";
+        }
+    }
+    let btn = { Cancel: { text: "Cancel" }, Confirm: { text: "Confirm" } }
+    function myaction(value) {
+        console.log(value);
+    }
+    window.onload = sweetalert("warning", "Welcome", "input", btn, myaction, 123);
+</script>
 
 </html>
