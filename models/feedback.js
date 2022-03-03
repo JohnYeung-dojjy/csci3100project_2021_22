@@ -1,9 +1,18 @@
 const express = require("express");
+const { MongoNetworkError } = require("mongodb");
+
+/* Feedback Data Schema
+*/
 
 var mongoose = require("mongoose");
+//const express = require("express");
 
-var UserSchema = mongoose.Schema({
+var FeedbackSchema = mongoose.Schema({
 	feedback_id: { type: Number, required: true, unique: true },
 	user_id: { type: String, required: true, unique: true },
 	feedback: { type: String }
 });
+
+module.exports = mongoose.model("Feedback", FeedbackSchema);
+
+
