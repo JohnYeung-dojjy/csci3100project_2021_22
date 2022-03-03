@@ -22,19 +22,18 @@ const System_functions = require("./System_functions");
 const User_functions = require("./User_functions");
 
 
-const DBuri = 'mongodb+srv://patrillicit:csci3100@cluster0.5gdcy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const DBuri = 'mongodb://127.0.0.1:27017/';
 
 
 //conncet with Cloud DB on Atlas
-async function conncetToCloudDB(){
-
-    mongoose.connect(DBuri , { useNewUrlParser: true, useUnifiedTopology: true})
-    .then((result) => console.log('connected to DB.'))
-    .catch((err) => console.log(err));
+async function conncetToCloudDB() {
+    mongoose.connect(DBuri, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then((result) => console.log('connected to DB.'))
+        .catch((err) => console.log(err));
 }
 
 //disconncet with database
-async function disconnectDB(){
+async function disconnectDB() {
     mongoose.connection.close().then(() => console.log('Connection Closed successfully!')).catch((err) => console.log(err));
 }
 

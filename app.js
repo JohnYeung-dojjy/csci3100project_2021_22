@@ -5,8 +5,8 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
-const database = require('')
-
+const database = require('./models/testdb');
+const system = require('./models/System_functions');
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
@@ -54,9 +54,15 @@ app.post('/regverify', (req, res) => {
     req.on('data', chunk => {
         data = data + chunk;
     })
-    req.on('end', () => {
-        res.send(data);
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        /* console.log(data); */
+        await system.registerNewAccount(obj).then((code) => {
+            /*            let body = JSON.stringify({ code: code }); */
+            res.send({ code: code });//automatically change to json
+        })
     })
+
 })
 
 const server = app.listen(3000);

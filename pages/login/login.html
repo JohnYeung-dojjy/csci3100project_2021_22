@@ -48,6 +48,7 @@
         background-size: cover;
     }
 
+
     .shell {
         width: 70%;
         height: 100%;
@@ -215,34 +216,44 @@
                 <div class="titlesize">
                     <h2>Sign up</h2>
                 </div>
-                <small id="password" class="form-text text-muted" style="text-align: center;">For password,only
-                    characters and digits are
-                    allowed.<br>Min length is 8</small>
-                <input type="text" placeholder="Username" required>
-                <input aria-label="password" type="password" placeholder="Password" aria-describedby="password"
-                    required>
-                <input type="password" placeholder="Confirm password" required>
-                <input type="email" placeholder="Email" required>
-                <button type="submit">GO</button>
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Confirm password">
+                <input type="email" placeholder="Email">
+                <button type="button">GO</button>
             </form>
         </div>
     </div>
 
-    <!--     <template id="my-template">
+    <template id="reminder">
         <swal-title>
-            Save changes to "Untitled 1" before closing?
+            Your username must be unique.
+
+            Your password should consist only character and digit.
+
+            The minimum length for the password is 8.
         </swal-title>
-        <swal-icon type="warning" color="red"></swal-icon>
+        <swal-icon type="info"></swal-icon>
         <swal-button type="info">
-            Save As
-        </swal-button>
-        <swal-button type="cancel">
-            Cancel
         </swal-button>
         <swal-param name="allowEscapeKey" value="false" />
-        <swal-param name="customClass" value='{ "popup": "my-popup" }' />
-    </template> -->
+        <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
 
+    <template id="reminder">
+        <swal-title>
+            Your username must be unique.
+
+            Your password should consist only character and digit.
+
+            The minimum length for the password is 8.
+        </swal-title>
+        <swal-icon type="info"></swal-icon>
+        <swal-button type="info">
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
 </body>
 <script>
     let button = document.querySelector('.button');
@@ -254,6 +265,7 @@
     let signIn = document.querySelector('.signIn');
     let side = 0;
     let input = document.querySelectorAll('input');
+
 
     button.onclick = function () {
         if (side == 0) {/* sign in state */
@@ -268,6 +280,15 @@
             signIn.style.visibility = "hidden";
             signUp.style.display = "flex"
             signUp.style.visibility = "visible";
+            setTimeout(function () {
+                document.querySelector(".shell").style.display = "none";
+                Swal.fire({
+                    template: '#reminder',
+                    preConfirm: (event) => {
+                        document.querySelector(".shell").style.display = "";
+                    }
+                })
+            }, 1000);
         } else {
             side = 0;
             ball.style.left = 0;
@@ -278,6 +299,7 @@
             signUp.style.visibility = "hidden";
             signIn.style.display = "flex"
             signIn.style.visibility = "visible";
+
         }
         for (let i = 0; i < input.length; i++) {
             input[i].value = "";
@@ -302,21 +324,18 @@
             if (data[i].checkValidity() === true) {
                 if (i === 1 && passwordre.test(data[i].value) === false) {
                     data[i].value = "";
-                    data[i].placeholder = "Please ensure the pattern is correct!!!"
                     data[i].className = "form-control error";
                     return;
                 }
 
                 if (i === 2 && data[i].value !== data[i - 1].value) {
                     data[i].value = "";
-                    data[i].placeholder = "the password entered should be the same!!!"
                     data[i].className = "form-control error";
                     return;
                 }
 
                 if (i === 3 && emailre.test[data[i].value] === false) {
                     data[i].value = "";
-                    data[i].placeholder = "please enter a valid email!!!"
                     data[i].className = "form-control error";
                     return;
                 }
@@ -329,6 +348,8 @@
 
         //console.log(data[0].value, data[1].value);
         let username = data[0].value;
+        let password = data[1].value;
+        let email = data[3].value;
         let request = new Request('/regverify', {
             method: 'post',
             headers: {
@@ -336,7 +357,10 @@
             },
             body: JSON.stringify(
                 {
-                    username: username
+                    username: username,
+                    password: password,
+                    user_email: email,
+                    admin: false
                 }
             )
         })
@@ -345,9 +369,12 @@
                 throw new Error(response.status);
             }
             return response.json();
-        }).then((jsonresult) => {
-            console.log(jsonresult);
-        }).catch(error => {
+        }).then((response) => {
+            if (response.code === 11000) {
+                data[0].value = "";
+                data[0].placeholder = "duplicated!"
+            }
+        }).catch(error => {//the request hasn't sent, e.g. the request url has no routing
             console.log('error happens!');
         })
 
