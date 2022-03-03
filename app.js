@@ -5,6 +5,10 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
+const database = require('')
+
+app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
+app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -23,20 +27,36 @@ The function above will pre-process the url in the file you send and give the us
 if the url in file starts with 'static', it will be redirect to the __dirname+'public' in server.
 So,all files can be seen by the user should be under the public
 */
-/* app.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/pages/login/login.html');
-}); */
+});
 
 app.get('/game', (req, res) => {
     res.sendFile(__dirname + '/pages/game/game.html');
 })
 
-app.get('/login', (req, res) => {
-    res.render('login', {
+app.get('/sample', (req, res) => {
+    res.render('sample.ejs', {
         title: 'Homepage',
         users: ['BRIan', 'TOM', 'JErrY']
     });
 
+})
+
+app.post('/loginverify', (req, res) => {
+    console.log(req.body);
+    res.end();
+})
+
+
+app.post('/regverify', (req, res) => {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', () => {
+        res.send(data);
+    })
 })
 
 const server = app.listen(3000);

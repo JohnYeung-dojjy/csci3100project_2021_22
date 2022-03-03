@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration and Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="static/js/sweetalert.js"></script>
 </head>
@@ -19,6 +21,19 @@
         /* set full screen */
     }
 
+    :root {
+        /* --success-color: #2ecc71; */
+        --error-color: #e74c3c;
+    }
+
+    /*     .form-control.success input {
+        border-color: var(--success-color);
+    } */
+
+    .form-control.error input {
+        border-color: var(--error-color);
+    }
+
     body {
         height: 100vh;
         /* 100%high */
@@ -29,6 +44,8 @@
         /* all sub elements align in the y-center/
         /* background-color: rgb(31, 32, 41); */
         background: url('static/img/RadioactiveHeat.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .shell {
@@ -83,12 +100,11 @@
         box-shadow: 0 0 10px #000;
         align-items: center;
         left: 0;
-
     }
 
     .bottom {
         width: 65%;
-        height: 70%;
+        height: 80%;
         /* background-image: url(./background.png); */
         background: inherit;
         transform-style: preserve-3d;
@@ -104,7 +120,7 @@
         /* the box will be a little bit round-shape */
     }
 
-    .bottom>div {
+    .bottom>form {
         width: 100%;
         height: 100%;
         display: flex;
@@ -113,14 +129,14 @@
         justify-content: space-evenly;
     }
 
-    .bottom>div h2 {
+    .bottom>form h2 {
         font-size: 100%;
         text-align: center;
         text-shadow: 0.25em 0.2em 0.2em grey;
         /* shadaw of text */
     }
 
-    .bottom>div input {
+    .bottom>form input {
         width: 60%;
         height: 10%;
         padding: 0 10px;
@@ -132,7 +148,7 @@
         font-size: 100%;
     }
 
-    .bottom>div button {
+    .bottom>form button {
         width: 80px;
         height: 30px;
         color: #333;
@@ -186,27 +202,46 @@
         </div>
 
         <div class="bottom">
-            <div class="signIn">
+            <form class="signIn" action="/loginverify" method="post">
                 <div class="titlesize">
                     <h2>Sign in</h2>
                 </div>
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
-                <button>GO</button>
-            </div>
-            <div class="signUp">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">GO</button>
+            </form>
+
+            <form class="signUp">
                 <div class="titlesize">
                     <h2>Sign up</h2>
                 </div>
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
-                <input type="password" placeholder="Confirm password">
-                <input type="text" placeholder="Email">
-                <button>GO</button>
-            </div>
+                <small id="password" class="form-text text-muted" style="text-align: center;">For password,only
+                    characters and digits are
+                    allowed.<br>Min length is 8</small>
+                <input type="text" placeholder="Username" required>
+                <input aria-label="password" type="password" placeholder="Password" aria-describedby="password"
+                    required>
+                <input type="password" placeholder="Confirm password" required>
+                <input type="email" placeholder="Email" required>
+                <button type="submit">GO</button>
+            </form>
         </div>
     </div>
 
+    <!--     <template id="my-template">
+        <swal-title>
+            Save changes to "Untitled 1" before closing?
+        </swal-title>
+        <swal-icon type="warning" color="red"></swal-icon>
+        <swal-button type="info">
+            Save As
+        </swal-button>
+        <swal-button type="cancel">
+            Cancel
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "my-popup" }' />
+    </template> -->
 
 </body>
 <script>
@@ -218,7 +253,8 @@
     let signUp = document.querySelector('.signUp');
     let signIn = document.querySelector('.signIn');
     let side = 0;
-    /* let input = document.querySelectorAll('input'); */
+    let input = document.querySelectorAll('input');
+
     button.onclick = function () {
         if (side == 0) {/* sign in state */
             side = 1;
@@ -247,11 +283,76 @@
             input[i].value = "";
         }
     }
-    let btn = { Cancel: { text: "Cancel" }, Confirm: { text: "Confirm" } }
-    function myaction(value) {
-        console.log(value);
+
+    const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
+
+
+    /* 
+    rules for the data verfication on registration phase:
+    first check if there is no blank row
+    then check the password,email correctness by regular expression
+    check the password and confirm password is the same 
+    after that, send request to  the database to check if the username is duplicated
+    */
+
+    document.querySelector(".signUp>button").onclick = function regverify() {
+        let data = document.querySelectorAll(".signUp input");
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].checkValidity() === true) {
+                if (i === 1 && passwordre.test(data[i].value) === false) {
+                    data[i].value = "";
+                    data[i].placeholder = "Please ensure the pattern is correct!!!"
+                    data[i].className = "form-control error";
+                    return;
+                }
+
+                if (i === 2 && data[i].value !== data[i - 1].value) {
+                    data[i].value = "";
+                    data[i].placeholder = "the password entered should be the same!!!"
+                    data[i].className = "form-control error";
+                    return;
+                }
+
+                if (i === 3 && emailre.test[data[i].value] === false) {
+                    data[i].value = "";
+                    data[i].placeholder = "please enter a valid email!!!"
+                    data[i].className = "form-control error";
+                    return;
+                }
+
+            }
+            else {
+                return;
+            }
+        }
+
+        //console.log(data[0].value, data[1].value);
+        let username = data[0].value;
+        let request = new Request('/regverify', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            },
+            body: JSON.stringify(
+                {
+                    username: username
+                }
+            )
+        })
+        fetch(request).then((response) => {
+            if (response.status !== 200) {
+                throw new Error(response.status);
+            }
+            return response.json();
+        }).then((jsonresult) => {
+            console.log(jsonresult);
+        }).catch(error => {
+            console.log('error happens!');
+        })
+
     }
-    window.onload = sweetalert("warning", "Welcome", "input", btn, myaction, 123);
+
 </script>
 
 </html>
