@@ -5,7 +5,8 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
-const database = require('')
+//const database = require('')
+//Please add it when you is not empty
 
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
@@ -33,6 +34,11 @@ app.get('/', (req, res) => {
 
 app.get('/game', (req, res) => {
     res.sendFile(__dirname + '/pages/game/game.html');
+})
+
+//temporary link
+app.get('/admin', (req, res) => {
+    res.sendFile(__dirname + '/pages/admin/admin.html');
 })
 
 app.get('/sample', (req, res) => {
