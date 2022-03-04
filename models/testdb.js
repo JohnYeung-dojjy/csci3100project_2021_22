@@ -22,7 +22,7 @@ const System_functions = require("./System_functions");
 const User_functions = require("./User_functions");
 
 
-const DBuri = 'mongodb://127.0.0.1:27017/';
+const DBuri = 'mongodb+srv://patrillicit:csci3100@cluster0.5gdcy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 
 //conncet with Cloud DB on Atlas
