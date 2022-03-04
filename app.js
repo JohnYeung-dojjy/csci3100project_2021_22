@@ -7,7 +7,6 @@ const path = require('path');
 const ejs = require('ejs');
 const database = require('./models/testdb');
 const system = require('./models/System_functions');
-const { render } = require('express/lib/response');
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
