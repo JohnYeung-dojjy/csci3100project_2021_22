@@ -21,18 +21,7 @@
         /* set full screen */
     }
 
-    :root {
-        /* --success-color: #2ecc71; */
-        --error-color: #e74c3c;
-    }
 
-    /*     .form-control.success input {
-        border-color: var(--success-color);
-    } */
-
-    .form-control.error input {
-        border-color: var(--error-color);
-    }
 
     body {
         height: 100vh;
@@ -149,6 +138,13 @@
         font-size: 100%;
     }
 
+    .error {
+
+        /* background-color: rgb(31, 32, 41); */
+        box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45);
+
+    }
+
     .bottom>form button {
         width: 80px;
         height: 30px;
@@ -240,19 +236,56 @@
         <swal-param name="customClass" value='{ "popup": "true" }' />
     </template>
 
-    <template id="reminder">
+    <template id="duplicatedusername">
         <swal-title>
-            Your username must be unique.
+            Sorry, this username is occupied
+        </swal-title>
+        <swal-icon type="warning"></swal-icon>
+        <swal-button type="info">
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
 
-            Your password should consist only character and digit.
-
-            The minimum length for the password is 8.
+    <template id="invalidepassword">
+        <swal-title>
+            The password doesn't fulfill the requirement!
+        </swal-title>
+        <swal-icon type="error"></swal-icon>
+        <swal-button type="info">
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
+    <template id="differentpassword">
+        <swal-title>
+            The password entered twice are different!
+        </swal-title>
+        <swal-icon type="error"></swal-icon>
+        <swal-button type="info">
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
+    <template id="invalidemail">
+        <swal-title>
+            Please ensure your email is valid!
         </swal-title>
         <swal-icon type="info"></swal-icon>
         <swal-button type="info">
         </swal-button>
         <swal-param name="allowEscapeKey" value="false" />
         <swal-param name="customClass" value='{ "popup": "true" }' />
+    </template>
+    <template id="regsuccess">
+        <swal-title>
+            Congratulations! A confirmation email will be sent to your email.
+        </swal-title>
+        <swal-icon type="info"></swal-icon>
+        <swal-button type="info">
+        </swal-button>
+        <swal-param name="allowEscapeKey" value="false" />
+        <swal-param name="customClass" value='{ "popup": "true","confirmButton": "btn btn-success" }' />
     </template>
 </body>
 <script>
@@ -317,35 +350,77 @@
     check the password and confirm password is the same 
     after that, send request to  the database to check if the username is duplicated
     */
-
+    /* 
+    here i apply AJAX technique (by Fetch API provided by the original javascript,not the jquery) in registration,
+    This method doesn't allow me to directy submit the form as form action will compulsorily redirect the user to 
+    another page. And then the server need to re-render the whole page.However, by using ajax, the server only send a
+    status code to the client and client-side will depend on the code to renew the partial elements in the page.
+    By this method, I can keep the correct input of the user and erase the error input only. 
+    However, the default form submission (without ajax) is easy for the programmers as there are only few steps to deal with. 
+     */
     document.querySelector(".signUp>button").onclick = function regverify() {
         let data = document.querySelectorAll(".signUp input");
+        let empty = 0;
         for (let i = 0; i < data.length; i++) {
-            if (data[i].checkValidity() === true) {
-                if (i === 1 && passwordre.test(data[i].value) === false) {
-                    data[i].value = "";
-                    data[i].className = "form-control error";
-                    return;
+            if (data[i].value !== "" && data[i].value !== null) {
+                switch (i) {
+                    case 1:
+                        if (passwordre.test(data[i].value) === false) {
+                            data[i].value = "";
+                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";;
+                            document.querySelector(".shell").style.display = "none";
+                            Swal.fire({
+                                template: '#invalidpassword',
+                                preConfirm: (event) => {
+                                    document.querySelector(".shell").style.display = "";
+                                }
+                            });
+                            return;
+                        }
+                        else {
+                            data[i].style = "";
+                        }
+                    case 2:
+                        if (data[2].value !== data[1].value) {
+                            data[i].value = "";
+                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+                            Swal.fire({
+                                template: '#differentpassword',
+                                preConfirm: (event) => {
+                                    document.querySelector(".shell").style.display = "";
+                                }
+                            });
+                            return;
+                        }
+                        else {
+                            data[i].style = "";
+                        }
+                    case 3:
+                        if (emailre.test[data[i].value] === false) {
+                            data[i].value = "";
+                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+                            Swal.fire({
+                                template: '#invalidemail',
+                                preConfirm: (event) => {
+                                    document.querySelector(".shell").style.display = "";
+                                }
+                            });
+                            return;
+                        }
+                        else {
+                            data[i].style = "";
+                        }
+                    default:
                 }
-
-                if (i === 2 && data[i].value !== data[i - 1].value) {
-                    data[i].value = "";
-                    data[i].className = "form-control error";
-                    return;
-                }
-
-                if (i === 3 && emailre.test[data[i].value] === false) {
-                    data[i].value = "";
-                    data[i].className = "form-control error";
-                    return;
-                }
-
             }
             else {
-                return;
+                empty++;
+                data[i].placeholder = "Can't be empty!"
             }
         }
-
+        if (empty > 0) {
+            return;
+        }
         //console.log(data[0].value, data[1].value);
         let username = data[0].value;
         let password = data[1].value;
@@ -363,18 +438,48 @@
                     admin: false
                 }
             )
-        })
-        fetch(request).then((response) => {
+        });
+        let code = fetch(request).then((response) => {
             if (response.status !== 200) {
                 throw new Error(response.status);
             }
             return response.json();
         }).then((response) => {
             if (response.code === 11000) {
+                Swal.fire({
+                    template: '#duplicatedusername',
+                    preConfirm: (event) => {
+                        document.querySelector(".shell").style.display = "";
+                    }
+                });
                 data[0].value = "";
-                data[0].placeholder = "duplicated!"
+                data[0].className = "error";
+                return response.code;
             }
-        }).catch(error => {//the request hasn't sent, e.g. the request url has no routing
+            else {
+                document.querySelector(".shell").style.display = "none";
+                Swal.fire({
+                    template: '#regsuccess',
+                    preConfirm: (event) => {
+                        document.querySelector(".shell").style.display = "";
+                    }
+                });
+                return 0;
+            }
+        }).then((code) => {
+            if (code != 11000) {
+                side = 0;
+                ball.style.left = 0;
+                on.style.opacity = .5;
+                off.style.opacity = 1;
+                bottom.style.transform = "rotateY(0deg)";
+                signUp.style.display = "none";
+                signUp.style.visibility = "hidden";
+                signIn.style.display = "flex"
+                signIn.style.visibility = "visible";
+            }
+        }
+        ).catch(error => {//the request hasn't sent, e.g. the request url has no routing
             console.log('error happens!');
         })
 
