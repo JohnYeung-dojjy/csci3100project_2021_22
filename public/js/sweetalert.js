@@ -1,10 +1,10 @@
-function sweetalert(icon, title, type, buttonobject, action, parameter) {
+function sweetalert(icon, title, text, input, buttonobject, action, parameter) {
     Swal.fire({
         icon: icon,
         title: title,
-        content: type,
+        text: text,
+        input: input,
         buttons: buttonobject,
-        className: 'my-validation-message',
         preConfirm: (value) => {
             if (!value) {
                 swal.showValidationMessage(
@@ -14,6 +14,8 @@ function sweetalert(icon, title, type, buttonobject, action, parameter) {
         }
     });
 }
+
+
 
 function determination(value, action, parameter) {
     return new Promise(
