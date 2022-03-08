@@ -3,6 +3,7 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 function onResults(results) {
+  
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(
@@ -14,6 +15,12 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
+  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
+  const wall = new Image();
+  wall.src = 'static/img/h4.png';
+  canvasCtx.drawImage(wall, 0, 0, wall.width         , wall.height,           // source rectangle
+                            0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
+
   canvasCtx.restore();
 }
 
@@ -26,7 +33,7 @@ hands.setOptions({
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
 });
-hands.onResults(onResults);
+hands.onResults(onResults); // draw the hand detection image on the canvas
 
 const camera = new Camera(videoElement, {
   onFrame: async () => {
