@@ -3,33 +3,67 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 window.onload = function () {
-  if (window.innerWidth > window.innerHeight) {
-    canvasElement.width = window.innerHeight;
-    canvasElement.height = window.innerHeight;
+  if (window.innerWidth > window.innerHeight *16/9) {
+    // canvasElement.width = window.innerHeight;
+    // canvasElement.height = window.innerHeight;
+    var min_height = Math.min(window.innerHeight, 720);
+    canvasElement.height = min_height;
+    canvasElement.width = min_height * 16/9;
   }
   else {
-    canvasElement.width = window.innerWidth;
-    canvasElement.height = window.innerWidth;
+    // canvasElement.width = window.innerWidth;
+    // canvasElement.height = window.innerWidth;
+    var min_width = Math.min(window.innerWidth, 1280);
+    canvasElement.width = min_width;
+    canvasElement.height = min_width * 9 / 16;
   }
+  // var min_height = Math.min(window.innerHeight, 720);
+  // canvasElement.height = min_height;
+  // canvasElement.width = min_height * 16 / 9;
+  
+  // var min_width = Math.min(window.innerWidth, 1280);
+  // canvasElement.width = min_width;
+  // canvasElement.height = min_width * 9 / 16;
 }
 
 window.onresize = function () {
-  if (window.innerWidth > window.innerHeight) {
-    canvasElement.width = window.innerHeight;
-    canvasElement.height = window.innerHeight;
+  if (window.innerWidth > window.innerHeight*16/9) {
+    // canvasElement.width = window.innerHeight;
+    // canvasElement.height = window.innerHeight;
+    var min_height = Math.min(window.innerHeight, 720);
+    canvasElement.height = min_height;
+    canvasElement.width = min_height * 16/9;
   }
   else {
-    canvasElement.width = window.innerWidth;
-    canvasElement.height = window.innerWidth;
+    // canvasElement.width = window.innerWidth;
+    // canvasElement.height = window.innerWidth;
+    var min_width = Math.min(window.innerWidth, 1280);
+    canvasElement.width = min_width;
+    canvasElement.height = min_width * 9 / 16;
   }
+  // var min_height = Math.min(window.innerHeight, 720);
+  // canvasElement.height = min_height;
+  // canvasElement.width = min_height * 16/9;
+
+  // var min_width = Math.min(window.innerWidth, 1280);
+  // canvasElement.width = min_width;
+  // canvasElement.height = min_width * 9 / 16;
 }
 
 function onResults(results) {
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(
-    results.image, 0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
+  
+  // draw wall image
+  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
+  const wall = new Image();
+  wall.src = 'static/img/h1.png';
+  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
+    0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
+
+  // draw hand skeleton
   if (results.multiHandLandmarks) {
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
@@ -37,12 +71,7 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
     }
   }
-  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
-  const wall = new Image();
-  wall.src = 'static/img/h4.png';
-  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
-    0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
-
+  
   canvasCtx.restore();
 }
 
