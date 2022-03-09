@@ -55,15 +55,19 @@ app.get('/admin', (req, res) => {
 
 app.post('/loginverify', async (req, res) => {
     /* console.log(req.body.username);//req.body is already a object */
-    await system.loginAccount(req.body).then((code) => {
-        console.log(code);
-        if (code === 11100) {
+    await system.loginAccount(req.body).then((content) => {
+        console.log(content);
+        if (content === 11100) {
             res.render('login.ejs', {
                 errormessage: 'the username or password is wrong!',
                 style: 'inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)'
             })
         }
         else {
+            /* res.render('admin.ejs',{
+               username: content._id.toString(),
+               email:content.email.toString(),
+            }) */
             res.redirect('/admin');
         }
     });

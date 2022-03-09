@@ -44,7 +44,7 @@ async function loginAccount(obj) {
     try {
         let code = await User.findOne({ username: obj.username, password: obj.password }).lean().then((acc) => {
             if (acc !== null) {
-                return acc._id.toString();
+                return acc;
             }
             else {
                 return 11100;
