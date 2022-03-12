@@ -68,8 +68,8 @@ function onResults(results) {
     if(results.multiHandLandmarks.length != 0){ 
       var fittedNum = 0;
       for( let i = 0; i < 21; i++){
-        if(results.multiHandLandmarks[0][i].x > 0){
-          if(results.multiHandLandmarks[0][i].y > 0){
+        if(results.multiHandLandmarks[0][i].x >= 0 && results.multiHandLandmarks[0][i].x <= 1){
+          if(results.multiHandLandmarks[0][i].y >= 0 && results.multiHandLandmarks[0][i].y <= 1){
             if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
               fittedNum++;
             }
