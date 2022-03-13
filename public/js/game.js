@@ -2,53 +2,34 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+
+// adjust canvas size
 window.onload = function () {
   if (window.innerWidth > window.innerHeight *16/9) {
-    // canvasElement.width = window.innerHeight;
-    // canvasElement.height = window.innerHeight;
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16/9;
   }
   else {
-    // canvasElement.width = window.innerWidth;
-    // canvasElement.height = window.innerWidth;
     var min_width = Math.min(window.innerWidth, 1280);
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  // var min_height = Math.min(window.innerHeight, 720);
-  // canvasElement.height = min_height;
-  // canvasElement.width = min_height * 16 / 9;
-  
-  // var min_width = Math.min(window.innerWidth, 1280);
-  // canvasElement.width = min_width;
-  // canvasElement.height = min_width * 9 / 16;
 }
-
+// adjust canvas size on resizing the window
 window.onresize = function () {
   if (window.innerWidth > window.innerHeight*16/9) {
-    // canvasElement.width = window.innerHeight;
-    // canvasElement.height = window.innerHeight;
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16/9;
   }
   else {
-    // canvasElement.width = window.innerWidth;
-    // canvasElement.height = window.innerWidth;
     var min_width = Math.min(window.innerWidth, 1280);
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  // var min_height = Math.min(window.innerHeight, 720);
-  // canvasElement.height = min_height;
-  // canvasElement.width = min_height * 16/9;
-
-  // var min_width = Math.min(window.innerWidth, 1280);
-  // canvasElement.width = min_width;
-  // canvasElement.height = min_width * 9 / 16;
 }
+
 
 function onResults(results) {
 
@@ -65,6 +46,8 @@ function onResults(results) {
 
   // draw hand skeleton
   if (results.multiHandLandmarks) {
+    // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
+    // console.log(results.multiHandLandmarks);
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
