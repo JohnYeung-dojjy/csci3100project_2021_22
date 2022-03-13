@@ -2,53 +2,41 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+const wallElement = document.createElement('canvas');
+wallElement.style.display = 'none';
+// image size is fixed
+wallElement.width = 1280;
+wallElement.height = 720;
+const wallCtx = wallElement.getContext('2d');
+
+
+// adjust canvas size
 window.onload = function () {
   if (window.innerWidth > window.innerHeight *16/9) {
-    // canvasElement.width = window.innerHeight;
-    // canvasElement.height = window.innerHeight;
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16/9;
   }
   else {
-    // canvasElement.width = window.innerWidth;
-    // canvasElement.height = window.innerWidth;
     var min_width = Math.min(window.innerWidth, 1280);
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  // var min_height = Math.min(window.innerHeight, 720);
-  // canvasElement.height = min_height;
-  // canvasElement.width = min_height * 16 / 9;
-  
-  // var min_width = Math.min(window.innerWidth, 1280);
-  // canvasElement.width = min_width;
-  // canvasElement.height = min_width * 9 / 16;
 }
-
+// adjust canvas size on resizing the window
 window.onresize = function () {
   if (window.innerWidth > window.innerHeight*16/9) {
-    // canvasElement.width = window.innerHeight;
-    // canvasElement.height = window.innerHeight;
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16/9;
   }
   else {
-    // canvasElement.width = window.innerWidth;
-    // canvasElement.height = window.innerWidth;
     var min_width = Math.min(window.innerWidth, 1280);
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  // var min_height = Math.min(window.innerHeight, 720);
-  // canvasElement.height = min_height;
-  // canvasElement.width = min_height * 16/9;
-
-  // var min_width = Math.min(window.innerWidth, 1280);
-  // canvasElement.width = min_width;
-  // canvasElement.height = min_width * 9 / 16;
 }
+
 
 function onResults(results) {
 
@@ -60,11 +48,26 @@ function onResults(results) {
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
   const wall = new Image();
   wall.src = 'static/img/h1.png';
+  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
   canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
-
   // draw hand skeleton
+<<<<<<< HEAD
+  if (results.multiHandLandmarks) {
+    // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
+    // console.log(results.multiHandLandmarks);
+    if(results.multiHandLandmarks.length != 0){ 
+      var fittedNum = 0;
+      for( let i = 0; i < 21; i++){
+        if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
+          fittedNum++;
+        }
+      }
+      console.log(fittedNum);
+    }
+=======
   if (results.multiHandLandmarks.length != 0) {
+>>>>>>> c14680f2ce8a85752c9fb06617116f0222f681c8
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
@@ -109,31 +112,18 @@ const camera = new Camera(videoElement, {
 camera.start();
 
 
-function checkTransparent(wall,x,y){
-  /*const img = new Image();
-  img.src = scr;
-  const canvas = document.createElement('canvas');
-  canvas.width = wall.width;
-  canvas.height = wall.height;
-  canvas.getContext('2d').drawImage(wall, 0, 0, wall.width, wall.height);
-  var pixelData = canvas.getContext('2d').getImageData(x*wall.width, y*wall.height, 1, 1).data;*/
-  var pixel_x = Math.floor(x*canvasElement.width)
-  var pixel_y = Math.floor(y*canvasElement.height)
-  var pixelData = canvasCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
-  var a = canvasCtx.getImageData(0, 0, canvasElement.width, canvasElement.height).data;
-  console.log(a);
-  for(let i = 0; i < a.length; i += 4){
-    if (a[i+3] != 255){
-      console.log(i);
-      console.log(canvasElement.width);
-      console.log(canvasElement.height);
-    }
-  }/*
+function checkTransparent(scr,x,y){
+  var pixel_x = Math.floor(x*1280);
+  var pixel_y = Math.floor(y*720);
+  var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
+  console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
+  //console.log(pixel_x, pixel_y, pixelData);
+  // if alpha value not 255 (transparent)
   if (pixelData[3] != 255){
     console.log(pixelData);
     return true;
   }else{
     return false;
-  }*/
+  }
   
 }
