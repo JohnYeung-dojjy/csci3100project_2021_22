@@ -48,6 +48,19 @@ function onResults(results) {
   if (results.multiHandLandmarks) {
     // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
     // console.log(results.multiHandLandmarks);
+    if(results.multiHandLandmarks.length != 0){ 
+      var fittedNum = 0;
+      for( let i = 0; i < 21; i++){
+        if(results.multiHandLandmarks[0][i].x >= 0 && results.multiHandLandmarks[0][i].x <= 1){
+          if(results.multiHandLandmarks[0][i].y >= 0 && results.multiHandLandmarks[0][i].y <= 1){
+            if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
+              fittedNum++;
+            }
+          }
+        }
+      }
+      console.log(fittedNum);
+    }
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
@@ -79,3 +92,22 @@ const camera = new Camera(videoElement, {
   height: 720
 });
 camera.start();
+
+
+function checkTransparent(scr,x,y){
+  const img = new Image();
+  img.src = scr;
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+  var pixelData = canvas.getContext('2d').getImageData(x*img.width, y*img.height, 1, 1).data;
+
+  // if alpha value not 255 (transparent)
+  if (pixelData[3] != 255){
+    return true;
+  }else{
+    return false;
+  }
+  
+}
