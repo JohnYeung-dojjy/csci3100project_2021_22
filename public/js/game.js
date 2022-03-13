@@ -64,25 +64,23 @@ function onResults(results) {
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
 
   // draw hand skeleton
-  if (results.multiHandLandmarks) {
-    if(results.multiHandLandmarks.length != 0){ 
-      var fittedNum = 0;
-      for( let i = 0; i < 21; i++){
-        if(results.multiHandLandmarks[0][i].x >= 0 && results.multiHandLandmarks[0][i].x <= 1){
-          if(results.multiHandLandmarks[0][i].y >= 0 && results.multiHandLandmarks[0][i].y <= 1){
-            if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
-              fittedNum++;
-            }
-          }
-        }
-      }
-      console.log(fittedNum);
-    }
+  if (results.multiHandLandmarks.length != 0) {
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
     }
+    var fittedNum = 0;
+    for( var landmarks of results.multiHandLandmarks[0]){
+      if(landmarks.x >= 0 && landmarks.x <= 1){
+        if(landmarks.y >= 0 && landmarks.y <= 1){
+          if(checkTransparent(wall,landmarks.x, landmarks.y)){
+            fittedNum++;
+          }
+        }
+      }
+    }
+    console.log(fittedNum);
   }
   
   canvasCtx.restore();
@@ -111,18 +109,31 @@ const camera = new Camera(videoElement, {
 camera.start();
 
 
-function checkTransparent(scr,x,y){
-  const img = new Image();
+function checkTransparent(wall,x,y){
+  /*const img = new Image();
   img.src = scr;
   const canvas = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
-  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-  var pixelData = canvas.getContext('2d').getImageData(x*img.width, y*img.height, 1, 1).data;
+  canvas.width = wall.width;
+  canvas.height = wall.height;
+  canvas.getContext('2d').drawImage(wall, 0, 0, wall.width, wall.height);
+  var pixelData = canvas.getContext('2d').getImageData(x*wall.width, y*wall.height, 1, 1).data;*/
+  var pixel_x = Math.floor(x*canvasElement.width)
+  var pixel_y = Math.floor(y*canvasElement.height)
+  var pixelData = canvasCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
+  var a = canvasCtx.getImageData(0, 0, canvasElement.width, canvasElement.height).data;
+  console.log(a);
+  for(let i = 0; i < a.length; i += 4){
+    if (a[i+3] != 255){
+      console.log(i);
+      console.log(canvasElement.width);
+      console.log(canvasElement.height);
+    }
+  }/*
   if (pixelData[3] != 255){
+    console.log(pixelData);
     return true;
   }else{
     return false;
-  }
+  }*/
   
 }
