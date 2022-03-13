@@ -2,6 +2,13 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+const wallElement = document.createElement('canvas');
+wallElement.style.display = 'none';
+// image size is fixed
+wallElement.width = 1280;
+wallElement.height = 720;
+const wallCtx = wallElement.getContext('2d');
+
 
 // adjust canvas size
 window.onload = function () {
@@ -41,9 +48,9 @@ function onResults(results) {
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
   const wall = new Image();
   wall.src = 'static/img/h1.png';
+  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
   canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
-
   // draw hand skeleton
   if (results.multiHandLandmarks) {
     // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
@@ -51,12 +58,8 @@ function onResults(results) {
     if(results.multiHandLandmarks.length != 0){ 
       var fittedNum = 0;
       for( let i = 0; i < 21; i++){
-        if(results.multiHandLandmarks[0][i].x >= 0 && results.multiHandLandmarks[0][i].x <= 1){
-          if(results.multiHandLandmarks[0][i].y >= 0 && results.multiHandLandmarks[0][i].y <= 1){
-            if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
-              fittedNum++;
-            }
-          }
+        if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
+          fittedNum++;
         }
       }
       console.log(fittedNum);
@@ -95,14 +98,11 @@ camera.start();
 
 
 function checkTransparent(scr,x,y){
-  const img = new Image();
-  img.src = scr;
-  const canvas = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
-  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-  var pixelData = canvas.getContext('2d').getImageData(x*img.width, y*img.height, 1, 1).data;
-
+  var pixel_x = Math.floor(x*1280);
+  var pixel_y = Math.floor(y*720);
+  var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
+  console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
+  //console.log(pixel_x, pixel_y, pixelData);
   // if alpha value not 255 (transparent)
   if (pixelData[3] != 255){
     return true;
