@@ -52,6 +52,7 @@ function onResults(results) {
   canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
   // draw hand skeleton
+<<<<<<< HEAD
   if (results.multiHandLandmarks) {
     // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
     // console.log(results.multiHandLandmarks);
@@ -64,11 +65,25 @@ function onResults(results) {
       }
       console.log(fittedNum);
     }
+=======
+  if (results.multiHandLandmarks.length != 0) {
+>>>>>>> c14680f2ce8a85752c9fb06617116f0222f681c8
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
     }
+    var fittedNum = 0;
+    for( var landmarks of results.multiHandLandmarks[0]){
+      if(landmarks.x >= 0 && landmarks.x <= 1){
+        if(landmarks.y >= 0 && landmarks.y <= 1){
+          if(checkTransparent(wall,landmarks.x, landmarks.y)){
+            fittedNum++;
+          }
+        }
+      }
+    }
+    console.log(fittedNum);
   }
   
   canvasCtx.restore();
@@ -105,6 +120,7 @@ function checkTransparent(scr,x,y){
   //console.log(pixel_x, pixel_y, pixelData);
   // if alpha value not 255 (transparent)
   if (pixelData[3] != 255){
+    console.log(pixelData);
     return true;
   }else{
     return false;
