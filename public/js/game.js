@@ -52,38 +52,47 @@ function onResults(results) {
   canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
   // draw hand skeleton
-<<<<<<< HEAD
   if (results.multiHandLandmarks) {
     // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
     // console.log(results.multiHandLandmarks);
-    if(results.multiHandLandmarks.length != 0){ 
-      var fittedNum = 0;
-      for( let i = 0; i < 21; i++){
-        if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
-          fittedNum++;
-        }
-      }
-      console.log(fittedNum);
-    }
-=======
-  if (results.multiHandLandmarks.length != 0) {
->>>>>>> c14680f2ce8a85752c9fb06617116f0222f681c8
+    // if(results.multiHandLandmarks.length != 0){ 
+    //   var fittedNum = 0;
+    //   for( let i = 0; i < 21; i++){
+    //     if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
+    //       fittedNum++;
+    //     }
+    //   }
+    //   console.log(fittedNum);
+    // }
     for (const landmarks of results.multiHandLandmarks) {
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
     }
-    var fittedNum = 0;
-    for( var landmarks of results.multiHandLandmarks[0]){
-      if(landmarks.x >= 0 && landmarks.x <= 1){
-        if(landmarks.y >= 0 && landmarks.y <= 1){
-          if(checkTransparent(wall,landmarks.x, landmarks.y)){
-            fittedNum++;
+    
+    
+    if (results.multiHandLandmarks.length > 0){
+      for( const landmarks of results.multiHandLandmarks){
+        if (checkDepth(landmarks)){
+          var fittedNum = 0;
+          for (const landmark of landmarks) {
+            if(checkTransparent(wall,landmark.x, landmark.y)){
+              fittedNum++;
+            }
+            // console.log(landmarks);
           }
         }
+        else{
+          console.log('your hand is too far away!');
+        }
+        // console.log(d_p0p9 , d_p5p17);
+        
+        // if(checkTransparent(wall,landmarks.x, landmarks.y)){
+        //   fittedNum++;
+        // }
       }
     }
-    console.log(fittedNum);
+      
   }
   
   canvasCtx.restore();
@@ -95,7 +104,7 @@ const hands = new Hands({
   }
 });
 hands.setOptions({
-  maxNumHands: 2,
+  maxNumHands: 1,
   modelComplexity: 1,
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
@@ -113,17 +122,38 @@ camera.start();
 
 
 function checkTransparent(scr,x,y){
+  // the image must be 1280*720
   var pixel_x = Math.floor(x*1280);
   var pixel_y = Math.floor(y*720);
+  
   var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
-  console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
-  //console.log(pixel_x, pixel_y, pixelData);
+  
+  // console.log(pixel_x, pixel_y, pixelData);
+  // console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
   // if alpha value not 255 (transparent)
   if (pixelData[3] != 255){
-    console.log(pixelData);
+    // console.log(pixelData);
     return true;
   }else{
     return false;
   }
   
+}
+
+function checkDepth(landmarks){
+  // var d_p0p9 = ManhattanDistance(landmarks[0], landmarks[9]);
+  // var d_p5p17 = ManhattanDistance(landmarks[5], landmarks[17]);
+  // return (d_p0p9 > 0.25 || d_p5p17 > 0.15);
+  var d_p0p9 = EuclideanDistance(landmarks[0], landmarks[9]);
+  var d_p5p17 = EuclideanDistance(landmarks[5], landmarks[17]);
+  // console.log(d_p0p9, d_p5p17);
+  return (d_p0p9 > 0.04 || d_p5p17 > 0.02);
+}
+
+function ManhattanDistance(landmark_1, landmark_2) {
+  return Math.abs(landmark_1.x - landmark_2.x)*16/9 + Math.abs(landmark_1.y - landmark_2.y);
+}
+
+function EuclideanDistance(landmark_1, landmark_2) {
+  return Math.pow((landmark_1.x - landmark_2.x)*16/9, 2) + Math.pow((landmark_1.y - landmark_2.y), 2);
 }
