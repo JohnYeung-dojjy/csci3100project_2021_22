@@ -77,3 +77,40 @@ async function changePassword(_id, oldPassword, newPassword) {
         console.log(err.message);
     }
 }
+
+//Leaderboard functions
+
+async function displayLeaderboard(obj){
+    try {
+        const lb = await Leaderboard.find().sort({"score":1}).limit(10);
+        console.log(lb);
+        return lb;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+async function updateLeaderboard(_id, score) {
+    try {
+        const instance = new Leaderboard({
+            user_id: _id,
+            score: score
+        });
+        let state = await instance.save()
+            .then((acc) => {
+                console.log('Leaderboard Updated Successfully!');
+                console.log(typeof acc.id);//string;
+                return acc.id;
+            })
+            .catch(
+                (err) => {
+                    console.log(err);
+                    return err.code;//number
+                }
+            )
+        return state;// if duplicate,the code is 11000,defined by mongodb
+    } catch (e) {
+        console.log(e.message);
+        return -1;
+    }
+}
