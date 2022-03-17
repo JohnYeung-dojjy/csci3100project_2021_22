@@ -14,9 +14,9 @@ module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore,
 
 
 //display functions,for now, we may not need this
-async function displayUsername(_id) {
+async function displayUsername(obj) {
     try {
-        const username = await User.find({ _id: _id }).select("username");
+        const username = await User.find({ _id: obj._id }).select("username");
         console.log(username);
         return username;
     } catch (err) {
@@ -25,9 +25,9 @@ async function displayUsername(_id) {
 }
 
 //for now, we may not need this either
-async function displayEmail(_id) {
+async function displayEmail(obj) {
     try {
-        const email = await User.find({ _id: _id }).select("user_email");
+        const email = await User.find({ _id: obj._id }).select("user_email");
         console.log(email);
         return email;
     } catch (err) {
@@ -35,9 +35,9 @@ async function displayEmail(_id) {
     }
 }
 
-async function displayIcon(_id) {
+async function displayIcon(obj) {
     try {
-        const icon = await User.find({ _id: _id }).select("user_icon");
+        const icon = await User.find({ _id: obj._id }).select("user_icon");
         console.log(icon);
         return icon;
     } catch (err) {
@@ -46,9 +46,9 @@ async function displayIcon(_id) {
 }
 
 //display functions,for now, we may not need this
-async function displayUsername(_id) {
+async function displayUsername(obj) {
     try {
-        const username = await User.find({ _id: _id }).select("username");
+        const username = await User.find({ _id: obj._id }).select("username");
         console.log(username);
         return username;
     } catch (err) {
@@ -56,9 +56,9 @@ async function displayUsername(_id) {
     }
 }
 
-async function displayBestScore(_id) {
+async function displayBestScore(obj) {
     try {
-        const bestScore = await Leaderboard.find({ _id: _id }).select("score");
+        const bestScore = await Leaderboard.find({ _id: obj._id }).select("score").sort({"score":1}).limit(1);
         console.log(bestScore);
         return bestScore;
     } catch (err) {
@@ -67,16 +67,56 @@ async function displayBestScore(_id) {
 }
 
 //change functions
-async function changePassword(_id, oldPassword, newPassword) {
+
+//todo add if-statement for wrong input
+async function changePassword(obj, oldPassword, newPassword) {
     try {
-        const acc = await User.find({ _id: _id }).where("password").equals(oldPassword).updateOne({ password: newPassword });
+        const acc = await User.find({ _id: obj._id }).where("password").equals(oldPassword).updateOne({ password: newPassword });
         console.log(acc);
+        console.log("Password changed successfully!")
 
 
     } catch (err) {
         console.log(err.message);
     }
 }
+
+async function changeIcon(obj, newImage) {
+    try {
+        /* //prob not needed because upload manager will restrict that
+        var parts = newImage.split('.');
+        if (parts[parts.length - 1] == "jpg" || (parts[parts.length - 1] == "png" ){
+
+        } else {
+            console.log("File Format not accepted.");
+        } */
+        const acc = await User.find({ _id: obj._id }).updateOne({ user_icon: newImage });
+        console.log(acc);
+        console.log("Icon changed successfully!")
+
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+async function changeEmail(obj, oldEmail, newEmail) {
+    try {
+        if (oldEmail.equals(newEmail)) {
+            console.log("New Email has to be different.");
+            //add a check if email already exits?
+        } else {
+            const acc = await User.find({ _id: obj._id }).where("user_email").equals(oldEmail).updateOne({ user_email: newEmail });
+            console.log(acc);
+            console.log("Email changed successfully!")
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+
+
 
 //Leaderboard functions
 
