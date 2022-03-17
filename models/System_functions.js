@@ -25,7 +25,7 @@ async function registerNewAccount(obj) {
             .then((acc) => {
                 console.log('User Saved Successfully!');
                 console.log(typeof acc.id);//string;
-                return acc.id;
+                return acc;
             })
             .catch(
                 (err) => {

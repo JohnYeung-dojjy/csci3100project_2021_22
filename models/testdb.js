@@ -23,6 +23,7 @@ const User_functions = require("./User_functions");
 
 
 const DBuri = 'mongodb+srv://patrillicit:csci3100@cluster0.5gdcy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+/* 'mongodb://127.0.0.1:27017/' //this is for local test, please don't delete! */;
 
 
 //conncet with Cloud DB on Atlas

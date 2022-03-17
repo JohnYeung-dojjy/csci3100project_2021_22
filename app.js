@@ -7,6 +7,8 @@ const path = require('path');
 const ejs = require('ejs');
 const database = require('./models/testdb');
 const system = require('./models/System_functions');
+const mail = require('./models/mail');
+/* const { getMaxListeners } = require('process'); */
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
@@ -81,12 +83,20 @@ app.post('/regverify', (req, res) => {
         data = data + chunk;
     })
     req.on('end', async () => {
+        //need content._doc._id.toString() to show id, for other info,content._doc.username is ok
         obj = JSON.parse(data);//from json to object
         /* console.log(data); */
-        await system.registerNewAccount(obj).then((code) => {
-            console.log(code);
-            /* let body = JSON.stringify({ code: code }); */
-            res.send({ code: code });//automatically change to json
+        await system.registerNewAccount(obj).then(async (content) => {
+            if (typeof content !== "number") {
+                console.log(content._doc._id.toString());
+                /* let body = JSON.stringify({ code: code }); */
+                await mail.mailing(content._doc, 0);
+                res.send({ code: content._doc._id.toString() });//automatically change to json
+
+            }
+            else {
+                res.send({ code: content });
+            }
         })
     })
 

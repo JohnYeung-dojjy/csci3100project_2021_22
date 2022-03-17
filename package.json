@@ -10,6 +10,7 @@
     "express-generator": "^4.16.1",
     "jquery": "^3.6.0",
     "mongoose": "^6.2.2",
+    "nodemailer": "^6.7.2",
     "react": "^17.0.2"
   },
   "scripts": {
