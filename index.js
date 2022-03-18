@@ -1,3 +1,5 @@
+require("./bin/www");
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -103,3 +105,18 @@ app.post('/regverify', (req, res) => {
 })
 
 const server = app.listen(3000);
+module.exports = (req, res) => {
+    let target = ''
+
+    if (req.url.startsWith('/api')) {
+        target = 'https://api.music.xxytime.top'
+    }
+
+    createProxyMiddleware({
+        target,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/': '/'
+        }
+    })(req, res)
+}
