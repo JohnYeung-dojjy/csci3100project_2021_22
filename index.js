@@ -1,5 +1,5 @@
-const PORT = process.env.PORT || 3000;
-require("./bin/www");
+/* const PORT = process.env.PORT || 3000; */
+/* require("./bin/www"); */
 /* const { createProxyMiddleware } = require('http-proxy-middleware'); */
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -105,4 +105,4 @@ app.post('/regverify', (req, res) => {
 
 })
 
-/* const server = app.listen(3000); */
+const server = app.listen(3000);
