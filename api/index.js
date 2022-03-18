@@ -1,4 +1,3 @@
-const PORT = process.env.PORT || 3000;
 require("./bin/www");
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
@@ -105,4 +104,19 @@ app.post('/regverify', (req, res) => {
 
 })
 
-/* const server = app.listen(3000); */
+const server = app.listen(3000);
+module.exports = (req, res) => {
+    let target = ''
+
+    if (req.url.startsWith('/api')) {
+        target = 'https://api.music.xxytime.top'
+    }
+
+    createProxyMiddleware({
+        target,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/': '/'
+        }
+    })(req, res)
+}
