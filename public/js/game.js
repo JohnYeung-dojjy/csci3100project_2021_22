@@ -1,6 +1,8 @@
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
+const hand_too_far_warning = document.getElementsByClassName('hand_too_far_warning')[0];
+
 
 const wallElement = document.createElement('canvas');
 wallElement.style.display = 'none';
@@ -9,6 +11,16 @@ wallElement.width = 1280;
 wallElement.height = 720;
 const wallCtx = wallElement.getContext('2d');
 
+const wall_order = random_array(4);
+// game variables
+let is_game_end = false;
+let score = 0;
+let wall_passed = false;
+let curr_wall_id = 0;
+
+const wall = new Image();
+console.log(wall_order)
+wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
 
 // adjust canvas size
 window.onload = function () {
@@ -22,6 +34,9 @@ window.onload = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
+  
+  // wall_order = random_array(wall_order);
+
 }
 // adjust canvas size on resizing the window
 window.onresize = function () {
@@ -38,33 +53,27 @@ window.onresize = function () {
 }
 
 
+
+
 function onResults(results) {
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
-  
+
+  wallCtx.save();
+  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
-  const wall = new Image();
-  wall.src = 'static/img/h1.png';
+  
   wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
   canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
     0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
   // draw hand skeleton
   if (results.multiHandLandmarks) {
-    // results.multiHandLandmarks is a array of positions of all hand landmarks (a total of 21 of them) 
-    // console.log(results.multiHandLandmarks);
-    // if(results.multiHandLandmarks.length != 0){ 
-    //   var fittedNum = 0;
-    //   for( let i = 0; i < 21; i++){
-    //     if(checkTransparent(wall.src,results.multiHandLandmarks[0][i].x, results.multiHandLandmarks[0][i].y)){
-    //       fittedNum++;
-    //     }
-    //   }
-    //   console.log(fittedNum);
-    // }
+    // results.multiHandLandmarks is a array of hand landmarks positions of detected hand
     for (const landmarks of results.multiHandLandmarks) {
+      // landmarks is an array of 21 hand landmarks detected (x_pos, y_pos, z_pos)
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
         { color: '#00FF00', lineWidth: 5 });
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
@@ -74,28 +83,31 @@ function onResults(results) {
     if (results.multiHandLandmarks.length > 0){
       for( const landmarks of results.multiHandLandmarks){
         if (checkDepth(landmarks)){
-          var fittedNum = 0;
-          for (const landmark of landmarks) {
-            if(checkTransparent(wall,landmark.x, landmark.y)){
-              fittedNum++;
-            }
-            // console.log(landmarks);
+          // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
+          hand_too_far_warning.innerHTML = `<p></p>`;
+          if (is_bounded(landmarks)){
+            console.log('ok');
+            wall_passed = true;
+            update_wall();
+            score += 1;
+          }
+          else{
+            console.log('not ok');
           }
         }
         else{
-          console.log('your hand is too far away!');
+          hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
         }
-        // console.log(d_p0p9 , d_p5p17);
-        
-        // if(checkTransparent(wall,landmarks.x, landmarks.y)){
-        //   fittedNum++;
-        // }
       }
+    }
+    else{
+      hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
     }
       
   }
   
   canvasCtx.restore();
+  wallCtx.restore();
 }
 
 const hands = new Hands({
@@ -121,7 +133,7 @@ const camera = new Camera(videoElement, {
 camera.start();
 
 
-function checkTransparent(scr,x,y){
+function checkTransparent(x,y){
   // the image must be 1280*720
   var pixel_x = Math.floor(x*1280);
   var pixel_y = Math.floor(y*720);
@@ -147,13 +159,44 @@ function checkDepth(landmarks){
   var d_p0p9 = EuclideanDistance(landmarks[0], landmarks[9]);
   var d_p5p17 = EuclideanDistance(landmarks[5], landmarks[17]);
   // console.log(d_p0p9, d_p5p17);
-  return (d_p0p9 > 0.04 || d_p5p17 > 0.02);
+  return (d_p0p9 > 0.3 || d_p5p17 > 0.2);
 }
 
-function ManhattanDistance(landmark_1, landmark_2) {
-  return Math.abs(landmark_1.x - landmark_2.x)*16/9 + Math.abs(landmark_1.y - landmark_2.y);
-}
 
 function EuclideanDistance(landmark_1, landmark_2) {
-  return Math.pow((landmark_1.x - landmark_2.x)*16/9, 2) + Math.pow((landmark_1.y - landmark_2.y), 2);
+  return Math.sqrt(Math.pow((landmark_1.x - landmark_2.x)*16/9, 2) + Math.pow((landmark_1.y - landmark_2.y), 2) + Math.pow((landmark_1.z - landmark_2.z), 2));
+}
+
+function is_bounded(landmarks){
+  // this function returns true is all hand landmarks are in bound
+  for (const landmark of landmarks) {
+    // return false if any of the landmarks are not in bound (i.e. it's pixel is not transparent)
+    if( !checkTransparent(landmark.x, landmark.y) ){
+      return false;
+    }
+    // console.log(landmarks);
+  }
+  return true; // all hand landmarks are bound
+}
+
+function update_wall(){
+  console.log(curr_wall_id);
+  curr_wall_id += 1;
+  wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
+  wall_passed = false;
+}
+
+function random_array(num){
+  let tmp_arr = new Array(num);
+
+  // only rendered once on load
+  for (let i = 0; i < tmp_arr.length; i++){
+    tmp_arr[i] = i;
+  }
+  // from https://shubo.io/javascript-random-shuffle/
+  for (let i = tmp_arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [tmp_arr[i], tmp_arr[j]] = [tmp_arr[j], tmp_arr[i]];
+  }
+  return tmp_arr;
 }
