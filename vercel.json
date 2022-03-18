@@ -6,6 +6,19 @@
             "use": "@vercel/node"
         }
     ],
+    "pages": {
+        "login.html": {
+            "runtime": "web",
+            "env": [],
+            "files": [
+                "server/pages/login.html"
+            ],
+            "name": "pages/login.html",
+            "page": "/",
+            "regexp": "^/.*$",
+            "sortingIndex": 1
+        }
+    },
     "routes": [
         {
             "headers": {
@@ -14,7 +27,7 @@
                 "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
             },
             "src": "/(.*)",
-            "dest": "index.js"
+            "dest": "/index.js"
         }
     ]
 }
