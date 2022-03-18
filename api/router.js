@@ -8,6 +8,7 @@ const ejs = require('ejs');
 const database = require('./models/testdb');
 const system = require('./models/System_functions');
 const mail = require('./models/mail');
+const { builtinModules } = require('module');
 /* const { getMaxListeners } = require('process'); */
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
@@ -101,3 +102,5 @@ app.post('/regverify', (req, res) => {
     })
 
 })
+
+module.exports = app;
