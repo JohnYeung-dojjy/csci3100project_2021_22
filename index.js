@@ -1,4 +1,4 @@
-/* const PORT = process.env.PORT || 3000; */
+const PORT = process.env.PORT || 5050;
 /* require("./bin/www"); */
 /* const { createProxyMiddleware } = require('http-proxy-middleware'); */
 const express = require('express');
@@ -34,7 +34,7 @@ So,all files can be seen by the user should be under the public
 */
 
 app.get('/home', (req, res) => {
-    res.sendFile(__dirname + 'api/pages/home/home.html');
+    res.sendFile(__dirname + '/api/pages/home/home.html');
 });
 
 app.get('/', (req, res) => {
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/game', (req, res) => {
-    res.sendFile(__dirname + 'api/pages/game/game.html');
+    res.sendFile(__dirname + '/api/pages/game/game.html');
 })
 
 
@@ -105,4 +105,4 @@ app.post('/regverify', (req, res) => {
 
 })
 
-const server = app.listen(3000);
+const server = app.listen(PORT);
