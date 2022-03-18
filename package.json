@@ -4,7 +4,7 @@
   "description": "packages for csci3100 project",
   "main": "index.js",
   "engines": {
-    "node": "14.x"
+    "node": "12.x"
   },
   "dependencies": {
     "cors": "^2.8.5",
