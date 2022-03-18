@@ -31,10 +31,6 @@ if the url in file starts with 'static', it will be redirect to the __dirname+'p
 So,all files can be seen by the user should be under the public
 */
 
-app.get('/home', (req, res) => {
-    res.sendFile(__dirname + '/pages/home/home.html');
-});
-
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/pages/login/login.html');
 })

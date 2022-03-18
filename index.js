@@ -1,8 +1,7 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const router = require('./api/router');
 const app = express();
-app.use('*', router);
-
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/pages/login/login.html');
+})
 const server = app.listen(3000);
 module.exports = app;
