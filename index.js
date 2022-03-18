@@ -5,16 +5,16 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
-const database = require('./models/testdb');
-const system = require('./models/System_functions');
-const mail = require('./models/mail');
+const database = require('./api/models/testdb');
+const system = require('./api/models/System_functions');
+const mail = require('./api/models/mail');
 /* const { getMaxListeners } = require('process'); */
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '\\views');
+app.set('views', __dirname + '\\api\\views');
 
 /* 
 try to understand the concept in this way:
@@ -31,15 +31,15 @@ So,all files can be seen by the user should be under the public
 */
 
 app.get('/home', (req, res) => {
-    res.sendFile(__dirname + '/pages/home/home.html');
+    res.sendFile(__dirname + '/api/pages/home/home.html');
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/pages/login/login.html');
+    res.sendFile(__dirname + '/api/pages/login/login.html');
 })
 
 app.get('/game', (req, res) => {
-    res.sendFile(__dirname + '/pages/game/game.html');
+    res.sendFile(__dirname + '/api/pages/game/game.html');
 })
 
 
@@ -52,7 +52,7 @@ app.get('/game', (req, res) => {
 }) */
 
 app.get('/admin', (req, res) => {
-    res.sendFile(__dirname + '/pages/admin/admin.html');
+    res.sendFile(__dirname + '/api/pages/admin/admin.html');
 })
 
 app.post('/loginverify', async (req, res) => {
