@@ -15,15 +15,13 @@
     right: 0;
     bottom: 0; */
     position: absolute;
-    top: 0;
+    top: 40px;
     height: auto;
     transform: scale(-1, 1);
     /* margin: auto; */
 }
 
-
-
-.container {
+.display {
   height: 100vh;
   /* 100%high */
   display: flex;
@@ -36,5 +34,13 @@
   position: relative;
   justify-content: center;
   align-items: center;
+  font-size: 24;
+}
+
+.score_and_time{
+  position: relative;
+  top: 20px;
+  justify-content: center;
+  align-items: end;
   font-size: 24;
 }
