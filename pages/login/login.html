@@ -216,11 +216,11 @@
         transition-duration: .5s;
         transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
         visibility: hidden;
+        overflow-y: hidden;
     }
 
     .closed {
         width: 0;
-        font-display: none;
     }
 
     .triangle {
@@ -365,6 +365,7 @@
     let triangle = document.querySelectorAll('.triangle');
 
     function showrules() {
+
         rules.classList.toggle('closed');
         triangle[0].classList.toggle('reverse');
         triangle[1].classList.toggle('reverse');
@@ -512,7 +513,7 @@
             }
             return response.json();
         }).then((response) => {
-            if (response.code === 11000) {
+            if (typeof response.code === "number") {
                 Swal.fire({
                     template: '#duplicatedusername',
                     preConfirm: (event) => {
@@ -534,7 +535,7 @@
                 return 0;
             }
         }).then((code) => {
-            if (code != 11000) {
+            if (code === 0) {
                 side = 0;
                 ball.style.left = 0;
                 on.style.opacity = .5;
