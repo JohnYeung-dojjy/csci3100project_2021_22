@@ -2,7 +2,7 @@
   "name": "csci3100project_2021_22",
   "version": "1.0.0",
   "description": "packages for csci3100 project",
-  "main": "index.js",
+  "main": "app.js",
   "engines": {
     "node": "12.x"
   },
@@ -18,7 +18,7 @@
     "react": "^17.0.2"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
