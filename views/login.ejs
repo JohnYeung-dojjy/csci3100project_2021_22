@@ -39,7 +39,7 @@
 
 
     .shell {
-        width: 70%;
+        width: 45%;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -93,7 +93,7 @@
     }
 
     .bottom {
-        width: 65%;
+        width: 100%;
         height: 80%;
         /* background-image: url(./background.png); */
         background: inherit;
@@ -159,7 +159,9 @@
         box-shadow: 0 0 10px rgb(255, 235, 167);
     }
 
-    /*  .bottom>div button:hover {} */
+    .bottom>form button:hover {
+        background-color: rgb(255, 245, 214);
+    }
 
     .signIn {
         transform: translateZ(80px);
@@ -186,6 +188,64 @@
         justify-content: center;
 
     }
+
+    .rules {
+        display: flex;
+        justify-content: center;
+        /*all elements align in the x-center */
+        align-items: center;
+        flex-direction: column;
+        position: absolute;
+        width: 20%;
+        height: 80%;
+        /* background-image: url(./background.png); */
+        /* background: inherit; */
+        transform-style: preserve-3d;
+        /* have 3-d effect */
+        box-shadow: inset 0 0 0 3000px rgba(255, 255, 255, 0.3);
+        /* 3000px inset shadow */
+        /* filter: blur(10px); */
+        /*         position: relative; */
+        /* seem relative is not important */
+        transition: 1s;
+        /*the action for switch takes 1s in total */
+        border-radius: 40px;
+        /* the box will be a little bit round-shape */
+        overflow-x: hidden;
+        transition-property: all;
+        transition-duration: .5s;
+        transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+        visibility: hidden;
+        overflow-y: hidden;
+    }
+
+    .closed {
+        width: 0;
+    }
+
+    .triangle {
+        position: absolute;
+        border-right: 0.2em solid black;
+        border-top: 0.2em solid black;
+        transform: rotate(225deg);
+        height: 15px;
+        width: 15px;
+    }
+
+    .reverse {
+        transform: rotate(45deg);
+    }
+
+    .goodfont {
+        font-size: Xx-large;
+        font-family: 'Tangerine', serif;
+        background: linear-gradient(to right, RED, black);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        letter-spacing: 1px;
+        font-weight: bolder;
+    }
 </style>
 
 <body>
@@ -204,7 +264,7 @@
                     <h2>Sign in</h2>
                 </div>
                 <input type="text" name="username" placeholder="<%=errormessage%>" required>
-                <input type=" password" name="password" placeholder="<%=errormessage%>" required>
+                <input type="password" name="password" placeholder="<%=errormessage%>" required>
                 <button type="submit">GO</button>
             </form>
 
@@ -217,24 +277,26 @@
                 <input type="password" placeholder="Confirm password">
                 <input type="email" placeholder="Email">
                 <button type="button">GO</button>
+                <span class="triangle" onclick="showrules()">
+                </span>
+                <span class="triangle" onclick="showrules()">
+                </span>
+                <span class="triangle" onclick="showrules()">
+                </span>
             </form>
         </div>
     </div>
-
-    <template id="reminder">
-        <swal-title>
-            Your username must be unique.
-
-            Your password should consist only character and digit.
-
-            The minimum length for the password is 8.
-        </swal-title>
-        <swal-icon type="info"></swal-icon>
-        <swal-button type="info">
-        </swal-button>
-        <swal-param name="allowEscapeKey" value="false" />
-        <swal-param name="customClass" value='{ "popup": "true" }' />
-    </template>
+    <div class="rules goodfont">
+        <p>
+            1. Your username must be unique.
+        </p>
+        <p>
+            2. Your password should consist only character and digit.
+        </p>
+        <p>
+            3. The minimum length for the password is 8.
+        </p>
+    </div>
 
     <template id="duplicatedusername">
         <swal-title>
@@ -247,7 +309,7 @@
         <swal-param name="customClass" value='{ "popup": "true" }' />
     </template>
 
-    <template id="invalidepassword">
+    <template id="invalidpassword">
         <swal-title>
             The password doesn't fulfill the requirement!
         </swal-title>
@@ -281,8 +343,8 @@
         <swal-title>
             Congratulations! A confirmation email will be sent to your email.
         </swal-title>
-        <swal-icon type="info"></swal-icon>
-        <swal-button type="info">
+        <swal-icon type="success"></swal-icon>
+        <swal-button type="success">
         </swal-button>
         <swal-param name="allowEscapeKey" value="false" />
         <swal-param name="customClass" value='{ "popup": "true","confirmButton": "btn btn-success" }' />
@@ -298,7 +360,17 @@
     let signIn = document.querySelector('.signIn');
     let side = 0;
     let input = document.querySelectorAll('input');
+    let rules = document.querySelector('.rules');
+    let topdiv = document.querySelector('.top');
+    let triangle = document.querySelectorAll('.triangle');
 
+    function showrules() {
+
+        rules.classList.toggle('closed');
+        triangle[0].classList.toggle('reverse');
+        triangle[1].classList.toggle('reverse');
+        triangle[2].classList.toggle('reverse');
+    }
 
     button.onclick = function () {
         if (side == 0) {/* sign in state */
@@ -313,15 +385,8 @@
             signIn.style.visibility = "hidden";
             signUp.style.display = "flex"
             signUp.style.visibility = "visible";
-            setTimeout(function () {
-                document.querySelector(".shell").style.display = "none";
-                Swal.fire({
-                    template: '#reminder',
-                    preConfirm: (event) => {
-                        document.querySelector(".shell").style.display = "";
-                    }
-                })
-            }, 1000);
+            rules.style.display = "flex";
+            rules.style.visibility = "visible";
         } else {
             side = 0;
             ball.style.left = 0;
@@ -332,7 +397,8 @@
             signUp.style.visibility = "hidden";
             signIn.style.display = "flex"
             signIn.style.visibility = "visible";
-
+            rules.style.visibility = "hidden";
+            rules.style.display = "none";
         }
         for (let i = 0; i < input.length; i++) {
             input[i].value = "";
@@ -384,6 +450,7 @@
                         if (data[2].value !== data[1].value) {
                             data[i].value = "";
                             data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+                            document.querySelector(".shell").style.display = "none";
                             Swal.fire({
                                 template: '#differentpassword',
                                 preConfirm: (event) => {
@@ -399,6 +466,7 @@
                         if (emailre.test[data[i].value] === false) {
                             data[i].value = "";
                             data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+                            document.querySelector(".shell").style.display = "none";
                             Swal.fire({
                                 template: '#invalidemail',
                                 preConfirm: (event) => {
@@ -445,7 +513,7 @@
             }
             return response.json();
         }).then((response) => {
-            if (response.code === 11000) {
+            if (typeof response.code === "number") {
                 Swal.fire({
                     template: '#duplicatedusername',
                     preConfirm: (event) => {
@@ -467,7 +535,7 @@
                 return 0;
             }
         }).then((code) => {
-            if (code != 11000) {
+            if (code === 0) {
                 side = 0;
                 ball.style.left = 0;
                 on.style.opacity = .5;
@@ -477,6 +545,8 @@
                 signUp.style.visibility = "hidden";
                 signIn.style.display = "flex"
                 signIn.style.visibility = "visible";
+                rules.style.visibility = "hidden";
+                rules.style.display = "none";
             }
         }
         ).catch(error => {//the request hasn't sent, e.g. the request url has no routing
@@ -489,6 +559,30 @@
         let inp = document.querySelectorAll(".signIn input");
         inp[0].style.boxShadow = '<%=style%>';
         inp[1].style.boxShadow = '<%=style%>';
+        rules.style.top = topdiv.clientHeight * 1.2 + 'px';
+        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 2 + 'px';
+        for (let i = 0; i < 3; i++) {
+            triangle[i].style.left = signUp.clientWidth * 0.82 + i * 12 + 'px';
+        }
+        if ((signUp.clientHeight) / 17 < (signUp.clientWidth) / 10) {
+            rules.style.fontSize = (signUp.clientHeight) / 17 + 'px';
+        }
+        else {
+            rules.style.fontSize = (signUp.clientWidth) / 10 + 'px';
+        }
+    }
+    window.onresize = function () {
+        rules.style.top = topdiv.clientHeight * 1.2 + 'px';
+        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 2 + 'px';
+        for (let i = 0; i < 3; i++) {
+            triangle[i].style.left = signUp.clientWidth * 0.82 + i * 12 + 'px';
+        }
+        if ((signUp.clientHeight) / 17 < (signUp.clientWidth) / 10) {
+            rules.style.fontSize = (signUp.clientHeight) / 17 + 'px';
+        }
+        else {
+            rules.style.fontSize = (signUp.clientWidth) / 12 + 'px';
+        }
     }
 </script>
 
