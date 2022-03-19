@@ -88,15 +88,16 @@ app.post('/regverify', (req, res) => {
         /* console.log(data); */
         await system.registerNewAccount(obj).then(async (content) => {
             if (typeof content !== "number") {
-                console.log(content._doc._id.toString());
-                /* let body = JSON.stringify({ code: code }); */
-                await mail.mailing(content._doc, 0);
-                res.send({ code: content._doc._id.toString() });//automatically change to json
-
+                //console.log(content._id.toString());
+                // let body = JSON.stringify({ code: code }); 
+                await mail.mailing(content, 0);
+                res.send({ code: content._id.toString() });//automatically change to json
             }
             else {
+                console.log(content);
                 res.send({ code: content });
             }
+
         })
     })
 
