@@ -14,7 +14,7 @@ app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '\\views');
+app.set('views', __dirname + '/views');
 
 /* 
 try to understand the concept in this way:
