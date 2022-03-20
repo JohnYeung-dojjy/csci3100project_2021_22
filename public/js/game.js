@@ -114,6 +114,7 @@ function onResults(results) {
     }
   }
   
+  is_game_end = timer.check_game_ended();
   canvasCtx.restore();
   wallCtx.restore();
 }

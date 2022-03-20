@@ -41,6 +41,17 @@ export function check_time_remain(){
     }
 }
 
+// return if the timer is up or not.
+export function check_game_ended(){
+    if(update_location != ''){
+        if(time == 0){
+            return true;
+        }
+    }
+    return false;
+    
+}
+
 // function to count down
 function count_down() {
     if(timer_started && time > 0){
