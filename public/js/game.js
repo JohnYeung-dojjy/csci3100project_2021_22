@@ -60,7 +60,7 @@ window.onresize = function () {
 
 
 function onResults(results) {
-
+  // reset image previously drew on canvas, and draw new image instead
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
@@ -93,7 +93,7 @@ function onResults(results) {
             console.log('ok');
             wall_passed = true;
             update_wall();
-            score += 1;
+            
             update_score();
           }
           else{
@@ -243,6 +243,7 @@ function update_timer(){
 }
 
 function update_score(){
+  score += 1;
   console.log("Score:"+score);
   document.getElementById('score').innerHTML = 'Score: ' + score;
 }
