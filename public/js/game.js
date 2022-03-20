@@ -1,8 +1,9 @@
+import * as timer from '/static/js/timer.js';
+
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 const hand_too_far_warning = document.getElementsByClassName('hand_too_far_warning')[0];
-const timer = document.getElementById('timer');
 
 const wallElement = document.createElement('canvas');
 wallElement.style.display = 'none';
@@ -14,11 +15,8 @@ const time_allowed = 15;
 
 const wall_order = random_array(4);
 // game variables
-let timer_link;
 let is_game_end = false;
 let score = 0;
-let time = time_allowed;
-let timer_started = false;
 let wall_passed = false;
 let curr_wall_id = 0;
 
@@ -38,8 +36,8 @@ window.onload = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  update_timer();
-  start_timer();
+  timer.initialize_timer(time_allowed, 'timer');
+  timer.start_timer();
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
@@ -104,18 +102,19 @@ function onResults(results) {
           hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
         }
       } 
-      /*if( !timer_started){
-        start_timer();
+      /*if( !timer.check_start_timer()){
+        timer.start_timer();
       }*/
     }
     else{
       hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
-      /*if( timer_started){
-        stop_timer();
+      /*if( timer.check_start_timer()){
+        timer.stop_timer();
       }*/
     }
   }
   
+  is_game_end = timer.check_game_ended();
   canvasCtx.restore();
   wallCtx.restore();
 }
@@ -211,36 +210,6 @@ function random_array(num){
   return tmp_arr;
 }
 
-function start_timer(){
-  update_timer();
-  if(time >= 0){
-    timer_link = setInterval(count_down ,1000);
-    timer_started = true;
-  }
-}
-
-function stop_timer(){
-  clearInterval(timer_link);
-  timer_started = false;
-}
-
-function count_down() {
-  update_timer();
-  console.log("Timer:"+time);
-  if(time == 0){
-    console.log("end");
-    clearInterval(timer_link);
-    timer_started = false;
-    is_game_end = true;
-  }else{
-    if(timer_started)
-      time = time - 1;
-  }
-}
-
-function update_timer(){
-  timer.innerHTML = 'Time remain: ' + time +'s';
-}
 
 function update_score(){
   score += 1;
