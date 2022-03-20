@@ -1,5 +1,5 @@
 
-const wallElement = document.createElement('canvas');
+export const wallElement = document.createElement('canvas');
 wallElement.style.display = 'none';
 // image size is fixed
 wallElement.width = 1280;
@@ -10,6 +10,8 @@ export const wall_order = random_array(4);
 
 export const wall = new Image();
 console.log(wall_order)
+
+let curr_wall_id = 0;
 wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
 
 function random_array(num){
@@ -31,7 +33,7 @@ export function update_wall(){
     console.log(curr_wall_id);
     curr_wall_id += 1;
     wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
-    wall_passed = false;
+    // wall_passed = false;
 }
 
 function checkTransparent(x,y){
