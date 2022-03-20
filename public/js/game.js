@@ -1,28 +1,19 @@
 import * as timer from '/static/js/timer.js';
+import * as wall from '/static/js/wall.js';
 
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 const hand_too_far_warning = document.getElementsByClassName('hand_too_far_warning')[0];
 
-const wallElement = document.createElement('canvas');
-wallElement.style.display = 'none';
-// image size is fixed
-wallElement.width = 1280;
-wallElement.height = 720;
-const wallCtx = wallElement.getContext('2d');
+
 const time_allowed = 15;
 
-const wall_order = random_array(4);
 // game variables
 let is_game_end = false;
 let score = 0;
 let wall_passed = false;
 let curr_wall_id = 0;
-
-const wall = new Image();
-console.log(wall_order)
-wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
 
 // adjust canvas size
 window.onload = function () {
@@ -63,14 +54,16 @@ function onResults(results) {
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
 
-  wallCtx.save();
-  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
+  wall.wallCtx.save();
+  wall.wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
   
-  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
-  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height,           // source rectangle
-    0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
+  wall.wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
+  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height, 0, 0, canvasElement.width, canvasElement.height); 
+                            // source rectangle             // destination rectangle);
+
+
   // draw hand skeleton
   if (results.multiHandLandmarks) {
     // results.multiHandLandmarks is a array of hand landmarks positions of detected hand
@@ -84,13 +77,13 @@ function onResults(results) {
     
     if (results.multiHandLandmarks.length > 0){
       for( const landmarks of results.multiHandLandmarks){
-        if (checkDepth(landmarks)){
+        if (wall.checkDepth(landmarks)){
           // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
           hand_too_far_warning.innerHTML = `<p></p>`;
-          if (is_bounded(landmarks)){
+          if (wall.is_bounded(landmarks)){
             console.log('ok');
             wall_passed = true;
-            update_wall();
+            wall.update_wall();
             
             update_score();
           }
@@ -116,7 +109,7 @@ function onResults(results) {
   
   is_game_end = timer.check_game_ended();
   canvasCtx.restore();
-  wallCtx.restore();
+  wall.wallCtx.restore();
 }
 
 const hands = new Hands({
@@ -140,76 +133,6 @@ const camera = new Camera(videoElement, {
   height: 720
 });
 camera.start();
-
-
-function checkTransparent(x,y){
-  // the image must be 1280*720
-  var pixel_x = Math.floor(x*1280);
-  var pixel_y = Math.floor(y*720);
-  
-  var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
-  
-  // console.log(pixel_x, pixel_y, pixelData);
-  // console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
-  // if alpha value not 255 (transparent)
-  if (pixelData[3] != 255){
-    // console.log(pixelData);
-    return true;
-  }else{
-    return false;
-  }
-  
-}
-
-function checkDepth(landmarks){
-  // var d_p0p9 = ManhattanDistance(landmarks[0], landmarks[9]);
-  // var d_p5p17 = ManhattanDistance(landmarks[5], landmarks[17]);
-  // return (d_p0p9 > 0.25 || d_p5p17 > 0.15);
-  var d_p0p9 = EuclideanDistance(landmarks[0], landmarks[9]);
-  var d_p5p17 = EuclideanDistance(landmarks[5], landmarks[17]);
-  // console.log(d_p0p9, d_p5p17);
-  return (d_p0p9 > 0.3 || d_p5p17 > 0.2);
-}
-
-
-function EuclideanDistance(landmark_1, landmark_2) {
-  return Math.sqrt(Math.pow((landmark_1.x - landmark_2.x)*16/9, 2) + Math.pow((landmark_1.y - landmark_2.y), 2) + Math.pow((landmark_1.z - landmark_2.z), 2));
-}
-
-function is_bounded(landmarks){
-  // this function returns true is all hand landmarks are in bound
-  for (const landmark of landmarks) {
-    // return false if any of the landmarks are not in bound (i.e. it's pixel is not transparent)
-    if( !checkTransparent(landmark.x, landmark.y) ){
-      return false;
-    }
-    // console.log(landmarks);
-  }
-  return true; // all hand landmarks are bound
-}
-
-function update_wall(){
-  console.log(curr_wall_id);
-  curr_wall_id += 1;
-  wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
-  wall_passed = false;
-}
-
-function random_array(num){
-  let tmp_arr = new Array(num);
-
-  // only rendered once on load
-  for (let i = 0; i < tmp_arr.length; i++){
-    tmp_arr[i] = i;
-  }
-  // from https://shubo.io/javascript-random-shuffle/
-  for (let i = tmp_arr.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [tmp_arr[i], tmp_arr[j]] = [tmp_arr[j], tmp_arr[i]];
-  }
-  return tmp_arr;
-}
-
 
 function update_score(){
   score += 1;
