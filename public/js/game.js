@@ -1,5 +1,7 @@
-import * as timer from '/static/js/timer.js';
-import * as Wall from '/static/js/wall.js';
+<script type="module">
+  import * as timer from 'static/js/timer.js';
+  import * as Wall from 'static/js/wall.js';
+</script>
 
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
@@ -16,10 +18,10 @@ let score = 0;
 
 // adjust canvas size
 window.onload = function () {
-  if (window.innerWidth > window.innerHeight *16/9) {
+  if (window.innerWidth > window.innerHeight * 16 / 9) {
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
-    canvasElement.width = min_height * 16/9;
+    canvasElement.width = min_height * 16 / 9;
   }
   else {
     var min_width = Math.min(window.innerWidth, 1280);
@@ -32,10 +34,10 @@ window.onload = function () {
 }
 // adjust canvas size on resizing the window
 window.onresize = function () {
-  if (window.innerWidth > window.innerHeight*16/9) {
+  if (window.innerWidth > window.innerHeight * 16 / 9) {
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
-    canvasElement.width = min_height * 16/9;
+    canvasElement.width = min_height * 16 / 9;
   }
   else {
     var min_width = Math.min(window.innerWidth, 1280);
@@ -57,10 +59,10 @@ function onResults(results) {
   Wall.wallCtx.clearRect(0, 0, Wall.wallElement.width, Wall.wallElement.height);
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
-  
+
   Wall.wallCtx.drawImage(Wall.wall, 0, 0, Wall.wall.width, Wall.wall.height);
-  canvasCtx.drawImage(Wall.wall, 0, 0, Wall.wall.width, Wall.wall.height, 0, 0, canvasElement.width, canvasElement.height); 
-                            // source rectangle             // destination rectangle);
+  canvasCtx.drawImage(Wall.wall, 0, 0, Wall.wall.width, Wall.wall.height, 0, 0, canvasElement.width, canvasElement.height);
+  // source rectangle             // destination rectangle);
 
 
   // draw hand skeleton
@@ -72,40 +74,40 @@ function onResults(results) {
         { color: '#00FF00', lineWidth: 5 });
       drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
     }
-    
-    
-    if (results.multiHandLandmarks.length > 0){
-      for( const landmarks of results.multiHandLandmarks){
-        if (Wall.checkDepth(landmarks)){
+
+
+    if (results.multiHandLandmarks.length > 0) {
+      for (const landmarks of results.multiHandLandmarks) {
+        if (Wall.checkDepth(landmarks)) {
           // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
           hand_too_far_warning.innerHTML = `<p></p>`;
-          if (Wall.is_bounded(landmarks)){
+          if (Wall.is_bounded(landmarks)) {
             console.log('ok');
             // wall_passed = true;
             Wall.update_wall();
-            
+
             update_score();
           }
-          else{
+          else {
             console.log('not ok');
           }
         }
-        else{
+        else {
           hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
         }
-      } 
+      }
       /*if( !timer.check_start_timer()){
         timer.start_timer();
       }*/
     }
-    else{
+    else {
       hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
       /*if( timer.check_start_timer()){
         timer.stop_timer();
       }*/
     }
   }
-  
+
   is_game_end = timer.check_game_ended();
   canvasCtx.restore();
   Wall.wallCtx.restore();
@@ -133,8 +135,8 @@ const camera = new Camera(videoElement, {
 });
 camera.start();
 
-function update_score(){
+function update_score() {
   score += 1;
-  console.log("Score:"+score);
+  console.log("Score:" + score);
   document.getElementById('score').innerHTML = 'Score: ' + score;
 }
