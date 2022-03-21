@@ -1,4 +1,3 @@
-import * as timer from '/static/js/timer.js';
 import * as Wall from '/static/js/wall.js';
 
 const videoElement = document.getElementsByClassName('input_video')[0];
@@ -26,8 +25,8 @@ window.onload = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  timer.initialize_timer(time_allowed, 'timer');
-  timer.start_timer();
+  initialize_timer(time_allowed, 'timer');
+  start_timer();
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
@@ -94,19 +93,19 @@ function onResults(results) {
           hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
         }
       } 
-      /*if( !timer.check_start_timer()){
-        timer.start_timer();
+      /*if( !check_start_timer()){
+        start_timer();
       }*/
     }
     else{
       hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
-      /*if( timer.check_start_timer()){
-        timer.stop_timer();
+      /*if( check_start_timer()){
+        stop_timer();
       }*/
     }
   }
   
-  is_game_end = timer.check_game_ended();
+  is_game_end = check_game_ended();
   canvasCtx.restore();
   Wall.wallCtx.restore();
 }
