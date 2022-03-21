@@ -1,5 +1,5 @@
 /* import * as timer from 'static/js/timer.js';
-import * as Wall from 'static/js/wall.js'; */
+import * as Wall from 'static/js/ js'; */
 
 
 const videoElement = document.getElementsByClassName('input_video')[0];
@@ -27,8 +27,8 @@ window.onload = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
-  timer.initialize_timer(time_allowed, 'timer');
-  timer.start_timer();
+  initialize_timer(time_allowed, 'timer');
+  start_timer();
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
@@ -54,13 +54,13 @@ function onResults(results) {
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
 
-  Wall.wallCtx.save();
-  Wall.wallCtx.clearRect(0, 0, Wall.wallElement.width, Wall.wallElement.height);
+  wallCtx.save();
+  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
 
-  Wall.wallCtx.drawImage(Wall.wall, 0, 0, Wall.wall.width, Wall.wall.height);
-  canvasCtx.drawImage(Wall.wall, 0, 0, Wall.wall.width, Wall.wall.height, 0, 0, canvasElement.width, canvasElement.height);
+  wallCtx.drawImage(wall, 0, 0, width, height);
+  canvasCtx.drawImage(wall, 0, 0, width, height, 0, 0, canvasElement.width, canvasElement.height);
   // source rectangle             // destination rectangle);
 
 
@@ -77,13 +77,13 @@ function onResults(results) {
 
     if (results.multiHandLandmarks.length > 0) {
       for (const landmarks of results.multiHandLandmarks) {
-        if (Wall.checkDepth(landmarks)) {
+        if (checkDepth(landmarks)) {
           // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
           hand_too_far_warning.innerHTML = `<p></p>`;
-          if (Wall.is_bounded(landmarks)) {
+          if (is_bounded(landmarks)) {
             console.log('ok');
             // wall_passed = true;
-            Wall.update_wall();
+            update_wall();
 
             update_score();
           }
@@ -109,7 +109,7 @@ function onResults(results) {
 
   is_game_end = timer.check_game_ended();
   canvasCtx.restore();
-  Wall.wallCtx.restore();
+  wallCtx.restore();
 }
 
 const hands = new Hands({
