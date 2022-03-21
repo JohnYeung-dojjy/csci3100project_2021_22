@@ -1,7 +1,6 @@
-<script type="module">
-  import * as timer from 'static/js/timer.js';
-  import * as Wall from 'static/js/wall.js';
-</script>
+import * as timer from 'static/js/timer.js';
+import * as Wall from 'static/js/wall.js';
+
 
 const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
