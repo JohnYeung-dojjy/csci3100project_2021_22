@@ -1,5 +1,5 @@
-import * as timer from 'static/js/timer.js';
-import * as Wall from 'static/js/wall.js';
+import * as timer from './timer';
+import * as Wall from './wall';
 
 
 const videoElement = document.getElementsByClassName('input_video')[0];
