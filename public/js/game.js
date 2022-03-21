@@ -59,8 +59,8 @@ function onResults(results) {
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
 
-  wallCtx.drawImage(wall, 0, 0, width, height);
-  canvasCtx.drawImage(wall, 0, 0, width, height, 0, 0, canvasElement.width, canvasElement.height);
+  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
+  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height, 0, 0, canvasElement.width, canvasElement.height);
   // source rectangle             // destination rectangle);
 
 
