@@ -10,7 +10,7 @@ const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
-module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore, changePassword };
+module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore, changePassword, displayLeaderboard, displayAllUser };
 
 
 //display functions,for now, we may not need this
@@ -58,7 +58,7 @@ async function displayUsername(obj) {
 
 async function displayBestScore(obj) {
     try {
-        const bestScore = await Leaderboard.find({ _id: obj._id }).select("score").sort({"score":1}).limit(1);
+        const bestScore = await Leaderboard.find({ _id: obj._id }).select("score").sort({ "score": 1 }).limit(1);
         console.log(bestScore);
         return bestScore;
     } catch (err) {
@@ -118,15 +118,48 @@ async function changeEmail(obj, oldEmail, newEmail) {
 
 
 
-//Leaderboard functions
-
-async function displayLeaderboard(obj){
+//modified!!!!
+async function displayLeaderboard() {
     try {
-        const lb = await Leaderboard.find().sort({"score":1}).limit(10);
-        console.log(lb);
-        return lb;
-    } catch (err) {
+        let query = Leaderboard.find().sort({ "score": 1 }).limit(10).lean().exec();
+        //lean() can only be used in findone() and find(), it has no use with save();
+        let content = query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
         console.log(err.message);
+        return -1;
+    }
+}
+
+async function displayAllUser() {
+    try {
+        let query = User.find().lean().exec();
+        //lean() can only be used in findone() and find(), it has no use with save();
+        let content = query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
+        console.log(err.message);
+        return -1;
     }
 }
 

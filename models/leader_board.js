@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 const express = require("express");
 
 var LeaderBoardSchema = mongoose.Schema({
-    user_id: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
     score: { type: Number, required: true }
 });
 

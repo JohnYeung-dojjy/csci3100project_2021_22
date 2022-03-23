@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const app = express();
 const fs = require('fs');
 const url = require('url');
@@ -8,7 +9,21 @@ const ejs = require('ejs');
 const database = require('./models/testdb');
 const system = require('./models/System_functions');
 const mail = require('./models/mail');
+const check = require('./models/cookiecheck');
+const user = require('./models/User_functions');
+
 /* const { getMaxListeners } = require('process'); */
+//cookie,session format setting
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: false,
+    resave: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 30 * 1000
+    }
+}));
+
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
@@ -34,8 +49,10 @@ app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/pages/home/home.html');
 });
 
-app.get('/', (req, res) => {
+app.get('/', check.noneedlogin, (req, res, next) => {
     res.sendFile(__dirname + '/pages/login/login.html');
+    console.log(req.session);
+    console.log(req.sessionID);
 })
 
 app.get('/game', (req, res) => {
@@ -51,8 +68,13 @@ app.get('/game', (req, res) => {
 
 }) */
 
-app.get('/admin', (req, res) => {
-    res.sendFile(__dirname + '/pages/admin/admin.html');
+app.get('/admin', check.needlogin, async (req, res) => {
+    let leaderboard = await user.displayLeaderboard();
+    let allUsernameAndID = await user.displayAllUser();
+    res.render('admin.ejs', {
+        thisleaderboard: leaderboard,
+        thisallUsernameAndID: allUsernameAndID
+    })
 })
 
 app.post('/loginverify', async (req, res) => {
@@ -70,6 +92,7 @@ app.post('/loginverify', async (req, res) => {
                username: content._id.toString(),
                email:content.email.toString(),
             }) */
+            check.cookiewrite(req, res, content);
             res.redirect('/admin');
         }
     });
