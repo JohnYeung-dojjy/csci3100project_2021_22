@@ -49,6 +49,10 @@ app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/pages/home/home.html');
 });
 
+app.get('/user', (req, res) => {
+    res.sendFile(__dirname + '/pages/user/user.html');
+});
+
 app.get('/', check.noneedlogin, (req, res, next) => {
     res.sendFile(__dirname + '/pages/login/login.html');
     console.log(req.session);
