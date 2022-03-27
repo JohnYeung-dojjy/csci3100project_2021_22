@@ -20,23 +20,23 @@ async function displayAllUsers() {
     }
 }
 
-async function deleteUserAcc(username){
+async function deleteUserAcc(username) {
     try {
         //Add Not Null, else User not found. 
-        const record = await User.find({username: username}).deleteOne();
+        const record = await User.find({ username: username }).deleteOne();
         console.log(username + "has been deleted.");
     } catch (err) {
-        console.log(err.message); 
+        console.log(err.message);
     }
 }
 
-async function deleteUserRecord(obj){
+async function deleteUserRecord(obj) {
     try {
         //Add Not Null, else User not found. 
-        const record = await Leaderboard.find({user_id: obj._id}).deleteMany();
+        const record = await Leaderboard.find({ user_id: obj._id }).deleteMany();
         console.log("Records have been deleted.");
     } catch (err) {
-        console.log(err.message); 
+        console.log(err.message);
     }
 }
 

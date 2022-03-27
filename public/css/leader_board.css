@@ -1,0 +1,66 @@
+#lboard {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    min-width: 200px;
+    margin: 10px;
+    border-radius: 1rem;
+    box-shadow: 2px 2px 16px 1px #aaa;
+}
+
+#lboard header {
+    background-color: #daa520;
+    color: white;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    height: 5rem;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#lboard table {
+    background-color: #16181e;
+    color: #999;
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+}
+
+.name {
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.rank {
+    text-align: right;
+    width: 4ch;
+    padding-left: 1rem;
+}
+
+tbody tr:nth-child(2n) {
+    background-color: #1f232c;
+}
+
+tbody tr:nth-child(1) .rank {
+    color: gold;
+}
+
+tbody tr:nth-child(2) .rank {
+    color: lightgray;
+}
+
+tbody tr:nth-child(3) .rank {
+    color: #CD7F32;
+}
+
+td {
+    padding: 1rem 1rem;
+}

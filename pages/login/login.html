@@ -191,9 +191,8 @@
 
     .rules {
         display: flex;
-        justify-content: center;
-        /*all elements align in the x-center */
-        align-items: center;
+        /* justify-content: center; */
+        /*  align-items: center; */
         flex-direction: column;
         position: absolute;
         width: 20%;
@@ -209,14 +208,15 @@
         /* seem relative is not important */
         transition: 1s;
         /*the action for switch takes 1s in total */
-        border-radius: 40px;
+        border-radius: 5px;
         /* the box will be a little bit round-shape */
-        overflow-x: hidden;
+        /* overflow-x: hidden; */
         transition-property: all;
         transition-duration: .5s;
         transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
         visibility: hidden;
-        overflow-y: hidden;
+        overflow-y: scroll;
+        text-align: center;
     }
 
     .closed {
@@ -239,10 +239,6 @@
     .goodfont {
         font-size: Xx-large;
         font-family: 'Tangerine', serif;
-        background: linear-gradient(to right, RED, black);
-        background-clip: text;
-        -webkit-background-clip: text;
-        color: transparent;
         letter-spacing: 1px;
         font-weight: bolder;
     }
@@ -363,7 +359,6 @@
     let rules = document.querySelector('.rules');
     let topdiv = document.querySelector('.top');
     let triangle = document.querySelectorAll('.triangle');
-
     function showrules() {
 
         rules.classList.toggle('closed');
@@ -426,68 +421,54 @@
      */
     document.querySelector(".signUp>button").onclick = function regverify() {
         let data = document.querySelectorAll(".signUp input");
-        let empty = 0;
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].value !== "" && data[i].value !== null) {
-                switch (i) {
-                    case 1:
-                        if (passwordre.test(data[i].value) === false) {
-                            data[i].value = "";
-                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";;
-                            document.querySelector(".shell").style.display = "none";
-                            Swal.fire({
-                                template: '#invalidpassword',
-                                preConfirm: (event) => {
-                                    document.querySelector(".shell").style.display = "";
-                                }
-                            });
-                            return;
-                        }
-                        else {
-                            data[i].style = "";
-                        }
-                    case 2:
-                        if (data[2].value !== data[1].value) {
-                            data[i].value = "";
-                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
-                            document.querySelector(".shell").style.display = "none";
-                            Swal.fire({
-                                template: '#differentpassword',
-                                preConfirm: (event) => {
-                                    document.querySelector(".shell").style.display = "";
-                                }
-                            });
-                            return;
-                        }
-                        else {
-                            data[i].style = "";
-                        }
-                    case 3:
-                        if (emailre.test[data[i].value] === false) {
-                            data[i].value = "";
-                            data[i].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
-                            document.querySelector(".shell").style.display = "none";
-                            Swal.fire({
-                                template: '#invalidemail',
-                                preConfirm: (event) => {
-                                    document.querySelector(".shell").style.display = "";
-                                }
-                            });
-                            return;
-                        }
-                        else {
-                            data[i].style = "";
-                        }
-                    default:
-                }
-            }
-            else {
-                empty++;
-                data[i].placeholder = "Can't be empty!"
-            }
+        if (data[0].value === "" || data[0].value === null) {
+            data[0].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+            data[0].placeholder = "Can't be empty!!!"
         }
-        if (empty > 0) {
+        if (passwordre.test(data[1].value) === false) {
+            data[1].value = "";
+            data[1].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+            document.querySelector(".shell").style.display = "none";
+            Swal.fire({
+                template: '#invalidpassword',
+                preConfirm: (event) => {
+                    document.querySelector(".shell").style.display = "";
+                }
+            });
             return;
+        }
+        else {
+            data[1].style = "";
+        }
+        if (data[2].value !== data[1].value) {
+            data[2].value = "";
+            data[2].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+            document.querySelector(".shell").style.display = "none";
+            Swal.fire({
+                template: '#differentpassword',
+                preConfirm: (event) => {
+                    document.querySelector(".shell").style.display = "";
+                }
+            });
+            return;
+        }
+        else {
+            data[2].style = "";
+        }
+        if (emailre.test(data[3].value) === false) {
+            data[3].value = "";
+            data[3].style = "box-shadow: inset 0 3px 5px rgba(255, 0, 0, 0.5), 0 4px 0px rgba(255, 0, 0, 0.45)";
+            document.querySelector(".shell").style.display = "none";
+            Swal.fire({
+                template: '#invalidemail',
+                preConfirm: (event) => {
+                    document.querySelector(".shell").style.display = "";
+                }
+            });
+            return;
+        }
+        else {
+            data[3].style = "";
         }
         //console.log(data[0].value, data[1].value);
         let username = data[0].value;
@@ -557,7 +538,7 @@
 
     window.onload = function () {
         rules.style.top = topdiv.clientHeight * 1.2 + 'px';
-        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 2 + 'px';
+        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 1.985 + 'px';
         for (let i = 0; i < 3; i++) {
             triangle[i].style.left = signUp.clientWidth * 0.82 + i * 12 + 'px';
         }
@@ -569,10 +550,13 @@
         }
     }
     window.onresize = function () {
+
         rules.style.top = topdiv.clientHeight * 1.2 + 'px';
-        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 2 + 'px';
+        rules.style.left = document.documentElement.clientWidth * 0.5 + signUp.clientWidth / 1.985 + 'px';
         for (let i = 0; i < 3; i++) {
-            triangle[i].style.left = signUp.clientWidth * 0.82 + i * 12 + 'px';
+            triangle[i].style.left = signUp.clientWidth * 0.82 + i * 10 + 'px';
+            triangle[i].style.height = document.documentElement.clientWidth / 90 + 'px';
+            triangle[i].style.width = document.documentElement.clientWidth / 90 + 'px';
         }
         if ((signUp.clientHeight) / 17 < (signUp.clientWidth) / 10) {
             rules.style.fontSize = (signUp.clientHeight) / 17 + 'px';

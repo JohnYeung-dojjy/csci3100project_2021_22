@@ -2,10 +2,14 @@
   "name": "csci3100project_2021_22",
   "version": "1.0.0",
   "description": "packages for csci3100 project",
-  "main": "index.js",
+  "main": "app.js",
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "ejs": "^3.1.6",
+    "expres": "0.0.5",
     "express": "^4.17.3",
     "express-generator": "^4.16.1",
     "express-session": "^1.17.2",
@@ -19,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JohnYeung-dojjy/csci3100project_2021_22.git"
+    "url": "git+https://github.com/littlebrian123/csci3100projectdeployment.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JohnYeung-dojjy/csci3100project_2021_22/issues"
+    "url": "https://github.com/littlebrian123/csci3100projectdeployment/issues"
   },
-  "homepage": "https://github.com/JohnYeung-dojjy/csci3100project_2021_22#readme"
+  "homepage": "https://github.com/littlebrian123/csci3100projectdeployment#readme"
 }

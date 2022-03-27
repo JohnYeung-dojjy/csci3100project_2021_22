@@ -20,7 +20,7 @@ app.use(session({
     resave: true,
     cookie: {
         httpOnly: true,
-        maxAge: 3600 * 1000
+        maxAge: 30 * 1000
     }
 }));
 
@@ -29,7 +29,7 @@ app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '\\views');
+app.set('views', __dirname + '/views');
 
 /* 
 try to understand the concept in this way:
@@ -47,6 +47,10 @@ So,all files can be seen by the user should be under the public
 
 app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/pages/home/home.html');
+});
+
+app.get('/user', (req, res) => {
+    res.sendFile(__dirname + '/pages/user/user.html');
 });
 
 app.get('/', check.noneedlogin, (req, res, next) => {
@@ -127,3 +131,4 @@ app.post('/regverify', (req, res) => {
 })
 
 const server = app.listen(3000);
+module.exports = app;
