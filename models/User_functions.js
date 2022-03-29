@@ -10,7 +10,7 @@ const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
-module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore, changePassword, displayLeaderboard, displayAllUser };
+module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore, changePassword };
 
 
 //display functions,for now, we may not need this
@@ -118,50 +118,9 @@ async function changeEmail(obj, oldEmail, newEmail) {
 
 
 
-//modified!!!!
-async function displayLeaderboard() {
-    try {
-        let query = Leaderboard.find().sort({ "score": 1 }).limit(10).lean().exec();
-        //lean() can only be used in findone() and find(), it has no use with save();
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-        return content;
-    }
-    catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-}
 
-async function displayAllUser() {
-    try {
-        let query = User.find().lean().exec();
-        //lean() can only be used in findone() and find(), it has no use with save();
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-        return content;
-    }
-    catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-}
+
+
 
 async function updateLeaderboard(_id, score) {
     try {

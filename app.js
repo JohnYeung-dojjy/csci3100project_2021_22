@@ -11,6 +11,7 @@ const system = require('./models/System_functions');
 const mail = require('./models/mail');
 const check = require('./models/cookiecheck');
 const user = require('./models/User_functions');
+const admin = require('./models/Admin_functions');
 
 /* const { getMaxListeners } = require('process'); */
 //cookie,session format setting
@@ -20,7 +21,7 @@ app.use(session({
     resave: true,
     cookie: {
         httpOnly: true,
-        maxAge: 30 * 1000
+        maxAge: 3000 * 1000
     }
 }));
 
@@ -73,8 +74,8 @@ app.get('/game', (req, res) => {
 }) */
 
 app.get('/admin', check.needlogin, async (req, res) => {
-    let leaderboard = await user.displayLeaderboard();
-    let allUsernameAndID = await user.displayAllUser();
+    let leaderboard = await admin.displayLeaderboard();
+    let allUsernameAndID = await admin.displayAllUser();
     res.render('admin.ejs', {
         thisleaderboard: leaderboard,
         thisallUsernameAndID: allUsernameAndID
@@ -125,6 +126,57 @@ app.post('/regverify', (req, res) => {
                 res.send({ code: content });
             }
 
+        })
+    })
+
+})
+
+app.post('/adminresetpassword', (req, res) => {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        await admin.resetPassword(obj).then((content) => {
+            if (typeof content !== "number") {
+                console.log(content);
+                res.send({ code: content.username });//automatically change to json
+            }
+            else {
+                res.send({ code: content });
+            }
+
+        })
+    })
+
+})
+
+
+app.post('/admindeleteaccount', (req, res) => {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        await admin.deleteUseraccount(obj).then((content) => {
+            res.send({ code: content });//automatically change to json
+        })
+    })
+
+})
+
+
+app.post('/admindeletegameplay', (req, res) => {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        await admin.deleteGameplay(obj).then((content) => {
+            res.send({ code: content });//automatically change to json
         })
     })
 
