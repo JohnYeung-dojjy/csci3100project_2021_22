@@ -114,3 +114,24 @@ async function forgetPassword(obj) {
     }
 }
 
+async function forgetUsername(obj) {
+    try {
+        let query = User.findOne({ user_email: obj.user_email }).lean().exec();
+        let content = query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
+
