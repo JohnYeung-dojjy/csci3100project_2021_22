@@ -1,6 +1,6 @@
 const videoElement = document.getElementsByClassName('input_video')[0];
-const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
+
 const hand_too_far_warning = document.getElementsByClassName('hand_too_far_warning')[0];
 const lboardElement = document.getElementById("lboard");
 
@@ -12,7 +12,11 @@ let score = 0;
 
 // adjust canvas size
 window.onload = function () {
-  if (window.innerWidth > window.innerHeight * 16 / 9) {
+  if (displayElement.offsetHeight < 720){
+    canvasElement.height = displayElement.offsetHeight;
+    canvasElement.width = displayElement.offsetHeight * 16 / 9;
+  }
+  else if (window.innerWidth > window.innerHeight * 16 / 9) {
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16 / 9;
@@ -22,12 +26,18 @@ window.onload = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
+
+  
   initialize_timer(time_allowed, 'timer');
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
 window.onresize = function () {
-  if (window.innerWidth > window.innerHeight * 16 / 9) {
+  if (displayElement.offsetHeight < 720){
+    canvasElement.height = displayElement.offsetHeight;
+    canvasElement.width = displayElement.offsetHeight * 16 / 9;
+  }
+  else if (window.innerWidth > window.innerHeight * 16 / 9) {
     var min_height = Math.min(window.innerHeight, 720);
     canvasElement.height = min_height;
     canvasElement.width = min_height * 16 / 9;
@@ -37,6 +47,7 @@ window.onresize = function () {
     canvasElement.width = min_width;
     canvasElement.height = min_width * 9 / 16;
   }
+  
 }
 
 

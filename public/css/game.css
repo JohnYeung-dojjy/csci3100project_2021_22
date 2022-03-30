@@ -1,6 +1,29 @@
+.score_and_time {
+    position: relative;
+    margin: auto;
+    /*top: 20px;*/
+    justify-content: center;
+    text-align: center;
+    align-items: end;
+    font-size: 24;
+    height: 10%;
+}
 
 .camera{
     display: none;
+    height: 100%;
+
+}
+
+.display {
+    position: relative;
+    /*height: 70vh;*/
+    /* 100%high */
+    height: 70%;
+    /*display: flex;*/
+    justify-content: center;
+    /*all elements align in the x-center */
+    align-items: center;
 }
 
 .input_video {
@@ -20,34 +43,23 @@
     right: 0;
     bottom: 0; */
     /*position: absolute;*/
-    top: 40px;
+    /*top: 40px;*/
     height: auto;
     transform: scale(-1, 1);
     /*margin: auto;*/
 }
 
-.display {
-    position: relative;
-    height: 70vh;
-    /* 100%high */
-    display: flex;
-    justify-content: center;
-    /*all elements align in the x-center */
-    align-items: center;
-}
+
 
 .hand_too_far_warning {
     position: relative;
     justify-content: center;
+    text-align: center;
     align-items: center;
     font-size: 24;
+    height: 15%;
 }
 
-.score_and_time {
-    position: relative;
-    margin: auto;
-    top: 20px;
-    justify-content: center;
-    align-items: end;
-    font-size: 24;
-}
+
+
+

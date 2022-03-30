@@ -168,7 +168,7 @@ async function changeEmail(obj, oldEmail, newEmail) {
         } else {
             const check = await User.find({user_email: newEmail})
             let content = check.then(
-                (result) => {
+                async (result) => {
                     if (result === null || result.length === 0) {
                         const query = await User.find({ _id: obj._id }).where("user_email").equals(oldEmail);
                         console.log(query);
