@@ -1,3 +1,8 @@
+
+.camera{
+    display: none;
+}
+
 .input_video {
     display: none;
     /* position: absolute;
@@ -14,15 +19,16 @@
     left: 0;
     right: 0;
     bottom: 0; */
-    position: absolute;
+    /*position: absolute;*/
     top: 40px;
     height: auto;
     transform: scale(-1, 1);
-    /* margin: auto; */
+    /*margin: auto;*/
 }
 
 .display {
-    height: 100vh;
+    position: relative;
+    height: 70vh;
     /* 100%high */
     display: flex;
     justify-content: center;
@@ -39,6 +45,7 @@
 
 .score_and_time {
     position: relative;
+    margin: auto;
     top: 20px;
     justify-content: center;
     align-items: end;
