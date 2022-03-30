@@ -124,7 +124,7 @@ async function changePassword(obj, oldPassword, newPassword) {
                 }
             }
         )
-        
+
     } catch (err) {
         console.log(err.message);
         return -1;
@@ -166,9 +166,9 @@ async function changeEmail(obj, oldEmail, newEmail) {
             console.log("New Email has to be different.");
             //add a check if email already exits?
         } else {
-            const check = await User.find({user_email: newEmail})
+            const check = await User.find({ user_email: newEmail })
             let content = check.then(
-                (result) => {
+                async (result) => {
                     if (result === null || result.length === 0) {
                         const query = await User.find({ _id: obj._id }).where("user_email").equals(oldEmail);
                         console.log(query);
@@ -178,9 +178,9 @@ async function changeEmail(obj, oldEmail, newEmail) {
                                     return 11100;
                                 }
                                 else {
-                                    result.updateOne({ user_email: newEmail});
+                                    result.updateOne({ user_email: newEmail });
                                     return result;
-                
+
                                 }
                             }
                         )
@@ -188,7 +188,7 @@ async function changeEmail(obj, oldEmail, newEmail) {
                     else {
                         console.log("Email is already registered.");
                         return 11100;
-    
+
                     }
                 }
             )

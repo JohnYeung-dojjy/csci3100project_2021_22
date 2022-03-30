@@ -92,12 +92,24 @@
         </div>
 
 
-        <div id="deleteUserAccpunt" style="display: none;">
-            <h1>Delete user's account</h1>
+        <div id="deleteGameplay" style="display: none;">
+            <h1>Delete user's gameplay</h1>
             <form>
                 <div class="form-group row">
                     <label for="inputUsername1" class="col-sm-2 col-form-label">Username :</label>
                     <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername1">
+                    </div>
+                    <div class="col-sm-3"><button type="button" onclick="deleteGameplayRecord()">Submit</button></div>
+                </div>
+            </form>
+        </div>
+
+        <div id="deleteUserAccpunt" style="display: none;">
+            <h1>Delete user's account</h1>
+            <form>
+                <div class="form-group row">
+                    <label for="inputUsername2" class="col-sm-2 col-form-label">Username :</label>
+                    <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername2">
                     </div>
                     <div class="col-sm-3"><button type="button" onclick="deleteUserAccpunt()">Submit</button></div>
                 </div>
@@ -105,17 +117,7 @@
         </div>
 
 
-        <div id="deleteGameplay" style="display: none;">
-            <h1>Delete user's gameplay</h1>
-            <form>
-                <div class="form-group row">
-                    <label for="inputUsername2" class="col-sm-2 col-form-label">Username :</label>
-                    <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername2">
-                    </div>
-                    <div class="col-sm-3"><button type="button" onclick="deleteGameplayRecord()">Submit</button></div>
-                </div>
-            </form>
-        </div>
+
 </body>
 
 <script>
@@ -190,17 +192,17 @@
     }
 
     function deleteGameplayRecord() {
-        let input = document.querySelector("#inputUsername").value;
+        let input = document.querySelector("#inputUsername1").value;
         if (input == '') {
-            document.querySelector("#inputUsername").classList.add("is-invalid");
+            document.querySelector("#inputUsername1").classList.add("is-invalid");
             return;
         }
-        document.querySelector("#inputUsername").classList.remove("is-invalid");
+        document.querySelector("#inputUsername1").classList.remove("is-invalid");
         let text = "Delete gameplay of user named " + input + " ?";
         if (confirm(text) == false) {
             return;
         }
-        let request = new Request('/admindeleteaccount', {
+        let request = new Request('/admindeletegameplay', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8;'
@@ -219,7 +221,7 @@
             return response.json();
         }).then((response) => {
             if (typeof response.code === "number") {
-                alert('the username is wrong');
+                alert('the username is wrong or the user has no game record');
                 document.querySelector("form").reset();
                 return response.code;
             }
@@ -252,7 +254,7 @@
             return;
         }
 
-        let request = new Request('/admindeletegameplay', {
+        let request = new Request('/admindeleteaccount', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8;'
