@@ -1,0 +1,48 @@
+.rule{
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    background-color: #1f232c;
+    display: inline-block;
+    top: 40px;
+    height: auto;
+    justify-content: center;
+    /*all elements align in the x-center */
+    align-items: center;
+}
+.button_container{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.rule table{
+    background-color: #16181e;
+    color: #999;
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+}
+
+.rule header{
+    background-color: #daa520;
+    color: white;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    height: 5rem;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+    font-size: x-large;
+    font-weight: bold;
+}
+.play_button {
+    width: auto;
+    height: 40%;
+    background-color: rgb(255, 235, 167);
+    border-radius: 20px;
+    position: relative;
+}

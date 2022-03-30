@@ -1,6 +1,5 @@
 /* This file contains all the database function for admins
-
-! not yet completed, functions need to be modified to check input data and handle wrong input
+completed!!!
 */
 
 var mongoose = require("mongoose");
@@ -10,33 +9,151 @@ const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
-async function displayAllUsers() {
+async function displayAllUser() {
     try {
-        const record = await User.find();
-        console.log(record);
-        return record;
-    } catch (err) {
+        let query = User.find().lean().exec();
+        //lean() can only be used in findone() and find(), it has no use with save();
+        let content = query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
         console.log(err.message);
+        return -1;
     }
 }
 
-async function deleteUserAcc(username) {
+//modified!!!!
+async function displayLeaderboard() {
     try {
-        //Add Not Null, else User not found. 
-        const record = await User.find({ username: username }).deleteOne();
-        console.log(username + "has been deleted.");
-    } catch (err) {
+        let query = Leaderboard.find().sort({ "score": 1 }).limit(10).lean().exec();
+        //lean() can only be used in findone() and find(), it has no use with save();
+        let content = query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
         console.log(err.message);
+        return -1;
     }
 }
 
-async function deleteUserRecord(obj) {
+//!!modified
+async function resetPassword(obj) {
     try {
-        //Add Not Null, else User not found. 
-        const record = await Leaderboard.find({ user_id: obj._id }).deleteMany();
-        console.log("Records have been deleted.");
-    } catch (err) {
+        let query = User.findOne({ username: obj.username }).exec();
+        let content = query.then(
+            async (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    result.password = '0000';
+                    await result.save();
+                    return result.toObject();
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
         console.log(err.message);
+        return -1;
     }
 }
 
+/* 
+logic is similar, delete the user record in all collections, if first one is success, then, username input by the
+admin is correct. However, the user may have no record in feedback and leaderboard(no feedback left,no game played)
+*/
+
+async function deleteUseraccount(obj) {
+    try {
+        let query = User.findOne({ username: obj.username }).exec();
+        let content = query.then(
+            async (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    await result.deleteOne();
+                    return "success";
+                }
+            }
+        );
+        if (content === "success") {
+            query = Leaderboard.findOne({ username: obj.username }).exec();
+            content = query.then(
+                async (result) => {
+                    if (result === null || result.length === 0) {
+                        return "success";
+                    }
+                    else {
+                        await result.deleteOne();
+                        return "success";
+                    }
+                }
+            );
+        }
+        if (content === "success") {
+            query = Feedback.find({ username: obj.username }).exec();
+            content = query.then(
+                async (result) => {
+                    if (result === null || result.length === 0) {
+                        return "success";
+                    }
+                    else {
+                        await result.deleteMany();
+                        return "success";
+                    }
+                }
+            );
+        }
+        return content;
+    }
+    catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
+
+
+async function deleteGameplay(obj) {
+    try {
+        let query = Leaderboard.findOne({ username: obj.username }).exec();
+        let content = query.then(
+            async (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    await result.deleteOne();
+                    return "success";
+                }
+            }
+        );
+        return content;
+    }
+    catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
+
+module.exports = { displayAllUser, displayLeaderboard, resetPassword, deleteUseraccount, deleteGameplay };

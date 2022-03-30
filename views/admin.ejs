@@ -40,20 +40,28 @@
         </div>
 
         <div id="leaderboard" style="display: none;">
-            <div class="css_tr">
-                <div class="css_td">&emsp;Username&emsp;</div>
-                <div class="css_td">&emsp;Score&emsp;</div>
-            </div>
-            <% for(let i=0; i<thisleaderboard.length; i++) {%>
-                <div class="css_tr">
-                    <div class="css_td">&emsp;<%= thisleaderboard[i].username %>&emsp;</div>
-                    <div class="css_td">&emsp;<%= thisleaderboard[i].score %>&emsp;</div>
-                </div>
-                <%}%>
+            <table class="table">
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col"> Score</th>
+                </tr>
+                <% for(let i=0; i<thisleaderboard.length; i++) {%>
+                    <tr>
+                        <th scope="col">
+                            <%= thisleaderboard[i].username %>
+                        </th>
+                        <th scope="col">
+                            <%= thisleaderboard[i].score %>
+                        </th>
+                    </tr>
+                    <%}%>
+            </table>
         </div>
 
-        <div>
-            <table id="allUsernameAndID" class="table" style="display: none;">
+
+
+        <div id="allUsernameAndID" style="display: none;">
+            <table class="table">
                 <tr>
                     <th scope="col">Username</th>
                     <th scope="col">User ID</th>
@@ -70,49 +78,70 @@
                     <%}%>
             </table>
         </div>
+
+        <div id="resetUserPassword" style="display: none;">
+            <h1>Reset User Password</h1>
+            <form>
+                <div class="form-group row">
+                    <label for="inputUsername" class="col-sm-2 col-form-label">Username :</label>
+                    <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername">
+                    </div>
+                    <div class="col-sm-3"><button type="button" onclick="resetUserPassword()">Submit</button></div>
+                </div>
+            </form>
+        </div>
+
+
+        <div id="deleteUserAccpunt" style="display: none;">
+            <h1>Delete user's account</h1>
+            <form>
+                <div class="form-group row">
+                    <label for="inputUsername1" class="col-sm-2 col-form-label">Username :</label>
+                    <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername1">
+                    </div>
+                    <div class="col-sm-3"><button type="button" onclick="deleteUserAccpunt()">Submit</button></div>
+                </div>
+            </form>
+        </div>
+
+
+        <div id="deleteGameplay" style="display: none;">
+            <h1>Delete user's gameplay</h1>
+            <form>
+                <div class="form-group row">
+                    <label for="inputUsername2" class="col-sm-2 col-form-label">Username :</label>
+                    <div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername2">
+                    </div>
+                    <div class="col-sm-3"><button type="button" onclick="deleteGameplayRecord()">Submit</button></div>
+                </div>
+            </form>
+        </div>
 </body>
 
 <script>
+    let all = document.querySelectorAll("#body")[0].children;
+    function hide() {
+        for (let i = 0; i < all.length; i++) {
+            if (all[i].tagName === "DIV") {
+                all[i].style.display = "none";
+            }
+        }
+    }
     function displayAllUsernameAndID() {
-        document.getElementById("leaderboard").style.display = "none";
-        document.getElementById("welcome").style.display = "none";
+        hide();
         document.getElementById("allUsernameAndID").style.display = "";
     }
 
-    function insertRowToTable(id, valueOfCell1, valueOfCell2) {
-        var table = document.getElementById(id);
-        var row = table.insertRow(-1);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        cell1.innerHTML = valueOfCell1;
-        cell2.innerHTML = valueOfCell2;
-    }
-
     function displayAllLeaderboard() {
+        hide();
         document.getElementById("leaderboard").style.display = "";
-        document.getElementById("welcome").style.display = "none";
-        document.getElementById("allUsernameAndID").style.display = "none";
     }
 
-    function insertRowToDivTable(id, valueOfCell1, valueOfCell2) {
-        var table = document.getElementById(id);
-        table.innerHTML = table.innerHTML +
-            `   <div class="css_tr">
-                    <div class="css_td">${valueOfCell1}</div>
-                    <div class="css_td">${valueOfCell2}</div>
-                </div>
-            `;
-    }
+
 
     function resetUserPasswordForm() {
-        let newElement = '';
-        newElement = newElement + '<h1>Reset User Password</h1>'
-        newElement = newElement + '<form><div class="form-group row">'
-        newElement = newElement + '<label for="inputUsername"  class="col-sm-2 col-form-label">Username :</label>'
-        newElement = newElement + '<div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername"></div>'
-        newElement = newElement + '<div class="col-sm-3"><button type="button" onclick="resetUserPassword()">Submit</button></div>'
-        newElement = newElement + '</div> </form>'
-        document.querySelector("#body").innerHTML = newElement;
+        hide();
+        document.getElementById("resetUserPassword").style.display = "";
     }
 
     function resetUserPassword() {
@@ -126,21 +155,38 @@
         if (confirm(text) == false) {
             return;
         }
+        let request = new Request('/adminresetpassword', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            },
+            body: JSON.stringify(
+                {
+                    username: input
+                }
+            )
+        });
 
-        //not send request yet
+        fetch(request).then((response) => {
+            if (response.status !== 200) {
+                throw new Error(response.status);
+            }
+            return response.json();
+        }).then((response) => {
+            if (typeof response.code === "number") {
+                alert('the username is wrong');
+            }
+            else {
+                alert('done!')
+            }
+        })
 
         document.querySelector("form").reset();
     }
 
     function deleteGameplayRecordForm() {
-        let newElement = '';
-        newElement = newElement + "<h1>Delete user's gameplay</h1>"
-        newElement = newElement + '<form><div class="form-group row">'
-        newElement = newElement + '<label for="inputUsername"  class="col-sm-2 col-form-label">Username :</label>'
-        newElement = newElement + '<div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername"></div>'
-        newElement = newElement + '<div class="col-sm-3"><button type="button" onclick="resetUserPassword()">Submit</button></div>'
-        newElement = newElement + '</div> </form>'
-        document.querySelector("#body").innerHTML = newElement;
+        hide();
+        document.getElementById("deleteGameplay").style.display = "";
     }
 
     function deleteGameplayRecord() {
@@ -154,39 +200,92 @@
         if (confirm(text) == false) {
             return;
         }
+        let request = new Request('/admindeleteaccount', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            },
+            body: JSON.stringify(
+                {
+                    username: input
+                }
+            )
+        });
 
-        //not send request yet
-
-        document.querySelector("form").reset();
+        let state = fetch(request).then((response) => {
+            if (response.status !== 200) {
+                throw new Error(response.status);
+            }
+            return response.json();
+        }).then((response) => {
+            if (typeof response.code === "number") {
+                alert('the username is wrong');
+                document.querySelector("form").reset();
+                return response.code;
+            }
+            else {
+                alert('done!');
+                return response.code;
+            }
+        }).then((response) => {
+            if (typeof response !== "number") {
+                window.location.reload();
+            }
+        })
     }
 
-    function deleteUserAccpuntForm() {
-        let newElement = '';
-        newElement = newElement + "<h1>Delete user's account</h1>"
-        newElement = newElement + '<form><div class="form-group row">'
-        newElement = newElement + '<label for="inputUsername"  class="col-sm-2 col-form-label">Username :</label>'
-        newElement = newElement + '<div class="col-sm-5"> <input class="form-control mx-sm-3 mb-2" type="text" id="inputUsername"></div>'
-        newElement = newElement + '<div class="col-sm-3"><button type="button" onclick="resetUserPassword()">Submit</button></div>'
-        newElement = newElement + '</div> </form>'
-        document.querySelector("#body").innerHTML = newElement;
 
+    function deleteUserAccpuntForm() {
+        hide();
+        document.getElementById("deleteUserAccpunt").style.display = "";
     }
 
     function deleteUserAccpunt() {
-        let input = document.querySelector("#inputUsername").value;
+        let input = document.querySelector("#inputUsername2").value;
         if (input == '') {
-            document.querySelector("#inputUsername").classList.add("is-invalid");
+            document.querySelector("#inputUsername2").classList.add("is-invalid");
             return;
         }
-        document.querySelector("#inputUsername").classList.remove("is-invalid");
+        document.querySelector("#inputUsername2").classList.remove("is-invalid");
         let text = "Delete account of user named " + input + " ?";
         if (confirm(text) == false) {
             return;
         }
 
-        //not send request yet
+        let request = new Request('/admindeletegameplay', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            },
+            body: JSON.stringify(
+                {
+                    username: input
+                }
+            )
+        });
 
-        document.querySelector("form").reset();
+        let state = fetch(request).then((response) => {
+            if (response.status !== 200) {
+                throw new Error(response.status);
+            }
+            return response.json();
+        }).then((response) => {
+            if (typeof response.code === "number") {
+                alert('the username is wrong');
+                document.querySelector("form").reset();
+                return response.code;
+            }
+            else {
+                alert('done!');
+                return response.code;
+            }
+        }).then((response) => {
+            if (typeof response !== "number") {
+                window.location.reload();
+            }
+        })
+
+
     }
 
 </script>
