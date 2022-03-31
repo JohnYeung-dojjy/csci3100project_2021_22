@@ -1,9 +1,4 @@
-const ruleElement = document.getElementsByClassName('rule')[0];
-const buttonElement = ruleElement.getElementsByClassName('play_button')[0];
-const cameraElement = document.getElementsByClassName('camera')[0];
 
-const canvasElement = document.getElementsByClassName('output_canvas')[0];
-const displayElement = document.getElementsByClassName('display')[0];
 
 function buttonAvailable(){
     buttonElement.innerHTML = "Play!";

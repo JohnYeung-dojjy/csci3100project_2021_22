@@ -1,8 +1,3 @@
-const videoElement = document.getElementsByClassName('input_video')[0];
-const canvasCtx = canvasElement.getContext('2d');
-
-const hand_too_far_warning = document.getElementsByClassName('hand_too_far_warning')[0];
-const lboardElement = document.getElementById("lboard");
 
 let camera_ready = false;
 // game variables
@@ -50,16 +45,14 @@ window.onresize = function () {
   
 }
 
-
-
-
 function onResults(results) {
   if (!is_game_end){
     play_game(results);
   }
   else{
-    cameraElement.style.display = "none";
-    lboardElement.style.display = "block";
+    Show_lboard();
+    
+    
   }
   
   is_game_end = check_game_ended();
@@ -95,7 +88,9 @@ function update_score() {
   console.log("Score:" + score);
   document.getElementById('score').innerHTML = 'Score: ' + score;
 }
-
+function reset_score(){
+  score = 0;
+}
 function play_game(results) {
   // reset image previously drew on canvas, and draw new image instead
   canvasCtx.save();

@@ -65,3 +65,24 @@ tbody tr:nth-child(3) .rank {
 td {
     padding: 1rem 1rem;
 }
+
+.play_score{
+    width: auto;
+    height: 40%;
+    background-color: rgb(255, 235, 167);
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.replay_return_button{
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: auto;
+    height: 40%;
+    background-color: rgb(255, 235, 167);
+    border-radius: 20px;
+    position: relative;
+}
+

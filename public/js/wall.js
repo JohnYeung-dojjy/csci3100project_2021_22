@@ -6,7 +6,7 @@ wallElement.width = 1280;
 wallElement.height = 720;
 const wallCtx = wallElement.getContext('2d');
 
-const wall_order = random_array(4);
+let wall_order = random_array(10);
 
 const wall = new Image();
 console.log(wall_order)
@@ -34,6 +34,11 @@ function update_wall() {
   curr_wall_id += 1;
   wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
   // wall_passed = false;
+}
+
+function reset_wall(){
+  wall_order = random_array(10);
+  curr_wall_id = 0;
 }
 
 function checkTransparent(x, y) {
