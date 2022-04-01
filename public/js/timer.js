@@ -3,7 +3,7 @@ let timer_started = false;
 let update_location = '';
 let timer_link;
 
-const time_allowed = 15;
+const time_allowed = 150;
 // initialize the timer
 // duration is the duration of timer (int), id is the id of the location (string)
 

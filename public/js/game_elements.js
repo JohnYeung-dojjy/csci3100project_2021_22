@@ -5,6 +5,8 @@ which will be used in various javascript functions related to the game
 Author: Yeung Ching Fung, John
 */
 
+// main content container
+const contentElement = document.getElementsByClassName("container")[0];
 
 // rule div element
 const ruleElement = document.getElementsByClassName('rule')[0];

@@ -6,8 +6,12 @@ function buttonAvailable(){
 }
 
 buttonElement.addEventListener('click', () => {
+    contentElement.style.transform = "rotateY(180deg)";
     ruleElement.style.display = "none";
+    ruleElement.style.visibility = "hidden";
     cameraElement.style.display = "block";
+    cameraElement.style.visibility = "visible";
+
     if (displayElement.offsetHeight < 720){
         canvasElement.height = displayElement.offsetHeight;
         canvasElement.width = displayElement.offsetHeight * 16 / 9;

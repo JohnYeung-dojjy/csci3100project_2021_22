@@ -3,11 +3,11 @@
     border-top-right-radius: 1rem;
     background-color: #1f232c;
     display: inline-block;
-    top: 40px;
-    height: auto;
+    top: 40%;
     justify-content: center;
     /*all elements align in the x-center */
     align-items: center;
+    position: relative;
 }
 .button_container{
     display: flex;

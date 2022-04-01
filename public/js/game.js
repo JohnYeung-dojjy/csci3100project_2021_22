@@ -15,7 +15,7 @@ let wall_timer;           /*a variable that stores the value in setInterval*/
 
 // adjust canvas size
 window.onload = function () {
-  if (displayElement.offsetHeight < 720){
+  if (displayElement.offsetHeight < 740){  // 720 + 10*2 (border width=10)
     canvasElement.height = displayElement.offsetHeight;
     canvasElement.width = displayElement.offsetHeight * 16 / 9;
   }
@@ -36,7 +36,7 @@ window.onload = function () {
 }
 // adjust canvas size on resizing the window
 window.onresize = function () {
-  if (displayElement.offsetHeight < 720){
+  if (displayElement.offsetHeight < 740){  // 720 + 10*2 (border width=10)
     canvasElement.height = displayElement.offsetHeight;
     canvasElement.width = displayElement.offsetHeight * 16 / 9;
   }
@@ -122,23 +122,27 @@ function play_game(results) {
       for (const landmarks of results.multiHandLandmarks) {
         if (checkDepth(landmarks)) {
           // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
-          hand_too_far_warning.innerHTML = `<p></p>`;
+          hand_too_far_warning.innerHTML = ``;
           if (wall_ready) {
             if (is_bounded(landmarks)){
               update_wall();
               update_score();
               wall_ready = false;
-              wall_timer = setTimeout(()=>{wall_ready=true}, 500);
+              canvasElement.style.border = "10px solid rgb(172, 250, 54)";
+              wall_timer = setTimeout(()=>{
+                wall_ready=true;
+                canvasElement.style.border = "10px solid black";
+              }, 500);
             }
           }
         }
         else {
-          hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
+          hand_too_far_warning.innerHTML = `your hand is too far away!`;
         }
       }
     }
     else {
-      hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
+      hand_too_far_warning.innerHTML = `hand not detected`;
     }
   }
   canvasCtx.restore();
