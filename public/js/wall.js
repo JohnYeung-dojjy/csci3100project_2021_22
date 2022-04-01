@@ -6,7 +6,9 @@ wallElement.width = 1280;
 wallElement.height = 720;
 const wallCtx = wallElement.getContext('2d');
 
-let wall_order = random_array(10);
+let wall_order = random_array(10); /* An array that stores the order to display wall*/
+
+
 
 const wall = new Image();
 console.log(wall_order)

@@ -1,9 +1,17 @@
-
-let camera_ready = false;
 // game variables
-let is_game_end = false;
-let score = 0;
+let is_game_end = false; // whether the game has ended or not
+let score = 0;           // current score of player
+let camera_ready = false; /* determinewhether the camera is ready or not, 
+                            player can start game once the camera_ready=true*/
+                            
+let wall_ready = true;   /* determine whether the wall is ready to be counted or not
+                            refreshed to false when a new wall is displayed.
+                            set to true when a new wall has been displayed for 0.3s*/
+
+let wall_timer;           /*a variable that stores the value in setInterval*/
+                      
 // let wall_passed = false;
+
 
 // adjust canvas size
 window.onload = function () {
@@ -47,12 +55,12 @@ window.onresize = function () {
 
 function onResults(results) {
   if (!is_game_end){
+    
+    console.log(wall_ready);
     play_game(results);
   }
   else{
     Show_lboard();
-    
-    
   }
   
   is_game_end = check_game_ended();
@@ -60,10 +68,10 @@ function onResults(results) {
 
 const hands = new Hands({
   locateFile: (file) => {
-    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    return `static/@mediapipe/hands/${file}`;
   }
 });
-hands.setOptions({
+hands.setOptions({ // hand detection model settings
   maxNumHands: 1,
   modelComplexity: 1,
   minDetectionConfidence: 0.5,
@@ -72,6 +80,7 @@ hands.setOptions({
 hands.onResults(onResults); // draw the hand detection image on the canvas
 
 const camera = new Camera(videoElement, {
+  // calls the camera, return the camera image
   onFrame: async () => {
     await hands.send({ image: videoElement });
     camera_ready = true;
@@ -84,11 +93,14 @@ const camera = new Camera(videoElement, {
 camera.start();
 
 function update_score() {
+  /*update the score
+  called when the hand image fits in the wall*/ 
   score += 1;
   console.log("Score:" + score);
   document.getElementById('score').innerHTML = 'Score: ' + score;
 }
 function reset_score(){
+  // call when the user choose to replay the game 
   score = 0;
 }
 function play_game(results) {
@@ -111,30 +123,22 @@ function play_game(results) {
         if (checkDepth(landmarks)) {
           // console.log(curr_wall_id, `static/img/walls/${wall_order[curr_wall_id]}.png`);
           hand_too_far_warning.innerHTML = `<p></p>`;
-          if (is_bounded(landmarks)) {
-            console.log('ok');
-            // wall_passed = true;
-            update_wall();
-
-            update_score();
-          }
-          else {
-            console.log('not ok');
+          if (wall_ready) {
+            if (is_bounded(landmarks)){
+              update_wall();
+              update_score();
+              wall_ready = false;
+              wall_timer = setTimeout(()=>{wall_ready=true}, 500);
+            }
           }
         }
         else {
           hand_too_far_warning.innerHTML = `<p>your hand is too far away!</p>`;
         }
       }
-      /*if( !timer.check_start_timer()){
-        timer.start_timer();
-      }*/
     }
     else {
       hand_too_far_warning.innerHTML = `<p>hand not detected</p>`;
-      /*if( timer.check_start_timer()){
-        timer.stop_timer();
-      }*/
     }
   }
   canvasCtx.restore();

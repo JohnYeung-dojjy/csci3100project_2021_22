@@ -9,9 +9,9 @@ replay_buttonElement.addEventListener("click", ()=>{
 // });
 
 function play_again(){
-    
+    // when player choose to play again
     reset_score();
-    update_score();
+    document.getElementById('score').innerHTML = 'Score: ' + score;
     initialize_timer(time_allowed, 'timer');
     start_timer();
     reset_wall();
