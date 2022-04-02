@@ -15,11 +15,17 @@
 
 </head>
 <style>
-    body {
+    body.light {
         height: 100%;
-        background: url('static/img/RadioactiveHeat.jpg');
+        background-image: url('static/img/RadioactiveHeat.jpg');
         background-repeat: repeat;
         background-size: cover;
+    }
+
+    
+    body.dark {
+        height: 100%;
+        background-color: black;
     }
 
     .bodyContent{
@@ -32,12 +38,15 @@
 
     }
 
+    .mode{
+        filter: invert(1) hue-rotate(180deg);
+    }
 
 
 </style>
 
 
-<body>
+<body id="body" class="light">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
         <a class="navbar-brand" href="#">Wall Hole</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -50,6 +59,7 @@
                 <li class="nav-item"><a onclick="resetPasswordForm()" class="nav-link">Reset Password</a></li>
                 <li class="nav-item"><a onclick="giveFeedback()" class="nav-link">Give Feedback</a></li>
                 <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start Game<i class="bi bi-joystick"></i></a></li>
+                <li class="nav-item"><a onclick="changemode()" class="nav-link">Change mode</a></li>
             </ul>
         </div>
     </nav>
@@ -260,6 +270,19 @@
         document.getElementById('resetPassword').style.display='none';
         document.getElementById('giveFeedback').style.display='';
     }
+
+    function changemode(){
+        document.querySelector('#body').classList.toggle("mode");
+        if(document.querySelector('#body').classList.contains("light")){
+            document.querySelector('#body').classList.remove("light");
+            document.querySelector('#body').classList.add("dark");
+        }else{
+            document.querySelector('#body').classList.remove("dark");
+            document.querySelector('#body').classList.add("light");
+        }
+        
+    }
+
 
 </script>
 </html>
