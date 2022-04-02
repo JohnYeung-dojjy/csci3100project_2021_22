@@ -1,4 +1,5 @@
 // game variables
+
 let is_game_end = false; // whether the game has ended or not
 let score = 0;           // current score of player
 let camera_ready = false; /* determinewhether the camera is ready or not, 
@@ -9,59 +10,47 @@ let wall_ready = true;   /* determine whether the wall is ready to be counted or
                             set to true when a new wall has been displayed for 0.3s*/
 
 let wall_timer;           /*a variable that stores the value in setInterval*/
-                      
+let countdown_ready = true;
+let game_countdown_second = 4;   
+const countdown = new Image();
+countdown.src = `static/img/count_down/${game_countdown_second - 1}_flip.png`;
+
 // let wall_passed = false;
 
 
 // adjust canvas size
 window.onload = function () {
-  if (displayElement.offsetHeight < 740){  // 720 + 10*2 (border width=10)
-    canvasElement.height = displayElement.offsetHeight;
-    canvasElement.width = displayElement.offsetHeight * 16 / 9;
-  }
-  else if (window.innerWidth > window.innerHeight * 16 / 9) {
-    var min_height = Math.min(window.innerHeight, 720);
-    canvasElement.height = min_height;
-    canvasElement.width = min_height * 16 / 9;
-  }
-  else {
-    var min_width = Math.min(window.innerWidth, 1280);
-    canvasElement.width = min_width;
-    canvasElement.height = min_width * 9 / 16;
-  }
-
-  
+  adjust_canvas_size();
   initialize_timer(time_allowed, 'timer');
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
 window.onresize = function () {
-  if (displayElement.offsetHeight < 740){  // 720 + 10*2 (border width=10)
-    canvasElement.height = displayElement.offsetHeight;
-    canvasElement.width = displayElement.offsetHeight * 16 / 9;
-  }
-  else if (window.innerWidth > window.innerHeight * 16 / 9) {
-    var min_height = Math.min(window.innerHeight, 720);
-    canvasElement.height = min_height;
-    canvasElement.width = min_height * 16 / 9;
-  }
-  else {
-    var min_width = Math.min(window.innerWidth, 1280);
-    canvasElement.width = min_width;
-    canvasElement.height = min_width * 9 / 16;
-  }
+  adjust_canvas_size();
   
 }
 
 function onResults(results) {
-  if (!is_game_end){
+  if (!is_game_start){ // if is in rules
+
+  }else{ // if is in game
+    if (!is_game_end){
+      //console.log(game_countdown_second);
+      //console.log(wall_ready);
+      if (game_countdown_second > 0){
+        game_countdown(results);
+      }else if (game_countdown_second == 0){
+        game_countdown_second -= 1;
+        start_timer();
+      }else{
+        play_game(results);
+      }
+    }
+    else{ // if game ended
+      Show_lboard();
+    }
+  }
     
-    console.log(wall_ready);
-    play_game(results);
-  }
-  else{
-    Show_lboard();
-  }
   
   is_game_end = check_game_ended();
 }
@@ -158,13 +147,46 @@ function display_hand(results){
   }
 }
 
-function display_wall(){
+
+
+function game_countdown(results) {
+  // reset image previously drew on canvas, and draw new image instead
+  canvasCtx.save();
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
+
+  display_countdown();
+  // draw hand skeleton
+  if (results.multiHandLandmarks) {
+    // results.multiHandLandmarks is a array of hand landmarks positions of detected hand
+    display_hand(results)
+  }
+  if (countdown_ready) {
+    countdown_ready = false;
+    wall_timer = setTimeout(()=>{
+      countdown_ready=true;
+      
+      update_countdown();
+      countdown.src = `static/img/count_down/${Math.max(0, game_countdown_second - 1)}_flip.png`;
+      
+    }, 1000);
+    
+  }
+  canvasCtx.restore();
+  wallCtx.restore();
+}
+
+function display_countdown(){
   wallCtx.save();
   wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
   // draw wall image
   // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
 
-  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
-  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height, 0, 0, canvasElement.width, canvasElement.height);
-                          // source rectangle             // destination rectangle);
+  wallCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height);
+  canvasCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height,// source rectangle  
+                               0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
+}
+
+function update_countdown(){
+  game_countdown_second -= 1;
 }

@@ -4,6 +4,10 @@
     text-align: center;
     height: 100%;
     margin: auto;
+    transform-style: preserve-3d;
+    /*allow 3d effect*/
+    transition: 1s;
+    /*the action for switch takes 1s in total */
 }
 
 .score_and_time {
@@ -18,9 +22,12 @@
 }
 
 .camera{
+    position: relative;
+    transform: translateZ(-80px) rotateY(180deg);
     display: none;
     height: 100%;
     visibility: "hidden";
+    /*transform-style: preserve-3d;*/
 
 }
 

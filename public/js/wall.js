@@ -31,6 +31,17 @@ function random_array(num) {
   return tmp_arr;
 }
 
+function display_wall(){
+  wallCtx.save();
+  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
+  // draw wall image
+  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
+
+  wallCtx.drawImage(wall, 0, 0, wall.width, wall.height);
+  canvasCtx.drawImage(wall, 0, 0, wall.width, wall.height, 0, 0, canvasElement.width, canvasElement.height);
+                          // source rectangle             // destination rectangle);
+}
+
 function update_wall() {
   console.log(curr_wall_id);
   curr_wall_id += 1;
@@ -87,4 +98,21 @@ function checkDepth(landmarks) {
 
 function EuclideanDistance(landmark_1, landmark_2) {
   return Math.sqrt(Math.pow((landmark_1.x - landmark_2.x) * 16 / 9, 2) + Math.pow((landmark_1.y - landmark_2.y), 2) + Math.pow((landmark_1.z - landmark_2.z), 2));
+}
+
+function adjust_canvas_size(){
+  if (displayElement.offsetHeight < 740){  // 720 + 10*2 (border width=10)
+    canvasElement.height = displayElement.offsetHeight;
+    canvasElement.width = displayElement.offsetHeight * 16 / 9;
+  }
+  else if (window.innerWidth > window.innerHeight * 16 / 9) {
+    var min_height = Math.min(window.innerHeight, 720);
+    canvasElement.height = min_height;
+    canvasElement.width = min_height * 16 / 9;
+  }
+  else {
+    var min_width = Math.min(window.innerWidth, 1280);
+    canvasElement.width = min_width;
+    canvasElement.height = min_width * 9 / 16;
+  }
 }

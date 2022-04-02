@@ -8,11 +8,15 @@
     /*all elements align in the x-center */
     align-items: center;
     position: relative;
+    transform:  translateZ(80px);
+    
 }
 .button_container{
     display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1rem;
+  /*border-bottom-right-radius: 1rem;*/
 }
 
 
