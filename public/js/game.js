@@ -98,7 +98,7 @@ async function onResults(results) {
 
 const hands = new Hands({
   locateFile: (file) => {
-    return `static/@mediapipe/hands/${file}`;
+    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
   }
 });
 hands.setOptions({ // hand detection model settings
