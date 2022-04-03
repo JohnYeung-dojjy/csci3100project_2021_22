@@ -47,7 +47,6 @@
 
 
 <body id="body" class="dark">
-<!-- <body id="body" class="light"> -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
         <a class="navbar-brand" href="#">Wall Hole</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -275,35 +274,16 @@
     function changemode(){
         document.querySelector('#body').classList.toggle("mode");
         if(document.querySelector('#body').classList.contains("light")){
-            document.querySelector('#body').classList.remove("light");
-            document.querySelector('#body').classList.add("dark");
+            document.querySelector('#body').classList.replace("light","dark");
             document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             document.cookie = " mode=dark";
         }else{
-            document.querySelector('#body').classList.remove("dark");
-            document.querySelector('#body').classList.add("light");
+            document.querySelector('#body').classList.replace("dark","light");
             document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             document.cookie = " mode=light";
         }
     }
 
-    function checkmode(){
-        document.querySelector('#body').classList.toggle("mode");
-        var buf = document.cookie.split(';');
-        for( var i=0; i<buf.length; i++){
-            var part = buf[i].split('=');
-            if(part[0] == 'mode' || part[0] == ' mode' ){
-                if(part.length > 1){
-                    if(part[1]=='light'){
-                        changemode();
-                    }
-                }
-                return;
-            }
-        }
-        changemode();
-    }
-    /*
     function checkmode(){
         var buf = document.cookie.split(';');
         for( var i=0; i<buf.length; i++){
@@ -311,14 +291,16 @@
             if(part[0] == 'mode' || part[0] == ' mode' ){
                 if(part.length > 1){
                     if(part[1]=='dark'){
-                        changemode();
+                        document.querySelector('#body').classList.toggle("mode");
+                    }else{
+                        document.querySelector('#body').classList.replace("dark","light");
                     }
                 }
                 return;
             }
         }
+        document.querySelector('#body').classList.replace("dark","light");
     }
-*/
 
     window.onload = checkmode;
 
