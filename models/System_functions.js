@@ -28,8 +28,8 @@ async function registerNewAccount(obj) {
             admin: obj.admin
         });
         let content = await instance.save().then(
-            (result) => {
-                return result.toObject();
+            async (result) => {
+                return await result.toObject();
             }
         )
         return content;
@@ -45,7 +45,7 @@ async function loginAccount(obj) {
     try {
         let query = User.find({ username: obj.username, password: obj.password }).lean().exec();
         //lean() can only be used in findone() and find(), it has no use with save();
-        let content = query.then(
+        let content = await query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
