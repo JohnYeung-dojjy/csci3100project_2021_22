@@ -9,11 +9,12 @@ const User = require("./User");
 const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
+const { contentType } = require("express/lib/response");
 
-module.exports = { displayUsername, displayEmail, displayIcon, displayBestScore, changePassword };
+module.exports = { displayIcon, displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail };
 
 
-//display functions,for now, we may not need this
+/* //display functions,for now, we may not need this
 async function displayUsername(obj) {
     try {
         const username = await User.find({ _id: obj._id }).select("username");
@@ -43,7 +44,7 @@ async function displayEmail(obj) {
         console.log(err.message);
         return -1;
     }
-}
+} */
 
 async function displayIcon(obj) {
     try {
@@ -65,7 +66,7 @@ async function displayIcon(obj) {
     }
 }
 
-//display functions,for now, we may not need this
+/* //display functions,for now, we may not need this
 async function displayUsername(obj) {
     try {
         const query = await User.find({ _id: obj._id }).select("username");
@@ -84,22 +85,22 @@ async function displayUsername(obj) {
         console.log(err.message);
         return -1;
     }
-}
-
+} */
+//!!!completed
 async function displayBestScore(obj) {
     try {
-        const query = await Leaderboard.find({ _id: obj._id }).select("score").sort({ "score": 1 }).limit(1);
-        console.log(query);
-        let content = query.then(
-            (result) => {
+        let query = Leaderboard.findOne({ username: obj.username }).select("score").sort({ "score": 1 }).limit(1).lean().exec();
+        let content = await query.then(
+            async (result) => {
                 if (result === null || result.length === 0) {
-                    return 11100;
+                    return "norecord";
                 }
                 else {
                     return result;
                 }
             }
-        )
+        );
+        return content;
     } catch (err) {
         console.log(err.message);
         return -1;
@@ -200,34 +201,38 @@ async function changeEmail(obj, oldEmail, newEmail) {
     }
 }
 
-
-
-
-
-
-
-
-async function updateLeaderboard(_id, score) {
+//completed!!
+// as login verification is done, the user must exist
+async function updateLeaderboard(obj) {
     try {
-        const instance = new Leaderboard({
-            user_id: _id,
-            score: score
-        });
-        let state = await instance.save()
-            .then((acc) => {
-                console.log('Leaderboard Updated Successfully!');
-                console.log(typeof acc.id);//string;
-                return acc.id;
-            })
-            .catch(
-                (err) => {
-                    console.log(err);
-                    return err.code;//number
+        let query = Leaderboard.findOne({ username: obj.username }).select("score").sort({ "score": 1 }).limit(1).exec();
+        let content = await query.then(
+            async (result) => {
+                if (result === null || result.length === 0) {
+                    return "norecord";
                 }
-            )
-        return state;// if duplicate,the code is 11000,defined by mongodb
-    } catch (e) {
-        console.log(e.message);
+                else {
+                    result.score = obj.score;
+                    await result.save();
+                    return await result.toObject();
+                }
+            }
+        );
+        if (content === "norecord") {
+            console.log("this is no record");
+            const instance = new Leaderboard({
+                username: obj.username,
+                score: obj.score
+            });
+            content = await instance.save().then(
+                async (result) => {
+                    return await result.toObject();
+                }
+            );
+        }
+        return content;
+    } catch (err) {
+        console.log(err.message);
         return -1;
     }
 }

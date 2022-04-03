@@ -1,6 +1,5 @@
-const ruleElement = document.getElementsByClassName('rule')[0];
-const buttonElement = ruleElement.getElementsByClassName('play_button')[0];
-const cameraElement = document.getElementsByClassName('camera')[0];
+// game variables
+let is_game_start = false;
 
 function buttonAvailable(){
     buttonElement.innerHTML = "Play!";
@@ -8,7 +7,15 @@ function buttonAvailable(){
 }
 
 buttonElement.addEventListener('click', () => {
-    ruleElement.style.display = "none";
+    contentElement.style.transform = "rotateY(180deg)";
+    contentElement.style.height = "100%";
     cameraElement.style.display = "block";
-    start_timer();
+    cameraElement.style.visibility = "visible";
+    cameraElement.style.height = "100%";
+    adjust_canvas_size();
+    
+    ruleElement.style.display = "none";
+    ruleElement.style.visibility = "hidden";
+    is_game_start = true;
+    
 });

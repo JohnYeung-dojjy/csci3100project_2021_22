@@ -1,53 +1,73 @@
-
-.camera{
-    display: none;
-}
-
-.input_video {
-    display: none;
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: scale(-1, 1); */
-}
-
-.output_canvas {
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; */
-    /*position: absolute;*/
-    top: 40px;
-    height: auto;
-    transform: scale(-1, 1);
-    /*margin: auto;*/
-}
-
-.display {
-    position: relative;
-    height: 70vh;
-    /* 100%high */
-    display: flex;
-    justify-content: center;
-    /*all elements align in the x-center */
-    align-items: center;
-}
-
-.hand_too_far_warning {
-    position: relative;
+.game {
     justify-content: center;
     align-items: center;
-    font-size: 24;
+    text-align: center;
+    /*height: 100%;*/
+    width: 100%;
+    margin: auto;
+    transform-style: preserve-3d;
+    /*allow 3d effect*/
+    transition: 1s;
+    /*the action for switch takes 1s in total */
 }
 
 .score_and_time {
     position: relative;
     margin: auto;
-    top: 20px;
+    /*top: 20px;*/
     justify-content: center;
+    text-align: center;
     align-items: end;
-    font-size: 24;
+    font-size: 36;
+    height: 10%;
 }
+
+.camera{
+    position: relative;
+    transform: translateZ(-80px) rotateY(180deg);
+    display: none;
+    height: 100%;
+    visibility: "hidden";
+    /*transform-style: preserve-3d;*/
+
+}
+
+.display {
+    position: relative;
+    /*height: 70vh;*/
+    /* 100%high */
+    height: 70%;
+    /*display: flex;*/
+    justify-content: center;
+    /*all elements align in the x-center */
+    align-items: center;
+}
+
+.input_video {
+    display: none;
+}
+
+.output_canvas {
+    height: auto;
+    transform: scale(-1, 1);
+    /*margin: auto;*/
+    border-width: 10px;
+    border-style: solid;
+    border-color: black;
+}
+
+
+
+.hand_too_far_warning {
+    border: 20px solid transparent;
+    position: relative;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    font-size: 36;
+    height: 15%;
+}
+
+
+
+

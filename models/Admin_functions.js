@@ -13,7 +13,7 @@ async function displayAllUser() {
     try {
         let query = User.find().lean().exec();
         //lean() can only be used in findone() and find(), it has no use with save();
-        let content = query.then(
+        let content = await query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
@@ -36,7 +36,7 @@ async function displayLeaderboard() {
     try {
         let query = Leaderboard.find().sort({ "score": 1 }).limit(10).lean().exec();
         //lean() can only be used in findone() and find(), it has no use with save();
-        let content = query.then(
+        let content = await query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
@@ -58,7 +58,7 @@ async function displayLeaderboard() {
 async function resetPassword(obj) {
     try {
         let query = User.findOne({ username: obj.username }).exec();
-        let content = query.then(
+        let content = await query.then(
             async (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
@@ -86,7 +86,7 @@ admin is correct. However, the user may have no record in feedback and leaderboa
 async function deleteUseraccount(obj) {
     try {
         let query = User.findOne({ username: obj.username }).exec();
-        let content = query.then(
+        let content = await query.then(
             async (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
@@ -99,7 +99,7 @@ async function deleteUseraccount(obj) {
         );
         if (content === "success") {
             query = Leaderboard.findOne({ username: obj.username }).exec();
-            content = query.then(
+            content = await query.then(
                 async (result) => {
                     if (result === null || result.length === 0) {
                         return "success";
@@ -113,7 +113,7 @@ async function deleteUseraccount(obj) {
         }
         if (content === "success") {
             query = Feedback.find({ username: obj.username }).exec();
-            content = query.then(
+            content = await query.then(
                 async (result) => {
                     if (result === null || result.length === 0) {
                         return "success";
@@ -137,7 +137,7 @@ async function deleteUseraccount(obj) {
 async function deleteGameplay(obj) {
     try {
         let query = Leaderboard.findOne({ username: obj.username }).exec();
-        let content = query.then(
+        let content = await query.then(
             async (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
