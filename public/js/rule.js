@@ -8,9 +8,10 @@ function buttonAvailable(){
 
 buttonElement.addEventListener('click', () => {
     contentElement.style.transform = "rotateY(180deg)";
+    contentElement.style.height = "100%";
     cameraElement.style.display = "block";
     cameraElement.style.visibility = "visible";
-
+    cameraElement.style.height = "100%";
     adjust_canvas_size();
     
     ruleElement.style.display = "none";

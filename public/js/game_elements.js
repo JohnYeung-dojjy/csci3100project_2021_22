@@ -6,7 +6,7 @@ Author: Yeung Ching Fung, John
 */
 
 // main content container
-const contentElement = document.getElementsByClassName("container")[0];
+const contentElement = document.getElementsByClassName("game")[0];
 
 // rule div element
 const ruleElement = document.getElementsByClassName('rule')[0];

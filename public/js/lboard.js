@@ -25,8 +25,11 @@ function Show_lboard(){
     ruleElement.style.display = "none";
     ruleElement.style.visibility = "hidden";
 
+    contentElement.style.height = "90%";
+
     cameraElement.style.visibility = "hidden";
     cameraElement.style.display = "none";
+    
     
     lboardElement.style.visibility = "visible";
     lboardElement.style.display = "block";
@@ -46,10 +49,10 @@ function reset_game_display(){
     ruleElement.style.display = "none";
     ruleElement.style.visibility = "hidden";
 
-    cameraElement.style.visibility = "visible";
     cameraElement.style.display = "block";
+    cameraElement.style.visibility = "visible";
     
-    lboardElement.style.visibility = "none";
-    lboardElement.style.display = "hidden";
+    lboardElement.style.display = "none";
+    lboardElement.style.visibility = "hidden";
     reset_wall();
 }
