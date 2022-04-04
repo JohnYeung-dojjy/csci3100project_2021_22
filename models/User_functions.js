@@ -11,7 +11,7 @@ const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 const { contentType } = require("express/lib/response");
 
-module.exports = { displayIcon, displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail };
+module.exports = { displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail };
 
 
 /* //display functions,for now, we may not need this
@@ -46,9 +46,9 @@ async function displayEmail(obj) {
     }
 } */
 
-async function displayIcon(obj) {
+async function displayInfo(obj) {
     try {
-        const icon = await User.find({ _id: obj._id }).select("user_icon");
+        const icon = await User.find({ username: obj.username }).select("user_icon");
         console.log(icon);
         let content = icon.then(
             (result) => {
