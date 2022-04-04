@@ -179,6 +179,7 @@
 
     const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
+    var oldEmail = "123@gmail.com";
 
     function updateInfo() {
         var newUsername = document.getElementById('newUsername').value;
@@ -194,7 +195,11 @@
             document.getElementById('newEmail1').classList.add("is-invalid");
             alert("Invalid email");
             return
-        } else {
+        } else if (newEmail1 == oldEmail) {
+            document.getElementById('newEmail1').classList.add("is-invalid");
+            alert("New email must be different from the old one.");
+            return
+        } else{
             document.getElementById('newEmail1').classList.remove("is-invalid");
         }
 
