@@ -11,7 +11,7 @@ const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 const { contentType } = require("express/lib/response");
 
-module.exports = { displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail };
+module.exports = { displayInfo, displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail, showFeedback, updateFeedback };
 
 
 /* //display functions,for now, we may not need this
@@ -110,10 +110,9 @@ async function displayBestScore(obj) {
 
 //change functions
 
-//todo add if-statement for wrong input
 async function changePassword(obj) {
     try {
-        const query = await User.find({ _id: obj._id }).where("password").equals(oldPassword).updateOne({ password: newPassword });
+        const query = await User.findOne({ username: obj.username }).where("password").equals(oldPassword).updateOne({ password: newPassword });
         console.log(query);
         let content = query.then(
             (result) => {
@@ -133,7 +132,7 @@ async function changePassword(obj) {
     }
 }
 
-async function changeIcon(obj) {
+async function changeIcon(obj, newImage) {
     try {
         /* //prob not needed because upload manager will restrict that
         var parts = newImage.split('.');
@@ -142,7 +141,7 @@ async function changeIcon(obj) {
         } else {
             console.log("File Format not accepted.");
         } */
-        const query = await User.find({ _id: obj._id }).updateOne({ user_icon: newImage });
+        const query = await User.findOne({ username: obj.username }).updateOne({ user_icon: newImage });
         console.log(query);
         let content = query.then(
             (result) => {
@@ -155,6 +154,7 @@ async function changeIcon(obj) {
                 }
             }
         )
+        return content;
 
     } catch (err) {
         console.log(err.message);
@@ -231,6 +231,64 @@ async function updateLeaderboard(obj) {
                 }
             );
         }
+        return content;
+    } catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
+
+
+//Feedback functions
+
+async function showFeedback() {
+    try {
+        let query = Feedback.find().sort({ "_id": -1 }).limit(5).lean().exec();
+        //lean() can only be used in findone() and find(), it has no use with save();
+        let content = await query.then(
+            (result) => {
+                if (result === null || result.length === 0) {
+                    return 11100;
+                }
+                else {
+                    return result;
+                }
+            }
+        )
+        return content;
+    }
+    catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
+
+async function updateFeedback(obj) {
+    try {
+
+        let query = Feedback.find({ username: obj.username }).exec();
+        let content = await query.then(
+            async (result) => {
+                if (result === null || result.length === 0) {
+                    return 0;
+                }
+                else {
+                    return result.length;
+                }
+            }
+        );
+        
+            const instance = new Feedback({
+                feedback_id: content,
+                username: obj.username,
+                feedback: obj.feedback
+            });
+            content = await instance.save().then(
+                async (result) => {
+                    return await result.toObject();
+                }
+            );
+        
         return content;
     } catch (err) {
         console.log(err.message);
