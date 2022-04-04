@@ -43,24 +43,31 @@
     .mode {
         filter: invert(1) hue-rotate(180deg);
     }
+
+    .container{
+        width: 60%;
+        position: center;
+
+    }
 </style>
 
 
 <body id="body" class="dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-        <a class="navbar-brand" onclick="logout()">Wall Hole</a>
+        <a class="navbar-brand">Wall Hole</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
             <ul class="navbar-nav">
+                <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start 
+                    Game<i class="bi bi-joystick"></i></a></li>
                 <li class="nav-item"><a onclick="displayUserInfo()" class="nav-link">Your Info</a></li>
                 <li class="nav-item"><a onclick="modifyUserInfo()" class="nav-link">Modify your Info</a></li>
                 <li class="nav-item"><a onclick="resetPasswordForm()" class="nav-link">Reset Password</a></li>
                 <li class="nav-item"><a onclick="giveFeedback()" class="nav-link">Give Feedback</a></li>
-                <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start
-                        Game<i class="bi bi-joystick"></i></a></li>
                 <li class="nav-item"><a onclick="changemode()" class="nav-link">Change mode</a></li>
+                <li class="nav-item"><a onclick="logout()" class="nav-link">Log-out</a></li>
             </ul>
         </div>
     </nav>
@@ -72,22 +79,25 @@
 
         <div id="userInfo" style='display: none'>
             <h3 class="title">Your Info</h3>
-            <div class="d-flex" style="align-items: center; width: 400px">
-                <div class="flex-shrink-0" id="userIcon">
-                    <img src="static/img/walls/0.png" width="300px">
-                </div>
-                <div class="flex-grow-1">
-                    <h4>ID: <div id="userID"></div>
-                    </h4>
-                    <h4>Email: <div id="userEmail"></div>
-                    </h4>
+            <div class="container">
+                <div class="d-flex" style="align-items: center; width: 400px">
+                    <div class="flex-shrink-0" id="userIcon">
+                        <img src="static/img/walls/0.png" width="300px">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4>ID: <div id="userID"></div>
+                        </h4>
+                        <h4>Email: <div id="userEmail"></div>
+                        </h4>
+                    </div>
                 </div>
             </div>
+            
         </div>
 
         <div id="modifyInfo" style='display: none'>
             <h3 class="title">Modify your Info</h3>
-            <div>
+            <div class="container">
                 <form id="modifyInfoForm">
                     <div class="form-group">
                         <label for="inputNewUsername">Username</label>
@@ -112,7 +122,7 @@
 
         <div id="resetPassword" style='display: none'>
             <h3 class="title">Reset Password</h3>
-            <div>
+            <div  class="container">
                 <form id="resetPasswordForm">
                     <div class="form-group">
                         <label for="inputOldPassword">Old password</label>
@@ -139,7 +149,17 @@
 
         <div id="giveFeedback" style='display: none'>
             <h3 class="title">Give Feedback</h3>
-            <div>
+            <div  class="container">
+                <div class="d-flex">
+                    <div class="flex-shrink-0" id="userIcon">
+                        <img src="static/img/walls/0.png" width="200px">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6>Username: Abc</h6>
+                        <h6>Feedback: This is not a great UI.</h6>
+                    </div>
+                </div>
+                <br>
                 <form id="giveFeedbackForm">
                     <div class="form-group">
                         <label for="inputFeedback">Feedback</label>
@@ -159,6 +179,7 @@
 
     const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
+    var oldEmail = "123@gmail.com";
 
     function updateInfo() {
         var newUsername = document.getElementById('newUsername').value;
@@ -174,7 +195,11 @@
             document.getElementById('newEmail1').classList.add("is-invalid");
             alert("Invalid email");
             return
-        } else {
+        } else if (newEmail1 == oldEmail) {
+            document.getElementById('newEmail1').classList.add("is-invalid");
+            alert("New email must be different from the old one.");
+            return
+        } else{
             document.getElementById('newEmail1').classList.remove("is-invalid");
         }
 
@@ -209,7 +234,11 @@
             alert("Incorrect new password");
             document.getElementById('newPassword').classList.add("is-invalid");
             return;
-        } else {
+        } else if(newPassword == oldPassword){
+            alert("A new password must be inputted");
+            document.getElementById('newPassword').classList.add("is-invalid");
+            return;
+        }else{
             document.getElementById('newPassword').classList.remove("is-invalid");
         }
 
