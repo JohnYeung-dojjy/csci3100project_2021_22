@@ -15,13 +15,14 @@ let game_countdown_second = 4;
 const countdown = new Image();
 countdown.src = `static/img/count_down/${game_countdown_second - 1}_flip.png`;
 
-// let wall_passed = false;
+let is_lboard_displayed = false;
 
 
 // adjust canvas size
 window.onload = function () {
   adjust_canvas_size();
   initialize_timer(time_allowed, 'timer');
+  // get_lboard();
   // wall_order = random_array(wall_order);
 }
 // adjust canvas size on resizing the window
@@ -47,48 +48,18 @@ async function onResults(results) {
       }
     }
     else { // if game ended
-      console.log("bestscore passed to the client:" + bestscore);
-      if (score >= bestscore) {
-        let request = new Request('/updateleaderboard', {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8;'
-          },
-          body: JSON.stringify(
-            {
-              username: username,
-              score: score
-            }
-          )
-        });
-        let response = await fetch(request);
-        if (response.status !== 200) {
-          throw new Error(response.status);
-        }
-      }
+      if (!is_lboard_displayed){
+        console.log("bestscore passed to the client:" + bestscore);
+        
+        add_lboard(score, bestscore);
+        get_lboard();
 
+        
+        Show_lboard();
 
-      let request = new Request('/getleaderboard', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8;'
-        }
-      });
-      let response = await fetch(request);
-      if (response.status !== 200) {
-        throw new Error(response.status);
+        is_lboard_displayed = true;
       }
-      response.json().then((response) => {
-        let getleaderboard = response;
-        let htmlboardname = document.querySelectorAll('#lboard .name');
-        let htmlboardscore = document.querySelectorAll('#lboard .score');
-        let looplength = 6 < getleaderboard.length ? 6 : getleaderboard.length;
-        for (let i = 0; i < looplength; i++) {
-          htmlboardname[i].innerHTML = getleaderboard[i].username;
-          htmlboardscore[i].innerHTML = getleaderboard[i].score;
-        }
-      });
-      Show_lboard();
+        
     }
   }
 
@@ -103,7 +74,7 @@ const hands = new Hands({
 });
 hands.setOptions({ // hand detection model settings
   maxNumHands: 1,
-  modelComplexity: 1,
+  modelComplexity: 0,
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
 });
