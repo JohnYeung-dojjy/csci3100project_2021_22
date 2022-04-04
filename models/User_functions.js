@@ -47,6 +47,8 @@ async function displayEmail(obj) {
 } */
 
 //!!!only display info is needed.
+//!!! try to tell the server if the user has updated the icon(if the logic is too complex to implement with 
+//single function, then add  one more displayicon() is ok, same, only object or number(for error) should be returned)
 async function displayInfo(obj) {
     try {
         const query = await User.findOne({ username: obj.username }).lean().exec();
@@ -87,6 +89,7 @@ async function displayUsername(obj) {
         return -1;
     }
 } */
+
 //!!!completed
 async function displayBestScore(obj) {
     try {
@@ -109,7 +112,8 @@ async function displayBestScore(obj) {
 }
 
 //change functions
-
+// i will pass you newpassword and the username the function
+// please find() the oldpassword by yourself with the username first
 async function changePassword(obj) {
     try {
         const query = await User.findOne({ username: obj.username }).where("password").equals(oldPassword).updateOne({ password: newPassword });
@@ -132,7 +136,9 @@ async function changePassword(obj) {
     }
 }
 
-async function changeIcon(obj, newImage) {
+
+//i will pass you the username and  the image in the obj
+async function changeIcon(obj) {
     try {
         /* //prob not needed because upload manager will restrict that
         var parts = newImage.split('.');
@@ -162,6 +168,9 @@ async function changeIcon(obj, newImage) {
     }
 }
 
+
+//in the obj, i will pass you the obj.newemail and obj.username, but i won't pass you the old email, please use username to
+//find the oldone first, and then do the checking, finally, update the email.
 async function changeEmail(obj) {
     try {
         if (oldEmail.equals(newEmail)) {
@@ -202,7 +211,7 @@ async function changeEmail(obj) {
     }
 }
 
-//completed!!
+//completed, but need checking
 // as login verification is done, the user must exist
 async function updateLeaderboard(obj) {
     try {
@@ -240,7 +249,8 @@ async function updateLeaderboard(obj) {
 
 
 //Feedback functions
-
+//make sure that you return the lastest 5 feedback, as they haven't finished the feedback system yet, you can use
+// the database function to create the feedback and then use showfeedback() to list the latest 5. 
 async function showFeedback() {
     try {
         let query = Feedback.find().sort({ "_id": -1 }).limit(5).lean().exec();
@@ -263,6 +273,10 @@ async function showFeedback() {
     }
 }
 
+
+//for the updatfeedback(), I will pass you the username and the feedback content only,
+//the feedbackid should not be provided by me
+// you can do the find() first to get the lastest id, or change another method.
 async function updateFeedback(obj) {
     try {
 
@@ -277,18 +291,18 @@ async function updateFeedback(obj) {
                 }
             }
         );
-        
-            const instance = new Feedback({
-                feedback_id: content,
-                username: obj.username,
-                feedback: obj.feedback
-            });
-            content = await instance.save().then(
-                async (result) => {
-                    return await result.toObject();
-                }
-            );
-        
+
+        const instance = new Feedback({
+            feedback_id: content,
+            username: obj.username,
+            feedback: obj.feedback
+        });
+        content = await instance.save().then(
+            async (result) => {
+                return await result.toObject();
+            }
+        );
+
         return content;
     } catch (err) {
         console.log(err.message);
