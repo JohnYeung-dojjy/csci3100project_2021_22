@@ -291,20 +291,18 @@
             if (typeof response !== "number") {
                 window.location.reload();
             }
-        })
-        function logout() {
-            let request = new Request('/logout', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8;'
-                }
-            });
-            fetch(request);
-            window.location.reload();
-        }
-
+        });
     }
-
+    async function logout() {
+        let request = new Request('/logout', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            }
+        });
+        await fetch(request);
+        window.location.reload();
+    }
 </script>
 
 </html>

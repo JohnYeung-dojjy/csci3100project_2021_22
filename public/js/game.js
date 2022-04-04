@@ -48,18 +48,18 @@ async function onResults(results) {
       }
     }
     else { // if game ended
-      if (!is_lboard_displayed){
+      if (!is_lboard_displayed) {
         console.log("bestscore passed to the client:" + bestscore);
-        
-        add_lboard(score, bestscore);
-        get_lboard();
 
-        
+        await add_lboard(score, bestscore);
+        await get_lboard();
+
+
         Show_lboard();
 
         is_lboard_displayed = true;
       }
-        
+
     }
   }
 
