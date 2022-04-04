@@ -46,11 +46,11 @@ async function displayEmail(obj) {
     }
 } */
 
+//!!!only display info is needed.
 async function displayInfo(obj) {
     try {
-        const icon = await User.find({ username: obj.username }).select("user_icon");
-        console.log(icon);
-        let content = icon.then(
+        const query = await User.findOne({ username: obj.username }).lean().exec();
+        let content = await query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
@@ -59,7 +59,8 @@ async function displayInfo(obj) {
                     return result;
                 }
             }
-        )
+        );
+        return content;
     } catch (err) {
         console.log(err.message);
         return -1;
@@ -110,7 +111,7 @@ async function displayBestScore(obj) {
 //change functions
 
 //todo add if-statement for wrong input
-async function changePassword(obj, oldPassword, newPassword) {
+async function changePassword(obj) {
     try {
         const query = await User.find({ _id: obj._id }).where("password").equals(oldPassword).updateOne({ password: newPassword });
         console.log(query);
@@ -132,7 +133,7 @@ async function changePassword(obj, oldPassword, newPassword) {
     }
 }
 
-async function changeIcon(obj, newImage) {
+async function changeIcon(obj) {
     try {
         /* //prob not needed because upload manager will restrict that
         var parts = newImage.split('.');
@@ -161,11 +162,11 @@ async function changeIcon(obj, newImage) {
     }
 }
 
-async function changeEmail(obj, oldEmail, newEmail) {
+async function changeEmail(obj) {
     try {
         if (oldEmail.equals(newEmail)) {
             console.log("New Email has to be different.");
-            //add a check if email already exits?
+            //no need to check the email existance as user will receive a confirmation email in the registration
         } else {
             const check = await User.find({ user_email: newEmail })
             let content = check.then(
