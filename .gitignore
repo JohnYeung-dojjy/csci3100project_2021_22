@@ -129,5 +129,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# os
+# OSX
 .DS_Store
+
+# custom
+pages/playground*
