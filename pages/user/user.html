@@ -38,7 +38,7 @@
 <body id="body" class="dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
         <div class="container">
-            <a class="navbar-brand" href="#">Wall Hole</a>
+            <a class="navbar-brand" href="#" onclick="welcomeUser()">Wall Hole</a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -66,40 +66,52 @@
         </div>
     </nav>
 
-    <section class="text-dark p-3">
-        <div class="container">
-            <div class="d-sm-flex align-items-center justify-content-between">
-                <img src="static/img/logo.png" alt="" class="d-block mx-auto h-100 w-50">
-                <div class="text-center text-sm-start">
-                    <p class="h2">Welcome user to</p>
-                    <p class="display-2">
-                        <span style="color: #F9A709;">Hole</span> in the <span style="color: #42E2FF;">Wall</span>
-                    </p>
-                    <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut ducimus, numquam qui sequi beatae aliquam officiis harum in fugit officia autem! Ipsam aperiam deserunt, quae sit excepturi quia a error?</p>
-                    <a href="../game" class="btn btn-primary btn-lg">
-                        Start Game 
-                        <i class="bi bi-joystick"></i>
-                    </a>
+    <div id="welcome">
+        <section class="text-dark p-3">
+            <div class="container">
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <img src="static/img/logo.png" alt="" class="d-block mx-auto h-100 w-50">
+                    <div class="text-center text-sm-start">
+                        <p class="h2">Welcome user to</p>
+                        <p class="display-2">
+                            <span style="color: #F9A709;">Hole</span> in the <span style="color: #42E2FF;">Wall</span>
+                        </p>
+                        <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut ducimus, numquam qui sequi beatae aliquam officiis harum in fugit officia autem! Ipsam aperiam deserunt, quae sit excepturi quia a error?</p>
+                        <a href="../game" class="btn btn-primary btn-lg">
+                            Start Game
+                            <i class="bi bi-joystick"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div id=" userInfo" style='display: none'>
-        <h3 class="title">Your Info</h3>
-        <div class="d-flex" style="align-items: center; width: 400px">
-            <div class="flex-shrink-0" id="userIcon">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle sm-3 mx-3">
+        <section class="update">
+            <div class="container">
+                <p class="h2">What's new</p>
+                <div id="updates" class="">list here</div>
             </div>
-            <div class="flex-grow-1">
-                <h4>ID:
-                    <div id="userID"></div>
-                </h4>
-                <h4>Email:
-                    <div id="userEmail"></div>
-                </h4>
+        </section>
+    </div>
+
+    <div id="userInfo" style='display: none'>
+        <div class="container">
+            <div class="d-flex" style="align-items: center; width: 400px">
+                <div class="flex-shrink-0" id="userIcon">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle sm-3 mx-3">
+                </div>
+                <div class="flex-grow-1">
+                    <h4>ID:
+                        <div id="userID"></div>
+                    </h4>
+                    <h4>Email:
+                        <div id="userEmail"></div>
+                    </h4>
+                </div>
             </div>
+
         </div>
+        <h3 class="title">Your Info</h3>
     </div>
 
     <div id="modifyInfo" style='display: none'>
@@ -166,8 +178,6 @@
                 <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
             </form>
         </div>
-    </div>
-
     </div>
 </body>
 
@@ -259,12 +269,22 @@
         document.getElementById('giveFeedbackForm').reset();
     }
 
+    function welcomeUser() {
+        document.getElementById('welcome').style.display = '';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('modifyInfo').style.display = 'none';
+        document.getElementById('resetPassword').style.display = 'none';
+        document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=welcome";
+    }
+
     function displayUserInfo() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = '';
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=userInfo";
     }
 
     function modifyUserInfo() {
@@ -273,6 +293,7 @@
         document.getElementById('modifyInfo').style.display = '';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=modifyInfo";
     }
 
     function resetPasswordForm() {
@@ -281,6 +302,7 @@
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = '';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=resetPassword";
     }
 
     function giveFeedback() {
@@ -289,6 +311,7 @@
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = '';
+        document.cookie = "section=giveFeedback";
     }
 
     function changemode() {
@@ -296,11 +319,11 @@
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
             document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = " mode=dark";
+            document.cookie = "mode=dark";
         } else {
             document.querySelector('#body').classList.replace("dark", "light");
             document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = " mode=light";
+            document.cookie = "mode=light";
         }
     }
 
@@ -322,7 +345,26 @@
         document.querySelector('#body').classList.replace("dark", "light");
     }
 
-    window.onload = checkmode;
+    function checkSection() {
+        var buf = document.cookie.split(';');
+        for (var i = 0; i < buf.length; i++) {
+            var part = buf[i].split('=');
+            if (part[0] == 'section' || part[0] == ' section') {
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById(part[1]).style.display = '';
+                return;
+            }
+        }
+    }
+
+    function startup() {
+        checkSection();
+        checkmode();
+    }
+
+    window.onload = startup();
+
+    console.log(document.cookie)
 </script>
 
 </html>
