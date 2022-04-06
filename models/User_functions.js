@@ -112,23 +112,23 @@ async function displayBestScore(obj) {
 }
 
 //change functions
-// i will pass you newpassword and the username the function
-// please find() the oldpassword by yourself with the username first
-async function changePassword(obj) {
+
+async function changePassword(obj, newpassword) {
     try {
-        const query = await User.findOne({ username: obj.username }).where("password").equals(oldPassword).updateOne({ password: newPassword });
-        console.log(query);
+        const query = await User.findOne({ username: obj.username }); //.where("password").equals(oldPassword)
         let content = query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
                 }
                 else {
+                    result.updateOne({ password: newpassword });
                     return result;
 
                 }
             }
         )
+        return content;
 
     } catch (err) {
         console.log(err.message);
@@ -175,14 +175,15 @@ async function changeEmail(obj) {
     try {
         if (oldEmail.equals(newEmail)) {
             console.log("New Email has to be different.");
+            return 11100;
             //no need to check the email existance as user will receive a confirmation email in the registration
         } else {
             const check = await User.find({ user_email: newEmail })
             let content = check.then(
                 async (result) => {
                     if (result === null || result.length === 0) {
-                        const query = await User.find({ _id: obj._id }).where("user_email").equals(oldEmail);
-                        console.log(query);
+                        const query = await User.find({ _id: obj._id });
+
                         let content = query.then(
                             (result) => {
                                 if (result === null || result.length === 0) {
