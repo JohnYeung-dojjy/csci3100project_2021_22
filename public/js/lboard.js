@@ -73,9 +73,16 @@ async function get_lboard() {
     let htmlboardname = document.querySelectorAll('#lboard .name');
     let htmlboardscore = document.querySelectorAll('#lboard .score');
     let looplength = 6 < getleaderboard.length ? 6 : getleaderboard.length;
+
+    
+
     for (let i = 0; i < looplength; i++) {
       htmlboardname[i].innerHTML = getleaderboard[i].username;
       htmlboardscore[i].innerHTML = getleaderboard[i].score;
+    }
+    for (let i = looplength; i < 6; i++){
+      htmlboardname[i].innerHTML = "";
+      htmlboardscore[i].innerHTML = "";
     }
   });
   return 0;
