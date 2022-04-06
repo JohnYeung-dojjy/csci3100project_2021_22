@@ -16,14 +16,13 @@
 <style>
     body.light {
         height: 100%;
-        background-image: url('static/img/RadioactiveHeat.jpg');
-        background-repeat: repeat;
-        background-size: cover;
+        color: rgb(0, 0, 0);
     }
 
     body.dark {
         height: 100%;
         background-color: rgb(27, 27, 27);
+        color: rgb(150, 150, 150);
     }
 
     .bodyContent {
@@ -38,137 +37,187 @@
     .mode {
         filter: invert(1) hue-rotate(180deg);
     }
-
-    .container {
-        width: 60%;
-        position: center;
-    }
 </style>
 
 
 <body id="body" class="dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-        <a class="navbar-brand">Wall Hole</a>
+        <a class="navbar-brand" href="#" onclick="welcomeUser()">Wall Hole</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
             <ul class="navbar-nav">
-                <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start
-                        Game<i class="bi bi-joystick"></i></a></li>
                 <li class="nav-item"><a onclick="displayUserInfo()" class="nav-link">Your Info</a></li>
                 <li class="nav-item"><a onclick="modifyUserInfo()" class="nav-link">Modify your Info</a></li>
                 <li class="nav-item"><a onclick="resetPasswordForm()" class="nav-link">Reset Password</a></li>
-                <li class="nav-item"><a onclick="giveFeedback()" class="nav-link">Give Feedback</a></li>
-                <li class="nav-item"><a onclick="changemode()" class="nav-link">Change mode</a></li>
+                <li class="nav-item"><a onclick="giveFeedback()" class="nav-link">Feedbacks</a></li>
+                <li class="nav-item">
+                    <a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">
+                        Start Game
+                        <i class="bi bi-joystick"></i>
+                    </a>
+                </li>
                 <li class="nav-item"><a onclick="logout()" class="nav-link">Log-out</a></li>
+                <li class="nav-item">
+                    <a onclick="changemode()" class="nav-link"> 
+                        <i class="bi bi-sun-fill" style="color: rgb(255, 136, 0)"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
     <div class="bodyContent">
         <div id="welcome" class="title">
-            <h3>Welcome User</h3>
+			<section class="p-3">
+                <div class="container">
+                    <div class="d-sm-flex align-items-center justify-content-between">
+                        <img src="static/img/logo.png" alt="" class="d-block mx-auto h-100 w-50">
+                        <div class="text-center text-sm-start">
+                            <p class="h2">Welcome user to</p>
+                            <p class="display-2"><b>
+                                <span style="color: #F9A709;">Hole</span> in the <span style="color: #42E2FF;">Wall</span>
+                            </b></p>
+                            <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut ducimus, numquam qui sequi beatae aliquam officiis harum in fugit officia autem! Ipsam aperiam deserunt, quae sit excepturi quia a error?</p>
+                            <a href="../game" class="btn btn-warning text-light btn-lg">
+                                Start Game
+                                <i class="bi bi-joystick"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+    
+            <section class="update">
+                <div class="container">
+                    <p class="h2">What's new</p>
+                    <div id="updates" class="">list here</div>
+                </div>
+            </section>
         </div>
 
 
         <div id="userInfo" style='display: none'>
-            <h3 class="title">Your Info</h3>
-            <div class="container">
-                <div class="d-flex" style="align-items: center; width: 400px">
-                    <div class="flex-shrink-0" id="userIcon">
-                        <% if (typeof thisicon==="object" ){%>
-                            <img src="data:image/<%=thisicon.contentType%>;base64,
-                        <%=thisicon.data.toString('base64')%>" width="300px">
-                            <%} else{%>
-                                <img src="static/img/walls/0.png" width="300px">
-                                <%}%>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h4>Username: <%=thisusername%>
-                        </h4>
-                        <h4>Email: <%=thisemail%>
-                        </h4>
-                    </div>
+			<h3 class="title">Your Info</h3>
+            <section class="p-3">
+                <div class="container">
+                    <h2 class="title">Your Information</h2>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <% if (typeof thisicon==="object" ){%>
+                                    <img src="data:image/<%=thisicon.contentType%>;base64,
+                                <%=thisicon.data.toString('base64')%>" width="300px">
+                                    <%} else{%>
+                                        <img src="static/img/walls/0.png" width="300px">
+                                        <%}%>
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: <%=thisusername%>
+                                </h4>
+                                <h4>Email: <%=thisemail%>
+                                </h4>
+                                <div id="editOptions" class="">
+                                    <a onclick="modifyUserInfo()" class="btn btn-primary btn-md">
+                                        Update Info
+                                    </a>
+                                    <a onclick="resetPasswordForm()" class="btn btn-warning text-light btn-md">
+                                        Reset Password
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                 </div>
-            </div>
+            </section>
         </div>
 
         <div id="modifyInfo" style='display: none'>
-            <h3 class="title">Modify your Info</h3>
-            <div class="container">
-                <form id="modifyInfoForm">
-                    <div class="form-group">
-                        <label for="inputNewUsername">Username</label>
-                        <input class="form-control" id="newUsername">
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="inputNewEmail">Email address</label>
-                        <input type="email" class="form-control" id="newEmail1">
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="inputNewIcon">New Icon</label>
-                        <br>
-                        <input type="file" class="form-control-file" id="newIcon" onchange="uploadfile()">
-                    </div>
-                    <br>
-                    <button class="btn btn-primary" type="button" onclick="updateInfo()">Update</button>
-                </form>
-            </div>
+            <section class="p-3">
+                <div class="container">
+                    <h2 class="title">Modify your Information</h2>
+                    <div>
+                        <form id="modifyInfoForm">
+                            <div class="form-group">
+                                <label for="inputNewUsername">Username</label>
+                                <input class="form-control" id="newUsername">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="inputNewEmail">Email address</label>
+                                <input type="email" class="form-control" id="newEmail1">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="inputNewIcon">New Icon</label>
+                                <br>
+                                <input type="file" class="form-control-file" id="newIcon" onchange="uploadfile()">
+                            </div>
+                            <br>
+                            <button class="btn btn-primary" type="button" onclick="updateInfo()">Update</button>
+                        </form>
+                    </div>																			
+                </div>
+            </section>
         </div>
 
         <div id="resetPassword" style='display: none'>
-            <h3 class="title">Reset Password</h3>
-            <div class="container">
-                <form id="resetPasswordForm">
-                    <div class="form-group">
-                        <label for="inputOldPassword">Old password</label>
-                        <input type="password" class="form-control" id="oldPassword">
+            <section class="p-3">
+                <div class="container">
+                    <h2 class="title">Reset Password</h2>
+                    <div>
+                        <form id="resetPasswordForm">
+                            <div class="form-group">
+                                <label for="inputOldPassword">Old password</label>
+                                <input type="password" class="form-control" id="oldPassword">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="inputNewPassword">New password</label>
+                                <input type="password" class="form-control" id="newPassword">
+                                <small id="passwordHelp" class="form-text text-muted">Password should consist only character and
+                                    digit with minimum length of 8.</small>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="inputNewPassword2">New password again</label>
+                                <input type="password" class="form-control" id="newPassword2">
+                                <small id="passwordHelp2" class="form-text text-muted">Must be the same as above</small>
+                            </div>
+                            <br>
+                            <button class="btn btn-primary" type="button" onclick="updatePassword()">Update</button>
+                        </form>
                     </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="inputNewPassword">New password</label>
-                        <input type="password" class="form-control" id="newPassword">
-                        <small id="passwordHelp" class="form-text text-muted">Password should consist only character and
-                            digit with minimum length of 8.</small>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="inputNewPassword2">New password again</label>
-                        <input type="password" class="form-control" id="newPassword2">
-                        <small id="passwordHelp2" class="form-text text-muted">Must be the same as above</small>
-                    </div>
-                    <br>
-                    <button class="btn btn-primary" type="button" onclick="updatePassword()">Update</button>
-                </form>
-            </div>
+                </div>
+            </section>
         </div>
 
         <div id="giveFeedback" style='display: none'>
-            <h3 class="title">Give Feedback</h3>
-            <div class="container">
-                <div class="d-flex">
-                    <div class="flex-shrink-0" id="userIcon">
-                        <img src="static/img/walls/0.png" width="200px">
-                    </div>
-                    <div class="flex-grow-1">
-                        <h6>Username: Abc</h6>
-                        <h6>Feedback: This is not a great UI.</h6>
-                    </div>
-                </div>
-                <br>
+            <section class="p-3">
+                <div class="container">
+                    <h2 class="title">Give Feedback</h2>
+            <div>
                 <form id="giveFeedbackForm">
-                    <div class="form-group">
-                        <label for="inputFeedback">Feedback</label>
-                        <textarea class="form-control" id="feedback" rows="3"></textarea>
-                    </div>
-                    <br>
-                    <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
+                    <fieldset>
+                        <legend>Input your own feedback</legend>
+                        <div class="form-group">
+                            <label for="inputFeedback">Input your own feedback</label>
+                            <textarea class="form-control" id="feedback" rows="3"></textarea>
+                        </div>
+                        <br>
+                        <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
+                    </fieldset>
+                    
                 </form>
             </div>
+                </div>
+            </section>
+    
+            <section class="">
+                <div class="container">
+                    <p class="h2">Feedbacks</p>
+                    <div id="updates" class="">list here</div>
+                </div>
+            </section>
         </div>
-
     </div>
 </body>
 
@@ -297,7 +346,6 @@
         window.location.reload();
     }
 
-
     function submiFeedback() {
         var feedback = document.getElementById('feedback').value;
         if (feedback == '') {
@@ -307,36 +355,53 @@
         // upload data
         document.getElementById('giveFeedbackForm').reset();
     }
+
+    function welcomeUser() {
+        document.getElementById('welcome').style.display = '';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('modifyInfo').style.display = 'none';
+        document.getElementById('resetPassword').style.display = 'none';
+        document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=welcome";
+    }
+	
     function displayUserInfo() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = '';
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=userInfo";
     }
+	
     function modifyUserInfo() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
         document.getElementById('modifyInfo').style.display = '';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=modifyInfo";
     }
+	
     function resetPasswordForm() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = '';
         document.getElementById('giveFeedback').style.display = 'none';
+        document.cookie = "section=resetPassword";
     }
+	
     function giveFeedback() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
         document.getElementById('modifyInfo').style.display = 'none';
         document.getElementById('resetPassword').style.display = 'none';
         document.getElementById('giveFeedback').style.display = '';
+        document.cookie = "section=giveFeedback";
     }
+	
     function changemode() {
-        document.querySelector('#body').classList.toggle("mode");
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
             document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
@@ -347,6 +412,7 @@
             document.cookie = " mode=light";
         }
     }
+	
     function checkmode() {
         var buf = document.cookie.split(';');
         for (var i = 0; i < buf.length; i++) {
@@ -354,7 +420,7 @@
             if (part[0] == 'mode' || part[0] == ' mode') {
                 if (part.length > 1) {
                     if (part[1] == 'dark') {
-                        document.querySelector('#body').classList.toggle("mode");
+                        document.querySelector('#body').classList.replace("light", "dark");
                     } else {
                         document.querySelector('#body').classList.replace("dark", "light");
                     }
@@ -364,6 +430,7 @@
         }
         document.querySelector('#body').classList.replace("dark", "light");
     }
+	
     function logout() {
         let request = new Request('/logout', {
             method: 'post',
@@ -405,7 +472,24 @@
 
     }
 
-    window.onload = checkmode;
+    function checkSection() {
+        var buf = document.cookie.split(';');
+        for (var i = 0; i < buf.length; i++) {
+            var part = buf[i].split('=');
+            if (part[0] == 'section' || part[0] == ' section') {
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById(part[1]).style.display = '';
+                return;
+            }
+        }
+    }
+
+    function startup() {
+        checkSection();
+        checkmode();
+    }
+
+    window.onload = startup();
 </script>
 
 </html>
