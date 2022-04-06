@@ -73,11 +73,11 @@
                     <img src="static/img/logo.png" alt="" class="d-block mx-auto h-100 w-50">
                     <div class="text-center text-sm-start">
                         <p class="h2">Welcome user to</p>
-                        <p class="display-2">
+                        <p class="display-2"><b>
                             <span style="color: #F9A709;">Hole</span> in the <span style="color: #42E2FF;">Wall</span>
-                        </p>
+                        </b></p>
                         <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut ducimus, numquam qui sequi beatae aliquam officiis harum in fugit officia autem! Ipsam aperiam deserunt, quae sit excepturi quia a error?</p>
-                        <a href="../game" class="btn btn-primary btn-lg">
+                        <a href="../game" class="btn btn-warning text-light btn-lg">
                             Start Game
                             <i class="bi bi-joystick"></i>
                         </a>
@@ -114,6 +114,14 @@
                             Email:
                             <div id="userEmail"></div>
                         </h4>
+                        <div id="editOptions" class="">
+                            <a onclick="modifyUserInfo()" class="btn btn-primary btn-md">
+                                Update Info
+                            </a>
+                            <a onclick="resetPasswordForm()" class="btn btn-warning text-light btn-md">
+                                Reset Password
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,69 +129,89 @@
     </div>
 
     <div id="modifyInfo" style='display: none'>
-        <h3 class="title">Modify your Info</h3>
-        <div>
-            <form id="modifyInfoForm">
-                <div class="form-group">
-                    <label for="inputNewUsername">Username</label>
-                    <input class="form-control" id="newUsername">
+        <section class="text-dark p-3">
+            <div class="container">
+                <h2 class="title">Modify your Information</h2>
+                <div>
+                    <form id="modifyInfoForm">
+                        <div class="form-group">
+                            <label for="inputNewUsername">Username</label>
+                            <input class="form-control" id="newUsername">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="inputNewEmail">Email address</label>
+                            <input type="email" class="form-control" id="newEmail1">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="inputNewIcon">New Icon</label>
+                            <br>
+                            <input type="file" class="form-control-file" id="newIcon">
+                        </div>
+                        <br>
+                        <button class="btn btn-primary" type="button" onclick="updateInfo()">Update</button>
+                    </form>
                 </div>
-                <br>
-                <div class="form-group">
-                    <label for="inputNewEmail">Email address</label>
-                    <input type="email" class="form-control" id="newEmail1">
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="inputNewIcon">New Icon</label>
-                    <br>
-                    <input type="file" class="form-control-file" id="newIcon">
-                </div>
-                <br>
-                <button class="btn btn-primary" type="button" onclick="updateInfo()">Update</button>
-            </form>
-        </div>
+            </div>
+        </section>
     </div>
 
     <div id="resetPassword" style='display: none'>
-        <h3 class="title">Reset Password</h3>
-        <div>
-            <form id="resetPasswordForm">
-                <div class="form-group">
-                    <label for="inputOldPassword">Old password</label>
-                    <input type="password" class="form-control" id="oldPassword">
+        <section class="text-dark p-3">
+            <div class="container">
+                <h2 class="title">Reset Password</h2>
+                <div>
+                    <form id="resetPasswordForm">
+                        <div class="form-group">
+                            <label for="inputOldPassword">Old password</label>
+                            <input type="password" class="form-control" id="oldPassword">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="inputNewPassword">New password</label>
+                            <input type="password" class="form-control" id="newPassword">
+                            <small id="passwordHelp" class="form-text text-muted">Password should consist only character
+                                and
+                                digit with minimum length of 8.</small>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="inputNewPassword2">New password again</label>
+                            <input type="password" class="form-control" id="newPassword2">
+                            <small id="passwordHelp2" class="form-text text-muted">Must be the same as above</small>
+                        </div>
+                        <br>
+                        <button class="btn btn-primary" type="button" onclick="updatePassword()">Update</button>
+                    </form>
                 </div>
-                <br>
-                <div class="form-group">
-                    <label for="inputNewPassword">New password</label>
-                    <input type="password" class="form-control" id="newPassword">
-                    <small id="passwordHelp" class="form-text text-muted">Password should consist only character and
-                        digit with minimum length of 8.</small>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="inputNewPassword2">New password again</label>
-                    <input type="password" class="form-control" id="newPassword2">
-                    <small id="passwordHelp2" class="form-text text-muted">Must be the same as above</small>
-                </div>
-                <br>
-                <button class="btn btn-primary" type="button" onclick="updatePassword()">Update</button>
-            </form>
-        </div>
+            </div>
+        </section>
     </div>
 
     <div id="giveFeedback" style='display: none'>
-        <h3 class="title">Give Feedback</h3>
-        <div>
-            <form id="giveFeedbackForm">
-                <div class="form-group">
-                    <label for="inputFeedback">Feedback</label>
-                    <textarea class="form-control" id="feedback" rows="3"></textarea>
+        <section class="text-dark p-3">
+            <div class="container">
+                <h2 class="title">Give Feedback</h2>
+                <div>
+                    <form id="giveFeedbackForm">
+                        <div class="form-group">
+                            <label for="inputFeedback">Feedback</label>
+                            <textarea class="form-control" id="feedback" rows="3"></textarea>
+                        </div>
+                        <br>
+                        <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
+                    </form>
                 </div>
-                <br>
-                <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
-            </form>
-        </div>
+            </div>
+        </section>
+
+        <section class="">
+            <div class="container">
+                <p class="h2">Feedbacks</p>
+                <div id="updates" class="">list here</div>
+            </div>
+        </section>
     </div>
 </body>
 
@@ -321,7 +349,7 @@
     }
 
     function changemode() {
-        document.querySelector('#body').classList.toggle("mode");
+        // document.querySelector('#body').classList.toggle("mode");
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
             document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -340,7 +368,8 @@
             if (part[0] == 'mode' || part[0] == ' mode') {
                 if (part.length > 1) {
                     if (part[1] == 'dark') {
-                        document.querySelector('#body').classList.toggle("mode");
+                        // document.querySelector('#body').classList.toggle("mode");
+                        document.querySelector('#body').classList.replace("light", "dark");
                     } else {
                         document.querySelector('#body').classList.replace("dark", "light");
                     }
@@ -369,8 +398,6 @@
     }
 
     window.onload = startup();
-
-    console.log(document.cookie)
 </script>
 
 </html>
