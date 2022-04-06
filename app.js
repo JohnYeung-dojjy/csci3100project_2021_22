@@ -6,13 +6,13 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
+const multer = require('multer');
 const database = require('./models/testdb');
 const system = require('./models/System_functions');
 const mail = require('./models/mail');
 const check = require('./models/cookiecheck');
 const user = require('./models/User_functions');
 const admin = require('./models/Admin_functions');
-
 /* const { getMaxListeners } = require('process'); */
 //cookie,session format setting
 app.use(session({
@@ -25,12 +25,27 @@ app.use(session({
     }
 }));
 
-app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: true }));
+app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: false }));
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, __dirname + '/uploads');
+        },
+        filename: function (req, file, cb) {
+            let filename = req.session.username + file.originalname;
+            cb(null, filename);
+        }
+    }),
+    limits: { fieldSize: 10 * 1024 * 1024 }
+}); //10MB
+
+
 
 /* 
 try to understand the concept in this way:
@@ -50,10 +65,21 @@ app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/pages/home/home.html');
 });
 
-app.get('/user', check.needlogin, (req, res) => {
-    res.render('user.ejs', {
-        thisusername: req.session.username
-    })
+app.get('/user', check.needlogin, async (req, res) => {
+    let info = await user.displayInfo({ username: req.session.username });
+    if (info.user_icon === null || info.user_icon === '') {
+        res.render('user.ejs', {
+            thisusername: info.username,
+            thisemail: info.user_email
+        });
+    }
+    else {
+        res.render('user.ejs', {
+            thisusername: info.username,
+            thisemail: info.user_email,
+            thisicon: info.user_icon
+        })
+    }
 });
 
 app.get('/', check.noneedlogin, (req, res) => {
@@ -80,7 +106,7 @@ app.get('/game', check.needlogin, async (req, res) => {
         title: 'Homepage',
         users: ['BRIan', 'TOM', 'JErrY']
     });
-
+ 
 }) */
 
 app.get('/admin', check.needlogin, async (req, res) => {
@@ -203,7 +229,7 @@ app.post('/updateleaderboard', (req, res) => {
         let content = await user.updateLeaderboard(obj);
         console.log(content.score);
         res.send(JSON.stringify(content));//automatically change to jsons
-    })
+    });
 
 });
 
@@ -219,5 +245,37 @@ app.post('/logout', async (req, res) => {
     res.redirect('/');
 });
 
+app.post('/upload', upload.single('photo'), async (req, res) => {
+    console.log(req.body);
+    console.log(req.file)
+    let photo;
+    if (req.file) {
+        photo = {
+            data: fs.readFileSync(req.file.path),
+            contentType: 'image/png'
+        }
+    }
+    else {
+        photo = '';
+    }
+    await user.updateInfo(req.body, photo).then((content) => {
+        if (content === "duplicated") {
+            res.send(content);
+        }
+        else {
+            req.session.destroy();
+            res.redirect('/');
+        }
+    });
+});
+
+
+app.post('/changepassword', async (req, res) => {
+    let result = await user.changepassword(req.body);
+    if (result === "success") {
+        req.session.destroy();
+        res.redirect('/');
+    }
+})
 const server = app.listen(3000);
 module.exports = app;

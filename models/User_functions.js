@@ -9,9 +9,8 @@ const User = require("./User");
 const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
-const { contentType } = require("express/lib/response");
 
-module.exports = { displayInfo, displayBestScore, changePassword, updateLeaderboard, changeIcon, changeEmail, showFeedback, updateFeedback };
+module.exports = { displayInfo, displayBestScore, updateInfo, updateLeaderboard, showFeedback, updateFeedback, changepassword };
 
 
 /* //display functions,for now, we may not need this
@@ -51,17 +50,7 @@ async function displayEmail(obj) {
 //single function, then add  one more displayicon() is ok, same, only object or number(for error) should be returned)
 async function displayInfo(obj) {
     try {
-        const query = await User.findOne({ username: obj.username }).lean().exec();
-        let content = await query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        );
+        let content = await User.findOne({ username: obj.username }).lean().exec();
         return content;
     } catch (err) {
         console.log(err.message);
@@ -113,7 +102,7 @@ async function displayBestScore(obj) {
 
 //change functions
 
-async function changePassword(obj, oldpassword, newpassword) {
+/* async function changePassword(obj, oldpassword, newpassword) {
     try {
         const query = await User.findOne({ username: obj.username, password: oldpassword }); //.where("password").equals(oldPassword)
         let content = query.then(
@@ -134,32 +123,41 @@ async function changePassword(obj, oldpassword, newpassword) {
         console.log(err.message);
         return -1;
     }
-}
+} */
 
 
 //i will pass you the username and  the image in the obj
-async function changeIcon(obj) {
+async function updateInfo(obj, photo) {
     try {
-        /* //prob not needed because upload manager will restrict that
-        var parts = newImage.split('.');
-        if (parts[parts.length - 1] == "jpg" || (parts[parts.length - 1] == "png" ){
-
-        } else {
-            console.log("File Format not accepted.");
-        } */
-        const query = await User.findOne({ username: obj.username });
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    result.updateOne({ user_icon: newImage })
-                    return result;
-
-                }
+        let content = "success";
+        let options = { returnDocument: 'after' };
+        if (obj.newusername !== '') {
+            let result = await User.findOne({ username: obj.newusername }).exec();
+            if (result === null || result.length === 0) {
+                await User.findOneAndUpdate({ username: obj.oldusername }, {
+                    username: obj.newusername
+                }, options).exec();
+                obj.oldusername = obj.newusername;
             }
-        )
+            else {
+                content = "duplicated";
+                return content;
+            }
+        }
+
+        if (obj.newemail !== '' && photo === '') {
+            await User.findOneAndUpdate({ username: obj.oldusername }, {
+                user_email: obj.newemail
+            }, options).exec();
+        }
+        else if (obj.newemail === '' && photo !== '') {
+            await User.findOneAndUpdate({ username: obj.oldusername }, { $set: { 'user_icon.data': photo.data, 'user_icon.contentType': photo.contentType } }, options).exec();
+        }
+        else if (obj.newemail !== '' && photo !== '') {
+            await User.findOneAndUpdate({ username: obj.oldusername }, {
+                $set: { 'user_icon.data': photo.data, 'user_icon.contentType': photo.contentType, 'user_email': obj.newemail }
+            }, options).exec();
+        }
         return content;
 
     } catch (err) {
@@ -168,7 +166,7 @@ async function changeIcon(obj) {
     }
 }
 
-async function changeEmail(obj, oldEmail, newEmail) {
+/* async function changeEmail(obj, oldEmail, newEmail) {
     try {
         if (oldEmail.equals(newEmail)) {
             console.log("New Email has to be different.");
@@ -207,7 +205,7 @@ async function changeEmail(obj, oldEmail, newEmail) {
         console.log(err.message);
         return -1;
     }
-}
+} */
 
 //completed, but need checking
 // as login verification is done, the user must exist
@@ -245,6 +243,18 @@ async function updateLeaderboard(obj) {
     }
 }
 
+
+async function changepassword(obj) {
+    try {
+        await User.findOneAndUpdate({ username: obj.username }, {
+            password: obj.password
+        }).exec();
+        return "success";
+    } catch (err) {
+        console.log(err.message);
+        return -1;
+    }
+}
 
 //Feedback functions
 //make sure that you return the lastest 5 feedback, as they haven't finished the feedback system yet, you can use
