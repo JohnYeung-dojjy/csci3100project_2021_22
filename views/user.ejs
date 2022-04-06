@@ -14,12 +14,13 @@
     <title>User page</title>
 </head>
 <style>
-    body.light {
+    .light {
         height: 100%;
+        background-color: rgb(255,255,255);
         color: rgb(0, 0, 0);
     }
 
-    body.dark {
+    .dark {
         height: 100%;
         background-color: rgb(27, 27, 27);
         color: rgb(150, 150, 150);
@@ -36,6 +37,12 @@
 
     .mode {
         filter: invert(1) hue-rotate(180deg);
+    }
+
+    .top{ 
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
     }
 </style>
 
@@ -106,9 +113,9 @@
                             <div class="flex-shrink-0 text-center" id="userIcon">
                                 <% if (typeof thisicon==="object" ){%>
                                     <img src="data:image/<%=thisicon.contentType%>;base64,
-                                <%=thisicon.data.toString('base64')%>" width="300px">
+                                <%=thisicon.data.toString('base64')%>" width="250px">
                                     <%} else{%>
-                                        <img src="static/img/walls/0.png" width="300px">
+                                        <img src="static/img/walls/0.png" width="250px">
                                         <%}%>
                             </div>
                             <div class="flex-grow-1 p-3">
@@ -193,28 +200,86 @@
         <div id="giveFeedback" style='display: none'>
             <section class="p-3">
                 <div class="container">
-                    <h2 class="title">Give Feedback</h2>
-            <div>
-                <form id="giveFeedbackForm">
-                    <fieldset>
-                        <legend>Input your own feedback</legend>
-                        <div class="form-group">
-                            <label for="inputFeedback">Input your own feedback</label>
-                            <textarea class="form-control" id="feedback" rows="3"></textarea>
+                    <div class="top dark" id="giveFeedbackFormDiv">
+                        <h2 class="title">Feedbacks</h2>
+                        <form id="giveFeedbackForm">
+                            <div class="form-group">
+                                <label for="inputFeedback">Leave your own feedback:</label>
+                                <textarea class="form-control" id="feedback" rows="2"></textarea>
+                            </div>
+                            <br>
+                            <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
+                        </form>
+                        <hr>
+                    </div>
+                    <div class="container">
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
                         </div>
-                        <br>
-                        <button class="btn btn-primary" type="button" onclick="submiFeedback()">Submit</button>
-                    </fieldset>
-                    
-                </form>
-            </div>
-                </div>
-            </section>
-    
-            <section class="">
-                <div class="container">
-                    <p class="h2">Feedbacks</p>
-                    <div id="updates" class="">list here</div>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+                            <div class="flex-shrink-0 text-center" id="userIcon">
+                                <img src="static/img/walls/0.png" width="250px">
+                            </div>
+                            <div class="flex-grow-1 p-3">
+                                <h4>Username: 1234
+                                </h4>
+                                <h4>Feedback: UI can be better
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -404,10 +469,12 @@
     function changemode() {
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
+            document.querySelector('#giveFeedbackFormDiv').classList.replace("light", "dark");
             document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
             document.cookie = " mode=dark";
         } else {
             document.querySelector('#body').classList.replace("dark", "light");
+            document.querySelector('#giveFeedbackFormDiv').classList.replace("dark", "light");
             document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
             document.cookie = " mode=light";
         }
@@ -421,8 +488,10 @@
                 if (part.length > 1) {
                     if (part[1] == 'dark') {
                         document.querySelector('#body').classList.replace("light", "dark");
+                        document.querySelector('#giveFeedbackFormDiv').classList.replace("light", "dark");
                     } else {
                         document.querySelector('#body').classList.replace("dark", "light");
+                        document.querySelector('#giveFeedbackFormDiv').classList.replace("dark", "light");
                     }
                 }
                 return;
