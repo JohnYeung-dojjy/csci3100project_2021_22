@@ -282,10 +282,10 @@
             headers: {
                 'Content-Type': 'application/json;charset=utf-8;'
             },
-            body: {
+            body: JSON.stringify({
                 username: oldUsername,
                 password: newPassword
-            }
+            })
         });
         let response = await fetch(request);
         if (response.status !== 200) {

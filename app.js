@@ -15,6 +15,8 @@ const user = require('./models/User_functions');
 const admin = require('./models/Admin_functions');
 /* const { getMaxListeners } = require('process'); */
 //cookie,session format setting
+app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: false }));
+app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
     saveUninitialized: false,
@@ -25,8 +27,7 @@ app.use(session({
     }
 }));
 
-app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: false }));
-app.use(bodyParser.json({ type: 'application/*+json' }));
+
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -271,11 +272,17 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
 
 
 app.post('/changepassword', async (req, res) => {
-    let result = await user.changepassword(req.body);
-    if (result === "success") {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        await user.changepassword(obj);
         req.session.destroy();
         res.redirect('/');
-    }
+    })
+
 })
 const server = app.listen(3000);
 module.exports = app;
