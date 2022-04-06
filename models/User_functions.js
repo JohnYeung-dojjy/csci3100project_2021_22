@@ -110,9 +110,9 @@ async function displayBestScore(obj) {
 
 //change functions
 
-async function changePassword(obj, newpassword) {
+async function changePassword(obj, oldpassword, newpassword) {
     try {
-        const query = await User.findOne({ username: obj.username }); //.where("password").equals(oldPassword)
+        const query = await User.findOne({ username: obj.username, password: oldpassword }); //.where("password").equals(oldPassword)
         let content = query.then(
             (result) => {
                 if (result === null || result.length === 0) {
@@ -142,14 +142,14 @@ async function changeIcon(obj, newImage) {
         } else {
             console.log("File Format not accepted.");
         } */
-        const query = await User.findOne({ username: obj.username }).updateOne({ user_icon: newImage });
-        console.log(query);
+        const query = await User.findOne({ username: obj.username });
         let content = query.then(
             (result) => {
                 if (result === null || result.length === 0) {
                     return 11100;
                 }
                 else {
+                    result.updateOne({user_icon: newImage })
                     return result;
 
                 }
@@ -163,7 +163,7 @@ async function changeIcon(obj, newImage) {
     }
 }
 
-async function changeEmail(obj) {
+async function changeEmail(obj, oldEmail, newEmail) {
     try {
         if (oldEmail.equals(newEmail)) {
             console.log("New Email has to be different.");
