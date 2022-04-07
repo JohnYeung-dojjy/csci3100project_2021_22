@@ -229,7 +229,7 @@ app.post('/updateleaderboard', (req, res) => {
         obj = JSON.parse(data);//from json to object
         let content = await user.updateLeaderboard(obj);
         console.log(content.score);
-        res.send(JSON.stringify(content));//automatically change to jsons
+        res.send(JSON.stringify(content));
     });
 
 });

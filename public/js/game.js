@@ -33,7 +33,7 @@ window.onresize = function () {
 
 async function onResults(results) {
   if (!is_game_start) { // if is in rules
-
+    is_lboard_displayed = false;
   } else { // if is in game
     if (!is_game_end) {
       //console.log(game_countdown_second);
@@ -51,7 +51,7 @@ async function onResults(results) {
       if (!is_lboard_displayed) {
         console.log("bestscore passed to the client:" + bestscore);
 
-        await add_lboard(score, bestscore);
+        bestscore = await add_lboard(score, bestscore);
         await get_lboard();
 
 

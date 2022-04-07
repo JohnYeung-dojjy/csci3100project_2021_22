@@ -74,13 +74,13 @@ async function get_lboard() {
     let htmlboardscore = document.querySelectorAll('#lboard .score');
     let looplength = 6 < getleaderboard.length ? 6 : getleaderboard.length;
 
-    
+
 
     for (let i = 0; i < looplength; i++) {
       htmlboardname[i].innerHTML = getleaderboard[i].username;
       htmlboardscore[i].innerHTML = getleaderboard[i].score;
     }
-    for (let i = looplength; i < 6; i++){
+    for (let i = looplength; i < 6; i++) {
       htmlboardname[i].innerHTML = "";
       htmlboardscore[i].innerHTML = "";
     }
@@ -89,6 +89,8 @@ async function get_lboard() {
 }
 
 async function add_lboard(score, bestscore) {
+  console.log("the current final score is" + score);
+  console.log("the best score is" + bestscore);
   if (score >= bestscore) {
     let request = new Request('/updateleaderboard', {
       method: 'post',
@@ -106,9 +108,10 @@ async function add_lboard(score, bestscore) {
     if (response.status !== 200) {
       throw new Error(response.status);
     }
-    response.json().then((response) => {
-      bestscore = response.score;
-    });
+    response = await response.json();
+    console.log("after uploading, bestscore is" + response.score);
+    console.log("if best score < score, err!!")
+    return response.score;
   }
-  return 0;
+  return bestscore;
 }
