@@ -34,7 +34,9 @@ async function displayAllUser() {
 //modified!!!!
 async function displayLeaderboard() {
     try {
-        let query = Leaderboard.find().sort({ "score": -1 }).limit(10).lean().exec();
+        let query = Leaderboard.find().sort( "-score" ).limit(10).lean().exec();
+        //let query = Leaderboard.find().sort({ "score": -1 }).limit(10).lean().exec();
+
         //lean() can only be used in findone() and find(), it has no use with save();
         let content = await query.then(
             (result) => {
