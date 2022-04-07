@@ -285,6 +285,7 @@ async function showFeedback() {
 //for the updatfeedback(), I will pass you the username and the feedback content only,
 //the feedbackid should not be provided by me
 // you can do the find() first to get the lastest id, or change another method.
+//updateFeedback({username:"Patrick" , feedback:"Amazing game!"});
 async function updateFeedback(obj) {
     try {
 
@@ -301,7 +302,7 @@ async function updateFeedback(obj) {
         );
 
         const instance = new Feedback({
-            feedback_id: content,
+            feedback_id: (content + 1),
             username: obj.username,
             feedback: obj.feedback
         });
