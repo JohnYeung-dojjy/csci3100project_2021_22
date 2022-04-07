@@ -218,11 +218,9 @@ async function updateLeaderboard(obj) {
                     return "norecord";
                 }
                 else {
-                    if (obj.score > result) {
-                        result.score = obj.score;
-                        await result.save();
-                        return await result.toObject();
-                    }
+                    result.score = obj.score;
+                    await result.save();
+                    return await result.toObject();
                 }
             }
         );
