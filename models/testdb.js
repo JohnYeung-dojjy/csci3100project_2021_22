@@ -41,6 +41,10 @@ async function disconnectDB() {
 //call functions for testing
 
 conncetToCloudDB();
+
+/*
+!!!! do not try to use the database function to directly create the data
+*/
 //System_functions.registerNewAccount("Bryan", 4321, "./test.jpeg", "fake@gmail.com", true );
 //disconnectDB();
 //System_functions.loginAccount("Bryan", 43216);

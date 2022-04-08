@@ -6,7 +6,7 @@ wallElement.width = 1280;
 wallElement.height = 720;
 const wallCtx = wallElement.getContext('2d');
 
-let wall_order = random_array(10); /* An array that stores the order to display wall*/
+let wall_order = random_array(22); /* An array that stores the order to display wall*/
 
 
 
@@ -14,7 +14,8 @@ const wall = new Image();
 console.log(wall_order)
 
 let curr_wall_id = 0;
-wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
+const wall_dir = "static/img/wall/"
+wall.src = wall_dir + `${wall_order[curr_wall_id]}.png`;
 
 function random_array(num) {
   let tmp_arr = new Array(num);
@@ -45,7 +46,8 @@ function display_wall(){
 function update_wall() {
   console.log(curr_wall_id);
   curr_wall_id += 1;
-  wall.src = `static/img/walls/${wall_order[curr_wall_id]}.png`;
+  wall.src = wall_dir + `${wall_order[curr_wall_id]}.png`;
+  console.log(wall.src);
   // wall_passed = false;
 }
 
@@ -54,35 +56,60 @@ function reset_wall(){
   curr_wall_id = 0;
 }
 
-function checkTransparent(x, y) {
-  // the image must be 1280*720
-  var pixel_x = Math.floor(x * 1280);
-  var pixel_y = Math.floor(y * 720);
+function is_Transparent(pixelData) {
 
-  var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
-
-  // console.log(pixel_x, pixel_y, pixelData);
-  // console.log(wallElement.width, wallElement.height, pixel_x, pixel_y, pixelData);
-  // if alpha value not 255 (transparent)
+  // if alpha value not 255 (transparent) or of color ffff49
   if (pixelData[3] != 255) {
     // console.log(pixelData);
     return true;
-  } else {
+  } else if(pixelData[0] != 255 || pixelData[1] != 255 || pixelData[2] != 16*4+9){
+    // if color is not #ffff49
+
+  }else {
     return false;
   }
 
 }
 
+function is_ffff49(pixelData) {
+  // check if the pixel is of RGB value #ffff49
+  if (pixelData[0] != 255 || pixelData[1] != 255 || pixelData[2] != 16*4+9){
+    return false;
+  } else{
+    return true;
+  }
+  
+}
+
 function is_bounded(landmarks) {
   // this function returns true is all hand landmarks are in bound
+  ffff49_count = 0;
   for (const landmark of landmarks) {
+      // the image must be 1280*720
+    var pixel_x = Math.floor(landmark.x * 1280);
+    var pixel_y = Math.floor(landmark.y * 720);
+
+    var pixelData = wallCtx.getImageData(pixel_x, pixel_y, 1, 1).data;
+    // console.log(pixelData);
     // return false if any of the landmarks are not in bound (i.e. it's pixel is not transparent)
-    if (!checkTransparent(landmark.x, landmark.y)) {
-      return false;
+    if (!is_Transparent(pixelData)) {
+      if (!is_ffff49(pixelData)){
+        return false;
+      } else{
+        ffff49_count += 1;
+      }
     }
     // console.log(landmarks);
   }
-  return true; // all hand landmarks are bound
+  // all hand landmarks are bounded at this point, check if at least 5 landmarks are in special area
+  console.log(ffff49_count);
+  if (ffff49_count >= 5){
+    // 
+    return true; 
+  } else{
+    return false;
+  }
+  
 }
 
 function checkDepth(landmarks) {
