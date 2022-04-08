@@ -75,7 +75,7 @@
         </div>
     </nav>
     <div class="bodyContent">
-        <div id="welcome" class="title">
+        <div id="welcome" class="title" style='display: none'>
             <section class="p-3">
                 <div class="container">
                     <div class="d-sm-flex align-items-center justify-content-between">
@@ -206,7 +206,7 @@
     <div id="giveFeedback" style='display: none'>
         <section class="p-3">
             <div class="container">
-                <div class="top dark" id="giveFeedbackFormDiv">
+                <div class="top light" id="giveFeedbackFormDiv">
                     <h2 class="title">Feedbacks</h2>
                     <form id="giveFeedbackForm">
                         <div class="form-group">
@@ -476,12 +476,12 @@
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
             document.querySelector('#giveFeedbackFormDiv').classList.replace("light", "dark");
-            document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
+            //document.cookie = "mode=; expires=Thu, 01 Jan 2000 00:00:00 GMT";
             document.cookie = " mode=dark";
         } else {
             document.querySelector('#body').classList.replace("dark", "light");
             document.querySelector('#giveFeedbackFormDiv').classList.replace("dark", "light");
-            document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
+            //document.cookie = "mode=; expires=Thu, 01 Jan 2000 00:00:00 GMT";
             document.cookie = " mode=light";
         }
     }
@@ -552,11 +552,11 @@
         for (var i = 0; i < buf.length; i++) {
             var part = buf[i].split('=');
             if (part[0] == 'section' || part[0] == ' section') {
-                document.getElementById('welcome').style.display = 'none';
                 document.getElementById(part[1]).style.display = '';
                 return;
             }
         }
+        document.getElementById('welcome').style.display = '';
     }
 
     function startup() {
