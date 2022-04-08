@@ -23,6 +23,7 @@ async function mailing(obj, option) {
                     console.log('Email sent: ' + info.response);
                 }
             });
+            return 0;
         } catch (e) {
             console.log(e.message);
             return -1;

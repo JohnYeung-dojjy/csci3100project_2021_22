@@ -50,19 +50,29 @@ app.get('/home', (req, res) => {
     res.sendFile(__dirname + '/pages/home/home.html');
 });
 
-app.get('/user', (req, res) => {
-    res.sendFile(__dirname + '/pages/user/user.html');
+app.get('/user', check.needlogin, (req, res) => {
+    res.render('user.ejs', {
+        thisusername: req.session.username
+    })
 });
 
-app.get('/', check.noneedlogin, (req, res, next) => {
+app.get('/', check.noneedlogin, (req, res) => {
     res.sendFile(__dirname + '/pages/login/login.html');
-    console.log(req.session);
-    console.log(req.sessionID);
-})
+});
 
-app.get('/game', (req, res) => {
-    res.sendFile(__dirname + '/pages/game/game.html');
-})
+app.get('/game', check.needlogin, async (req, res) => {
+    let obj = { username: req.session.username };
+    let score = 0;
+    let userresult = await user.displayBestScore(obj);
+    if (typeof userresult === "object") {
+        score = userresult.score;
+    }
+    console.log("score in server is" + score);
+    res.render('game.ejs', {
+        thisusername: req.session.username,
+        thisscore: score
+    })
+});
 
 
 /* app.get('/sample', (req, res) => {
@@ -79,8 +89,8 @@ app.get('/admin', check.needlogin, async (req, res) => {
     res.render('admin.ejs', {
         thisleaderboard: leaderboard,
         thisallUsernameAndID: allUsernameAndID
-    })
-})
+    });
+});
 
 app.post('/loginverify', async (req, res) => {
     /* console.log(req.body.username);//req.body is already a object */
@@ -93,16 +103,16 @@ app.post('/loginverify', async (req, res) => {
             })
         }
         else {
-            /* res.render('admin.ejs',{
-               username: content._id.toString(),
-               email:content.email.toString(),
-            }) */
             check.cookiewrite(req, res, content);
-            res.redirect('/admin');
+            if (content.admin) {
+                res.redirect('/admin');
+            }
+            else {
+                res.redirect('/user');
+            }
         }
     });
-
-})
+});
 
 
 app.post('/regverify', (req, res) => {
@@ -129,7 +139,7 @@ app.post('/regverify', (req, res) => {
         })
     })
 
-})
+});
 
 app.post('/adminresetpassword', (req, res) => {
     let data = '';
@@ -150,7 +160,7 @@ app.post('/adminresetpassword', (req, res) => {
         })
     })
 
-})
+});
 
 
 app.post('/admindeleteaccount', (req, res) => {
@@ -165,7 +175,7 @@ app.post('/admindeleteaccount', (req, res) => {
         })
     })
 
-})
+});
 
 
 app.post('/admindeletegameplay', (req, res) => {
@@ -180,7 +190,34 @@ app.post('/admindeletegameplay', (req, res) => {
         })
     })
 
-})
+});
+
+
+app.post('/updateleaderboard', (req, res) => {
+    let data = '';
+    req.on('data', chunk => {
+        data = data + chunk;
+    })
+    req.on('end', async () => {
+        obj = JSON.parse(data);//from json to object
+        let content = await user.updateLeaderboard(obj);
+        console.log(content.score);
+        res.send(JSON.stringify(content));//automatically change to jsons
+    })
+
+});
+
+app.post('/getleaderboard', async (req, res) => {
+    await admin.displayLeaderboard().then((content) => {
+        res.send(JSON.stringify(content));
+    });
+});
+
+
+app.post('/logout', async (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 
 const server = app.listen(3000);
 module.exports = app;

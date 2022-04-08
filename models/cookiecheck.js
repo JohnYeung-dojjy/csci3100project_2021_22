@@ -17,7 +17,7 @@ function noneedlogin(req, res, next) {
             return res.redirect('/admin');
         }
         else {
-            return res.redirect('/game');
+            return res.redirect('/user');
         }
     } else {
         console.log('not authenticated');

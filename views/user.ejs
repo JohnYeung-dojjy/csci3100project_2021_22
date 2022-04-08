@@ -12,7 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <title>User page</title>
-
+    <script>
+        let username = JSON.parse('<%-JSON.stringify(thisusername)%>');
+    </script>
 </head>
 <style>
     body.light {
@@ -22,33 +24,31 @@
         background-size: cover;
     }
 
-    
+
     body.dark {
         height: 100%;
         background-color: rgb(27, 27, 27);
     }
 
-    .bodyContent{
+    .bodyContent {
         align-items: center;
         justify-content: center;
     }
 
-    .title{
+    .title {
         text-align: center;
 
     }
 
-    .mode{
+    .mode {
         filter: invert(1) hue-rotate(180deg);
     }
-
-
 </style>
 
 
 <body id="body" class="dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-        <a class="navbar-brand" href="#">Wall Hole</a>
+        <a class="navbar-brand" onclick="logout()">Wall Hole</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -58,7 +58,8 @@
                 <li class="nav-item"><a onclick="modifyUserInfo()" class="nav-link">Modify your Info</a></li>
                 <li class="nav-item"><a onclick="resetPasswordForm()" class="nav-link">Reset Password</a></li>
                 <li class="nav-item"><a onclick="giveFeedback()" class="nav-link">Give Feedback</a></li>
-                <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start Game<i class="bi bi-joystick"></i></a></li>
+                <li class="nav-item"><a href="../game" class="nav-link" style="color: rgb(255, 136, 0);">Start
+                        Game<i class="bi bi-joystick"></i></a></li>
                 <li class="nav-item"><a onclick="changemode()" class="nav-link">Change mode</a></li>
             </ul>
         </div>
@@ -67,21 +68,23 @@
         <div id="welcome" class="title">
             <h3>Welcome User</h3>
         </div>
-        
+
 
         <div id="userInfo" style='display: none'>
             <h3 class="title">Your Info</h3>
-            <div class="d-flex" style="align-items: center; width: 400px"> 
-				<div class="flex-shrink-0" id="userIcon"> 
-					<img src="static/img/walls/0.png" width="300px">
-				</div>
-				<div class="flex-grow-1"> 
-					<h4>ID: <div id="userID"></div></h4>
-					<h4>Email: <div id="userEmail"></div></h4>
-				</div>
-			</div>
+            <div class="d-flex" style="align-items: center; width: 400px">
+                <div class="flex-shrink-0" id="userIcon">
+                    <img src="static/img/walls/0.png" width="300px">
+                </div>
+                <div class="flex-grow-1">
+                    <h4>ID: <div id="userID"></div>
+                    </h4>
+                    <h4>Email: <div id="userEmail"></div>
+                    </h4>
+                </div>
+            </div>
         </div>
-        
+
         <div id="modifyInfo" style='display: none'>
             <h3 class="title">Modify your Info</h3>
             <div>
@@ -118,8 +121,9 @@
                     <br>
                     <div class="form-group">
                         <label for="inputNewPassword">New password</label>
-                        <input type="password" class="form-control" id="newPassword">    
-                        <small id="passwordHelp" class="form-text text-muted">Password should consist only character and digit with minimum length of 8.</small>
+                        <input type="password" class="form-control" id="newPassword">
+                        <small id="passwordHelp" class="form-text text-muted">Password should consist only character and
+                            digit with minimum length of 8.</small>
                     </div>
                     <br>
                     <div class="form-group">
@@ -152,16 +156,16 @@
 
 
 <script>
-    
+
     const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
 
-    function updateInfo(){
+    function updateInfo() {
         var newUsername = document.getElementById('newUsername').value;
         var newEmail1 = document.getElementById('newEmail1').value;
         var newIcon = document.getElementById('newIcon').value;
 
-        if(newUsername == '' && newEmail1 == '' && newIcon == ''){
+        if (newUsername == '' && newEmail1 == '' && newIcon == '') {
             alert("One of the box must be filled");
             return;
         }
@@ -170,139 +174,149 @@
             document.getElementById('newEmail1').classList.add("is-invalid");
             alert("Invalid email");
             return
-        }else{
+        } else {
             document.getElementById('newEmail1').classList.remove("is-invalid");
         }
 
         // upload data
-        
-        
-	    document.getElementById('modifyInfoForm').reset();
+
+
+        document.getElementById('modifyInfoForm').reset();
     }
 
-    function updatePassword(){
+    function updatePassword() {
         var oldPassword = document.getElementById('oldPassword').value;
         var newPassword = document.getElementById('newPassword').value;
         var newPassword2 = document.getElementById('newPassword2').value;
 
-        if(oldPassword == ''){
+        if (oldPassword == '') {
             alert("All of the box must be filled");
             document.getElementById('oldPassword').classList.add("is-invalid");
             return;
-        }else if(passwordre.test(oldPassword) === false){
+        } else if (passwordre.test(oldPassword) === false) {
             alert("Incorrect password");
             document.getElementById('oldPassword').classList.add("is-invalid");
             return;
-        }else{
+        } else {
             document.getElementById('oldPassword').classList.remove("is-invalid");
         }
 
-        if(newPassword == ''){
+        if (newPassword == '') {
             alert("All of the box must be filled");
             document.getElementById('newPassword').classList.add("is-invalid");
             return;
-        }else if(passwordre.test(newPassword) === false){
+        } else if (passwordre.test(newPassword) === false) {
             alert("Incorrect new password");
             document.getElementById('newPassword').classList.add("is-invalid");
             return;
-        }else{
+        } else {
             document.getElementById('newPassword').classList.remove("is-invalid");
         }
 
-        if(newPassword2 == ''){
+        if (newPassword2 == '') {
             alert("All of the box must be filled");
             document.getElementById('newPassword2').classList.add("is-invalid");
             return;
-        }else if(newPassword2 != newPassword){
+        } else if (newPassword2 != newPassword) {
             alert("Incorrect new password");
             document.getElementById('newPassword2').classList.add("is-invalid");
             return;
-        }else{
+        } else {
             document.getElementById('newPassword2').classList.remove("is-invalid");
         }
 
 
         // upload data
 
-        
-	    document.getElementById('resetPasswordForm').reset();
+
+        document.getElementById('resetPasswordForm').reset();
     }
 
-    function submiFeedback(){
+    function submiFeedback() {
         var feedback = document.getElementById('feedback').value;
-        if(feedback == '' ){
+        if (feedback == '') {
             alert("The feedback box cannot be empty");
             return;
         }
 
         // upload data
-	    document.getElementById('giveFeedbackForm').reset();
+        document.getElementById('giveFeedbackForm').reset();
     }
 
-    function displayUserInfo(){
-        document.getElementById('welcome').style.display='none';
-        document.getElementById('userInfo').style.display='';
-        document.getElementById('modifyInfo').style.display='none';
-        document.getElementById('resetPassword').style.display='none';
-        document.getElementById('giveFeedback').style.display='none';
+    function displayUserInfo() {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('userInfo').style.display = '';
+        document.getElementById('modifyInfo').style.display = 'none';
+        document.getElementById('resetPassword').style.display = 'none';
+        document.getElementById('giveFeedback').style.display = 'none';
     }
 
-    function modifyUserInfo(){
-        document.getElementById('welcome').style.display='none';
-        document.getElementById('userInfo').style.display='none';
-        document.getElementById('modifyInfo').style.display='';
-        document.getElementById('resetPassword').style.display='none';
-        document.getElementById('giveFeedback').style.display='none';
+    function modifyUserInfo() {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('modifyInfo').style.display = '';
+        document.getElementById('resetPassword').style.display = 'none';
+        document.getElementById('giveFeedback').style.display = 'none';
     }
 
-    function resetPasswordForm(){
-        document.getElementById('welcome').style.display='none';
-        document.getElementById('userInfo').style.display='none';
-        document.getElementById('modifyInfo').style.display='none';
-        document.getElementById('resetPassword').style.display='';
-        document.getElementById('giveFeedback').style.display='none';
+    function resetPasswordForm() {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('modifyInfo').style.display = 'none';
+        document.getElementById('resetPassword').style.display = '';
+        document.getElementById('giveFeedback').style.display = 'none';
     }
 
-    function giveFeedback(){
-        document.getElementById('welcome').style.display='none';
-        document.getElementById('userInfo').style.display='none';
-        document.getElementById('modifyInfo').style.display='none';
-        document.getElementById('resetPassword').style.display='none';
-        document.getElementById('giveFeedback').style.display='';
+    function giveFeedback() {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('modifyInfo').style.display = 'none';
+        document.getElementById('resetPassword').style.display = 'none';
+        document.getElementById('giveFeedback').style.display = '';
     }
 
-    function changemode(){
+    function changemode() {
         document.querySelector('#body').classList.toggle("mode");
-        if(document.querySelector('#body').classList.contains("light")){
-            document.querySelector('#body').classList.replace("light","dark");
-            document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        if (document.querySelector('#body').classList.contains("light")) {
+            document.querySelector('#body').classList.replace("light", "dark");
+            document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
             document.cookie = " mode=dark";
-        }else{
-            document.querySelector('#body').classList.replace("dark","light");
-            document.cookie = "mode=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        } else {
+            document.querySelector('#body').classList.replace("dark", "light");
+            document.cookie = "mode=; expires=Thu, 01 Jan 2030 00:00:00 GMT";
             document.cookie = " mode=light";
         }
     }
 
-    function checkmode(){
+    function checkmode() {
         var buf = document.cookie.split(';');
-        for( var i=0; i<buf.length; i++){
+        for (var i = 0; i < buf.length; i++) {
             var part = buf[i].split('=');
-            if(part[0] == 'mode' || part[0] == ' mode' ){
-                if(part.length > 1){
-                    if(part[1]=='dark'){
+            if (part[0] == 'mode' || part[0] == ' mode') {
+                if (part.length > 1) {
+                    if (part[1] == 'dark') {
                         document.querySelector('#body').classList.toggle("mode");
-                    }else{
-                        document.querySelector('#body').classList.replace("dark","light");
+                    } else {
+                        document.querySelector('#body').classList.replace("dark", "light");
                     }
                 }
                 return;
             }
         }
-        document.querySelector('#body').classList.replace("dark","light");
+        document.querySelector('#body').classList.replace("dark", "light");
     }
-
+    function logout() {
+        let request = new Request('/logout', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8;'
+            }
+        });
+        fetch(request);
+        window.location.reload();
+    }
     window.onload = checkmode;
 
 </script>
+
 </html>
