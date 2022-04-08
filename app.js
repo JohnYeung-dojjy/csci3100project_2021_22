@@ -20,10 +20,10 @@ app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
     saveUninitialized: false,
-    resave: true,
+    resave: false,
     cookie: {
         httpOnly: true,
-        maxAge: 3600 * 1000 * 24
+        maxAge: 3600 * 1000
     }
 }));
 
