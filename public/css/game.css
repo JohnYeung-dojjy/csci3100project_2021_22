@@ -18,8 +18,8 @@
     justify-content: center;
     text-align: center;
     align-items: end;
-    font-size: 36;
     height: 10%;
+    font-size: inherit;
 }
 
 .camera{
@@ -29,6 +29,7 @@
     height: 100%;
     visibility: "hidden";
     /*transform-style: preserve-3d;*/
+    font-size: xx-large;
 
 }
 
@@ -64,7 +65,7 @@
     justify-content: center;
     text-align: center;
     align-items: center;
-    font-size: 36;
+    font-size: inherit;
     height: 15%;
 }
 

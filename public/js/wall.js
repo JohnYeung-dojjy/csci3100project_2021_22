@@ -1,3 +1,36 @@
+/**
+ * wall: This file contains functions handles all wall related functions
+ * 
+ * Author: YEUNG Ching Fung
+ * 
+ * Version 1: Written 8 April 2022
+ * 
+ * functions: 
+ *    random_array(num)         : a function that returns a random shuffled array of $(num) wall indices
+ * 
+ *    display_wall()            : a function that draw the wall image onto the game canvas 
+ * 
+ *    update_wall()             : a function that update the wall image, called after player passed a wall
+ * 
+ *    reset_wall()              : a function that reset the wall image and the wall index array, 
+ *                                called after player clicked replay
+ * 
+ *    is_Transparent(pixelData) : a function that check if the input pixel on the wall is transparent
+ * 
+ *    is_ffff49(pixelData)      : a function that check if the input pixel on the wall is of color #ffff49
+ * 
+ *    is_bounded(landmarks)     : a function that check if the input landmarks are all bounded by the wall image
+ * 
+ *    check_Depth(landmarks)    : a function that check if the player's hand is too far away from the camera
+ * 
+ *    EuclideanDistance(landmark1, landmark2): a function that computes the distance between 2 hand landmarks
+ * 
+ *    adjust_canvas_size()      : a function that adjusts the wall canvas size dynamically,
+ *                                called when transition from another display to game 
+ *                                (i.e., when player clicks 'start button' at rules)
+ * 
+ */
+
 
 const wallElement = document.createElement('canvas');
 wallElement.style.display = 'none';
