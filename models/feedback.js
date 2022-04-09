@@ -9,7 +9,7 @@ var mongoose = require("mongoose");
 
 var FeedbackSchema = mongoose.Schema({
 	feedback_id: { type: Number, required: true, unique: true },
-	username: { type: String, required: true },
+	username: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 	feedback: { type: String }
 });
 

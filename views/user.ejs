@@ -218,73 +218,7 @@
                     </form>
                     <hr>
                 </div>
-                <div class="container">
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="d-sm-flex align-items-center p-3" style="align-items: center;">
-                        <div class="flex-shrink-0 text-center" id="userIcon">
-                            <img src="static/img/walls/0.png" style="max-width: 125px; max-height:125px;">
-                        </div>
-                        <div class="flex-grow-1 p-3">
-                            <h4>Username: 1234
-                            </h4>
-                            <h4>Feedback: UI can be better
-                            </h4>
-                        </div>
-                    </div>
+                <div class="container" id="feedbacktemplate">
                 </div>
             </div>
         </section>
@@ -449,14 +383,63 @@
     }
 
     // chekck the format of the form for updating feedback
-    function submiFeedback() {
+    async function submiFeedback() {
+        // get the input value from the form for adding of feedback
         var feedback = document.getElementById('feedback').value;
+
+        // check if the feedback is filled
         if (feedback == '') {
             alert("The feedback box cannot be empty");
             return;
         }
-        // upload data
+
+        // upload the feedback
+        let request = new Request('/updatefeedback', {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                username: oldUsername,
+                feedback: feedback
+            })
+        });
+        await fetch(request);
         document.getElementById('giveFeedbackForm').reset();
+
+        // get the new feedback
+        let newrequest = new Request('/getfeedback', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        });
+        let response = await fetch(newrequest);
+        response = await response.json();
+        if (typeof response === "object") {
+            let feedbacktemplate = document.getElementById('feedbacktemplate');
+            feedbacktemplate.innerHTML = '';
+            for (let i = 0; i < response.length; i++) {
+                feedbacktemplate.innerHTML = feedbacktemplate.innerHTML + template(response[i]);
+            }
+        }
+
+    }
+
+    // the template of the feedback
+    function template(obj) {
+        return `<div class="d-sm-flex align-items-center p-3" style="align-items: center;">
+             <div class="flex-shrink-0 text-center" id="userIcon">
+                <img src="data:image/${obj.username.user_icon.contentType};base64,${obj.username.user_icon.data.toString('base64')}" style="max-width: 125px; max-height:125px;">
+            </div>
+            <div class="flex-grow-1 p-3">
+                    <h4>Username: ${obj.username.username}
+                    </h4>
+                    <h4>Feedback:${obj.feedback}
+                    </h4>
+                </div>
+            </div>
+        `
     }
 
     // change to welcome user page
@@ -548,14 +531,14 @@
     }
 
     // log out of the account
-    function logout() {
+    async function logout() {
         let request = new Request('/logout', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8;'
             }
         });
-        fetch(request);
+        await fetch(request);
         window.location.reload();
     }
 
@@ -610,7 +593,25 @@
         checkmode();
     }
 
-    window.onload = startup();
+    // get feedback from databack when the page is loaded
+    window.onload = async function () {
+        let newrequest = new Request('/getfeedback', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        });
+        let response = await fetch(newrequest);
+        response = await response.json();
+        if (typeof response === "object") {
+            let feedbacktemplate = document.getElementById('feedbacktemplate');
+            feedbacktemplate.innerHTML = '';
+            for (let i = 0; i < response.length; i++) {
+                feedbacktemplate.innerHTML = feedbacktemplate.innerHTML + template(response[i]);
+            }
+        }
+        startup();
+    }
 </script>
 
 </html>
