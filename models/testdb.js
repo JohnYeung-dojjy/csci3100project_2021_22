@@ -41,12 +41,6 @@ async function disconnectDB() {
 //call functions for testing
 
 conncetToCloudDB();
-User_functions.updateFeedback({username: "1234", feedback: "fun, but not stable yet"});
-User_functions.updateFeedback({username: "Bene", feedback: "love it!"});
-User_functions.updateFeedback({username: "Patrick", feedback: "15 seconds is a bit short"});
-User_functions.updateFeedback({username: "1234", feedback: "great user interface"});
-User_functions.updateFeedback({username: "Bene", feedback: "good game"});
-User_functions.updateFeedback({username: "Bene", feedback: "5 stars"});
 
 
 
