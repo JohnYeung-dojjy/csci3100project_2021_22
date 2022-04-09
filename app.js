@@ -287,7 +287,17 @@ app.post('/changepassword', async (req, res) => {
 
 
 app.post('/getfeedback', async (req, res) => {
+    let content = await user.showFeedback();
+    console.log(content);
+    let result = JSON.stringify(content);
+    res.send(result);
+});
 
-})
+app.post('/updatefeedback', async (req, res) => {
+    console.log(req.body);
+    let content = await user.updateFeedback(req.body);
+    console.log(content);
+    res.end();
+});
 const server = app.listen(3000);
 module.exports = app;

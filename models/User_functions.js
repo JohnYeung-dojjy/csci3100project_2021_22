@@ -261,19 +261,14 @@ async function changepassword(obj) {
 // the database function to create the feedback and then use showfeedback() to list the latest 5. 
 async function showFeedback() {
     try {
-        let query = Feedback.find().sort({ "_id": -1 }).limit(5).lean().exec();
-        //lean() can only be used in findone() and find(), it has no use with save();
-        let content = await query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-        return content;
+        let result = await Feedback.find().sort({ "_id": -1 }).limit(5).populate({
+            path: 'username',
+            select: { username: 1, user_icon: 1 }
+        }).lean().exec();
+        if (result === null || result.length === 0) {
+            return "nofeedback"
+        }
+        return result;
     }
     catch (err) {
         console.log(err.message);
@@ -288,30 +283,16 @@ async function showFeedback() {
 //updateFeedback({username:"Patrick" , feedback:"Amazing game!"});
 async function updateFeedback(obj) {
     try {
-
-        let query = Feedback.find({ username: obj.username }).exec();
-        let content = await query.then(
-            async (result) => {
-                if (result === null || result.length === 0) {
-                    return 0;
-                }
-                else {
-                    return result.length;
-                }
-            }
-        );
-
+        let info = await User.findOne({ username: obj.username }).lean().exec();
+        let result = await Feedback.find({ username: info._id.toString() }).lean().exec();
+        let length = (result.length > 0) ? result.length + 1 : 1;
         const instance = new Feedback({
-            feedback_id: (content + 1),
-            username: obj.username,
+            feedback_id: length,
+            username: info._id.toString(),
             feedback: obj.feedback
         });
-        content = await instance.save().then(
-            async (result) => {
-                return await result.toObject();
-            }
-        );
-
+        let content = await instance.save();
+        content = await content.toObject();
         return content;
     } catch (err) {
         console.log(err.message);
