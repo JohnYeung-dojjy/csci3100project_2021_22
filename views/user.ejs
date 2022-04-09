@@ -294,18 +294,30 @@
 
 
 <script>
+    // format of a email
     const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    // format of a password
     const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
+
+    // Get thr username of the user from database
     var oldUsername = JSON.parse('<%-JSON.stringify(thisusername)%>');
+    // Get thr email of the user from database
     var oldEmail = JSON.parse('<%-JSON.stringify(thisemail)%>');
+
+    // chekck the format of the form for updating the username, email, and/or icon 
     async function updateInfo() {
+        // get the input value from the form for updating the username, email, and/or icon
         var newUsername = document.getElementById('newUsername').value;
         var newEmail1 = document.getElementById('newEmail1').value;
         var newIcon = document.getElementById('newIcon').value;
+
+        // check if at least one of the field is field
         if (newUsername == '' && newEmail1 == '' && newIcon == '') {
             alert("One of the box must be filled");
             return;
         }
+
+        // check if the email is in correct form and different from the old email
         if (newEmail1 != '' && emailre.test(newEmail1) === false) {
             document.getElementById('newEmail1').classList.add("is-invalid");
             alert("Invalid email");
@@ -317,6 +329,8 @@
         } else {
             document.getElementById('newEmail1').classList.remove("is-invalid");
         }
+
+        // check if the username is in correct form and different from the old username
         if (newUsername == oldUsername) {
             document.getElementById('newUsername').classList.add("is-invalid");
             alert("New username must be different from the old one.");
@@ -324,6 +338,7 @@
         } else {
             document.getElementById('newUsername').classList.remove("is-invalid");
         }
+
         // upload data
         let formData = new FormData();
         let file = '';
@@ -338,6 +353,8 @@
             method: 'post',
             body: formData
         });
+
+        // check if the upload is successful or not
         let response = await fetch(request);
         let result;
         if (response.status !== 200) {
@@ -346,6 +363,8 @@
         else {
             result = await response.text();
         }
+
+        // check if the username is duplicated
         if (result === "duplicated") {
             alert('the username is duplicated, you need a unique username');
             document.getElementById('newUsername').value = '';
@@ -354,12 +373,16 @@
             alert('done! you will need to login again to see the effect!');
             window.location.reload();
         }
-
     }
+
+    // chekck the format of the form for updating password
     async function updatePassword() {
+        // get the input value from the form for updating the password
         var oldPassword = document.getElementById('oldPassword').value;
         var newPassword = document.getElementById('newPassword').value;
         var newPassword2 = document.getElementById('newPassword2').value;
+
+        // check if the old password is filled, in correct form and being correct
         if (oldPassword == '') {
             alert("All of the box must be filled");
             document.getElementById('oldPassword').classList.add("is-invalid");
@@ -371,6 +394,8 @@
         } else {
             document.getElementById('oldPassword').classList.remove("is-invalid");
         }
+        
+        // check if the new password is filled, in correct form and different from the old password
         if (newPassword == '') {
             alert("All of the box must be filled");
             document.getElementById('newPassword').classList.add("is-invalid");
@@ -386,6 +411,8 @@
         } else {
             document.getElementById('newPassword').classList.remove("is-invalid");
         }
+        
+        // check if the repeat new password is filled, in correct form and the same as the new password
         if (newPassword2 == '') {
             alert("All of the box must be filled");
             document.getElementById('newPassword2').classList.add("is-invalid");
@@ -397,6 +424,8 @@
         } else {
             document.getElementById('newPassword2').classList.remove("is-invalid");
         }
+        
+        // upload the new password
         let request = new Request('/changepassword', {
             method: 'post',
             headers: {
@@ -407,6 +436,8 @@
                 password: newPassword
             })
         });
+
+        // get the response from the database
         let response = await fetch(request);
         if (response.status !== 200) {
             throw new Error(response.status);
@@ -417,6 +448,7 @@
         window.location.reload();
     }
 
+    // chekck the format of the form for updating feedback
     function submiFeedback() {
         var feedback = document.getElementById('feedback').value;
         if (feedback == '') {
@@ -427,6 +459,7 @@
         document.getElementById('giveFeedbackForm').reset();
     }
 
+    // change to welcome user page
     function welcomeUser() {
         document.getElementById('welcome').style.display = '';
         document.getElementById('userInfo').style.display = 'none';
@@ -436,6 +469,7 @@
         document.cookie = "section=welcome";
     }
 
+    // change to display user information page
     function displayUserInfo() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = '';
@@ -445,6 +479,7 @@
         document.cookie = "section=userInfo";
     }
 
+    // change to modify user information page
     function modifyUserInfo() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
@@ -454,6 +489,7 @@
         document.cookie = "section=modifyInfo";
     }
 
+    // change to reset password page
     function resetPasswordForm() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
@@ -463,6 +499,7 @@
         document.cookie = "section=resetPassword";
     }
 
+    // change to give feedback page
     function giveFeedback() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('userInfo').style.display = 'none';
@@ -472,6 +509,7 @@
         document.cookie = "section=giveFeedback";
     }
 
+    // change the mode of the page
     function changemode() {
         if (document.querySelector('#body').classList.contains("light")) {
             document.querySelector('#body').classList.replace("light", "dark");
@@ -486,8 +524,11 @@
         }
     }
 
+    // check the mode of the page from the cookie of the page when loading the page
     function checkmode() {
+        // get the cookie and split the cookie
         var buf = document.cookie.split(';');
+        // check the cookie if user has changed the mode of the page before 
         for (var i = 0; i < buf.length; i++) {
             var part = buf[i].split('=');
             if (part[0] == 'mode' || part[0] == ' mode') {
@@ -506,6 +547,7 @@
         document.querySelector('#body').classList.replace("dark", "light");
     }
 
+    // log out of the account
     function logout() {
         let request = new Request('/logout', {
             method: 'post',
@@ -517,6 +559,7 @@
         window.location.reload();
     }
 
+    // upload the icon for the user
     async function uploadfile() {
         const picre = /^image/;
         let pic = document.querySelector('#newIcon');
@@ -533,6 +576,7 @@
         }
     }
 
+    // upload the icon for the user
     function preview(file) {
         if (file) {
             let reader = new FileReader();
@@ -547,6 +591,7 @@
 
     }
 
+    // check the last page of the user when page is loaded
     function checkSection() {
         var buf = document.cookie.split(';');
         for (var i = 0; i < buf.length; i++) {
@@ -559,6 +604,7 @@
         document.getElementById('welcome').style.display = '';
     }
 
+    // call the functions when loading the page
     function startup() {
         checkSection();
         checkmode();
