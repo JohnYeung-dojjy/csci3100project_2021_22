@@ -286,12 +286,14 @@ async function showFeedback() {
 //the feedbackid should not be provided by me
 // you can do the find() first to get the lastest id, or change another method.
 //updateFeedback({username:"Patrick" , feedback:"Amazing game!"});
+
 async function updateFeedback(obj) {
     try {
 
-        let query = Feedback.find({ username: obj.username }).exec();
+        let query = Feedback.find().exec();
         let content = await query.then(
             async (result) => {
+                console.log(result);
                 if (result === null || result.length === 0) {
                     return 0;
                 }
@@ -300,7 +302,7 @@ async function updateFeedback(obj) {
                 }
             }
         );
-
+        console.log(content);
         const instance = new Feedback({
             feedback_id: (content + 1),
             username: obj.username,
