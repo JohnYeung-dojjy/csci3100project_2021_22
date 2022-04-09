@@ -4,9 +4,12 @@
  * Author: YEUNG Ching Fung
  * 
  * Version 1: Written 8 April 2022
+ * Version 2: Revised 9 April 2022, moved display hand and countdown function to wall.js
  * 
  * functions: 
  *    random_array(num)         : a function that returns a random shuffled array of $(num) wall indices
+ *
+ *    display_hand()            : a function that draw the detected hand onto the game canvas
  * 
  *    display_wall()            : a function that draw the wall image onto the game canvas 
  * 
@@ -14,6 +17,14 @@
  * 
  *    reset_wall()              : a function that reset the wall image and the wall index array, 
  *                                called after player clicked replay
+
+ *    game_countdown()          : a function that handles the countdown when the game has just started
+ * 
+ *    display_countdown()       : a function that draw the countdown image onto the game canvas 
+ *                                when the game is counting down before start
+ * 
+ *    update_countdown()        : a function that updates the countdown image during countdown
+ *                                called once a second update game_countdown_second == 0
  * 
  *    is_Transparent(pixelData) : a function that check if the input pixel on the wall is transparent
  * 
@@ -65,6 +76,17 @@ function random_array(num) {
   return tmp_arr;
 }
 
+
+function display_hand(results) {
+  for (const landmarks of results.multiHandLandmarks) {
+    // landmarks is an array of 21 hand landmarks detected (x_pos, y_pos, z_pos)
+    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,                  // draw the connecting lines
+      { color: '#00FF00', lineWidth: 5 });                                    
+    drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 }); // draw the points
+  }
+}
+
+
 function display_wall(){
   wallCtx.save();
   wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
@@ -88,6 +110,59 @@ function reset_wall(){
   wall_order = random_array(10);
   curr_wall_id = 0;
 }
+function game_countdown(results) {
+  // reset image previously drew on canvas, and draw new image instead
+  canvasCtx.save();
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
+
+  display_countdown(); // display the current countdown image
+  // draw hand skeleton
+  if (results.multiHandLandmarks) {
+    // results.multiHandLandmarks is a array of hand landmarks positions of detected hand
+    display_hand(results)
+  }
+  if (countdown_ready) {
+    countdown_ready = false;
+    wall_timer = setTimeout(() => {
+      countdown_ready = true;
+
+      update_countdown();
+      countdown.src = `static/img/count_down/${Math.max(0, game_countdown_second - 1)}_flip.png`;
+      
+
+    }, 1000); // change a new countdown image every 1s
+
+  }
+  // standard operations to reset the canvas after each frame
+  canvasCtx.restore();
+  wallCtx.restore();
+}
+
+function display_countdown() {
+  // standard operations to reset the canvas after each frame
+  wallCtx.save();
+  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
+  // draw wall image
+  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
+
+  wallCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height);
+  canvasCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height,// source rectangle  
+    0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
+}
+
+function update_countdown() {
+  game_countdown_second -= 1;
+  if (game_countdown_second>0){
+    let audio = new Audio("static/audio/321.mp3");
+    audio.play();
+  }else{
+    let audio = new Audio("static/audio/go.mp3");
+    audio.play();
+  }
+
+}
+
 
 function is_Transparent(pixelData) {
 
@@ -176,3 +251,4 @@ function adjust_canvas_size(){
     canvasElement.height = min_width * 9 / 16;
   }
 }
+
