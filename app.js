@@ -62,9 +62,9 @@ if the url in file starts with 'static', it will be redirect to the __dirname+'p
 So,all files can be seen by the user should be under the public
 */
 
-app.get('/home', (req, res) => {
-    res.sendFile(__dirname + '/pages/home/home.html');
-});
+// app.get('/home', (req, res) => {
+//     res.sendFile(__dirname + '/pages/home/home.html');
+// });
 
 app.get('/user', check.needlogin, async (req, res) => {
     let info = await user.displayInfo({ username: req.session.username });
@@ -284,5 +284,20 @@ app.post('/changepassword', async (req, res) => {
     })
 
 })
+
+
+app.post('/getfeedback', async (req, res) => {
+    let content = await user.showFeedback();
+    console.log(content);
+    let result = JSON.stringify(content);
+    res.send(result);
+});
+
+app.post('/updatefeedback', async (req, res) => {
+    console.log(req.body);
+    let content = await user.updateFeedback(req.body);
+    console.log(content);
+    res.end();
+});
 const server = app.listen(3000);
 module.exports = app;
