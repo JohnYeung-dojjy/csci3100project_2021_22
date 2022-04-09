@@ -23,7 +23,7 @@ app.use(session({
     resave: true,
     cookie: {
         httpOnly: true,
-        maxAge: 24 * 3600 * 1000
+        maxAge: 3600 * 1000 * 24
     }
 }));
 
