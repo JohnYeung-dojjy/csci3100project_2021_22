@@ -4,6 +4,7 @@
  * Author: YEUNG Ching Fung
  * 
  * Version 1: Written 8 April 2022
+ * Version 2: Revised 9 April 2022, moved display hand and countdown function to wall.js
  * 
  * functions: 
  *    hands.onResults(): a function that handles each frame captured by the camera,
@@ -17,16 +18,6 @@
  *    update_score()   : a function that updates the score after player passed a wall
  *    
  *    reset_score()    : a function that resets the score to 0, called when the player replay the game
- *  
- *    display_hand()   : a function that draw the detected hand onto the game canvas
- * 
- *    game_countdown() : a function that handles the countdown when the game has just started
- * 
- *    display_countdown(): a function that draw the countdown image onto the game canvas 
- *                          when the game is counting down before start
- * 
- *    update_countdown(): a function that updates the countdown image during countdown
- *                        called once a second update game_countdown_second == 0
  * 
  *    
  */
@@ -142,6 +133,8 @@ function update_score() {
   score += 1;
   console.log("Score:" + score);
   document.getElementById('score').innerHTML = 'Score: ' + score;
+  let audio = new Audio("static/audio/pass.mp3");
+  audio.play();
 }
 function reset_score() {
   // call when the user choose to replay the game 
@@ -195,57 +188,3 @@ function play_game(results) {
   wallCtx.restore();
 }
 
-function display_hand(results) {
-  for (const landmarks of results.multiHandLandmarks) {
-    // landmarks is an array of 21 hand landmarks detected (x_pos, y_pos, z_pos)
-    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,                  // draw the connecting lines
-      { color: '#00FF00', lineWidth: 5 });                                    
-    drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 }); // draw the points
-  }
-}
-
-
-
-function game_countdown(results) {
-  // reset image previously drew on canvas, and draw new image instead
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height); // draw camera image
-
-  display_countdown(); // display the current countdown image
-  // draw hand skeleton
-  if (results.multiHandLandmarks) {
-    // results.multiHandLandmarks is a array of hand landmarks positions of detected hand
-    display_hand(results)
-  }
-  if (countdown_ready) {
-    countdown_ready = false;
-    wall_timer = setTimeout(() => {
-      countdown_ready = true;
-
-      update_countdown();
-      countdown.src = `static/img/count_down/${Math.max(0, game_countdown_second - 1)}_flip.png`;
-
-    }, 1000); // change a new countdown image every 1s
-
-  }
-  // standard operations to reset the canvas after each frame
-  canvasCtx.restore();
-  wallCtx.restore();
-}
-
-function display_countdown() {
-  // standard operations to reset the canvas after each frame
-  wallCtx.save();
-  wallCtx.clearRect(0, 0, wallElement.width, wallElement.height);
-  // draw wall image
-  // https://stackoverflow.com/questions/23104582/scaling-an-image-to-fit-on-canvas
-
-  wallCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height);
-  canvasCtx.drawImage(countdown, 0, 0, countdown.width, countdown.height,// source rectangle  
-    0, 0, canvasElement.width, canvasElement.height); // destination rectangle);
-}
-
-function update_countdown() {
-  game_countdown_second -= 1;
-}
