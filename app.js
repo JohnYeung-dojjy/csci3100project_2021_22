@@ -100,7 +100,7 @@ app.get('/game', check.userneedlogin, async (req, res) => {
     }
     console.log("score in server is" + score);
     res.render('game.ejs', {
-        thisusername: req.session.username,
+        thisusername: obj.username,
         thisscore: score
     })
 });
