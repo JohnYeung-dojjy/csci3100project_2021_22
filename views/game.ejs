@@ -128,7 +128,8 @@
                 <button type="button" class="play_button" id="replay_button">
                     Play Again
                 </button>
-                <button type="button" class="play_button" id="return_button" onclick="location.href='/';">
+                <button type="button" class="play_button" id="return_button" onclick="
+                    returntouser()">
                     Exit
                 </button>
             </div>
@@ -143,6 +144,13 @@
 <script src="static/js/rule.js"></script>
 <script src="static/js/game.js"></script>
 <script src="static/js/lboard.js"></script>
-
+<script>
+    function returntouser() {
+        let request = new Request('/user', {
+            method: 'get',
+        });
+        await fetch(request);
+    }
+</script>
 
 </html>

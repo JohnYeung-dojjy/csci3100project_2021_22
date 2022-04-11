@@ -111,7 +111,8 @@ async function deleteUseraccount(obj) {
             );
         }
         if (content === "success") {
-            query = Feedback.find({ username: obj.username }).exec();
+            let oldquery = await User.findOne({ username: obj.username }).lean().exec();
+            query = await Feedback.find({ username: oldquery._id.toString() }).exec();
             content = await query.then(
                 async (result) => {
                     if (result === null || result.length === 0) {
