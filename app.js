@@ -19,10 +19,10 @@ app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', exten
 app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
-    saveUninitialized: false,
+    saveUninitialized: true,
     resave: true,
     cookie: {
-        httpOnly: true,
+        httpOnly: false,
         maxAge: 3600 * 1000 * 24
     }
 }));

@@ -1,7 +1,16 @@
 const express = require("express");
-const res = require("express/lib/response");
-function needlogin(req, res, next) {
-    if (req.session.username) {
+function userneedlogin(req, res, next) {
+    if (req.session.username && req.session.admin === false) {
+        console.log('authenticated');
+        next();
+    } else {
+        console.log('not authenticated');
+        return res.redirect('/');
+    }
+}
+
+function adminneedlogin(req, res, next) {
+    if (req.session.username && req.session.admin === true) {
         console.log('authenticated');
         next();
     } else {
