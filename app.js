@@ -27,7 +27,11 @@ app.use(session({
     }
 }));
 
-
+app.use(function (req, res, next) {
+    req.session._garbage = Date();
+    req.session.touch();
+    next();
+});
 app.use('/static', express.static(__dirname + '/public'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
