@@ -42,4 +42,4 @@ function cookiewrite(req, res, content) {
 
 
 
-module.exports = { cookiewrite, needlogin, noneedlogin };
+module.exports = { cookiewrite, adminneedlogin, userneedlogin, noneedlogin };

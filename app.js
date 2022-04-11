@@ -66,7 +66,7 @@ So,all files can be seen by the user should be under the public
 //     res.sendFile(__dirname + '/pages/home/home.html');
 // });
 
-app.get('/user', check.needlogin, async (req, res) => {
+app.get('/user', check.userneedlogin, async (req, res) => {
     let info = await user.displayInfo({ username: req.session.username });
     if (info.user_icon === null || info.user_icon === '') {
         res.render('user.ejs', {
@@ -87,7 +87,7 @@ app.get('/', check.noneedlogin, (req, res) => {
     res.sendFile(__dirname + '/pages/login/login.html');
 });
 
-app.get('/game', check.needlogin, async (req, res) => {
+app.get('/game', check.userneedlogin, async (req, res) => {
     let obj = { username: req.session.username };
     let score = 0;
     let userresult = await user.displayBestScore(obj);
@@ -110,7 +110,7 @@ app.get('/game', check.needlogin, async (req, res) => {
  
 }) */
 
-app.get('/admin', check.needlogin, async (req, res) => {
+app.get('/admin', check.adminneedlogin, async (req, res) => {
     let leaderboard = await admin.displayLeaderboard();
     let allUsernameAndID = await admin.displayAllUser();
     res.render('admin.ejs', {
