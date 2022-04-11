@@ -146,8 +146,8 @@
 <script src="static/js/lboard.js"></script>
 <script>
     async function returntouser() {
-        let request = new Request('/user', {
-            method: 'get',
+        let request = new Request('/', {
+            method: 'get'
         });
         await fetch(request);
     }
