@@ -145,7 +145,7 @@
 <script src="static/js/game.js"></script>
 <script src="static/js/lboard.js"></script>
 <script>
-    function returntouser() {
+    async function returntouser() {
         let request = new Request('/user', {
             method: 'get',
         });
