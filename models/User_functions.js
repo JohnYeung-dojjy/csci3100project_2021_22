@@ -134,7 +134,16 @@ async function updateInfo(obj, photo) {
         if (obj.newusername !== '') {
             let result = await User.findOne({ username: obj.newusername }).exec();
             if (result === null || result.length === 0) {
-                await User.findOneAndUpdate({ username: obj.oldusername }, {
+                let olduser = await User.findOne({ username: obj.oldusername }).lean().exec();
+                let olduserid = olduser._id.toString();
+                let newuser = await User.findOneAndUpdate({ username: obj.oldusername }, {
+                    username: obj.newusername
+                }, options).lean().exec();
+                let newuserid = newuser._id.toString();
+                await Feedback.findOneAndUpdate({ username: olduserid }, {
+                    username: newuserid
+                }, options).exec();
+                await Leaderboard.findOneAndUpdate({ username: obj.oldusername }, {
                     username: obj.newusername
                 }, options).exec();
                 obj.oldusername = obj.newusername;
@@ -285,7 +294,7 @@ async function showFeedback() {
 async function updateFeedback(obj) {
     try {
         let info = await User.findOne({ username: obj.username }).lean().exec();
-        let result = await Feedback.find({ username: info._id.toString() }).lean().exec();
+        let result = await Feedback.find().lean().exec();
         let length = (result.length > 0) ? result.length + 1 : 1;
         const instance = new Feedback({
             feedback_id: length,
