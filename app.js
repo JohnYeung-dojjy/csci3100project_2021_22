@@ -13,6 +13,8 @@ const mail = require('./models/mail');
 const check = require('./models/cookiecheck');
 const user = require('./models/User_functions');
 const admin = require('./models/Admin_functions');
+const { contentType } = require('express/lib/response');
+const { mainModule } = require('process');
 /* const { getMaxListeners } = require('process'); */
 //cookie,session format setting
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: false }));
@@ -22,7 +24,7 @@ app.use(session({
     saveUninitialized: true,
     resave: true,
     cookie: {
-        httpOnly: false,
+        httpOnly: true,
         maxAge: 3600 * 1000 * 24
     }
 }));
@@ -72,19 +74,11 @@ So,all files can be seen by the user should be under the public
 
 app.get('/user', check.userneedlogin, async (req, res) => {
     let info = await user.displayInfo({ username: req.session.username });
-    if (info.user_icon === null || info.user_icon === '') {
-        res.render('user.ejs', {
-            thisusername: info.username,
-            thisemail: info.user_email
-        });
-    }
-    else {
-        res.render('user.ejs', {
-            thisusername: info.username,
-            thisemail: info.user_email,
-            thisicon: info.user_icon
-        })
-    }
+    res.render('user.ejs', {
+        thisusername: info.username,
+        thisemail: info.user_email,
+        thisicon: info.user_icon
+    });
 });
 
 app.get('/', check.noneedlogin, (req, res) => {
@@ -158,7 +152,12 @@ app.post('/regverify', (req, res) => {
         await system.registerNewAccount(obj).then(async (content) => {
             if (typeof content !== "number") {
                 //console.log(content._id.toString());
-                // let body = JSON.stringify({ code: code }); 
+                // let body = JSON.stringify({ code: code });
+                let photo = {
+                    data: fs.readFileSync(__dirname + '/public/img/Defaultuser.jpg'),
+                    contentType: 'image/png'
+                }
+                await system.defaulticon(content, photo);
                 await mail.mailing(content, 0);
                 res.send({ code: content._id.toString() });//automatically change to json
             }
@@ -172,16 +171,17 @@ app.post('/regverify', (req, res) => {
 
 });
 
-app.post('/adminresetpassword', (req, res) => {
+app.post('/adminresetpassword', async (req, res) => {
     let data = '';
     req.on('data', chunk => {
         data = data + chunk;
     })
     req.on('end', async () => {
         obj = JSON.parse(data);//from json to object
-        await admin.resetPassword(obj).then((content) => {
+        await admin.resetPassword(obj).then(async (content) => {
             if (typeof content !== "number") {
                 console.log(content);
+                await mail.reset(content, 0);
                 res.send({ code: content.username });//automatically change to json
             }
             else {

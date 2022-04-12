@@ -64,7 +64,7 @@ async function resetPassword(obj) {
                     return 11100;
                 }
                 else {
-                    result.password = '0000';
+                    result.password = 'xxxx0000';
                     await result.save();
                     return result.toObject();
                 }

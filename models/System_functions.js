@@ -2,16 +2,13 @@
 
 ! not yet completed, functions need to be modified to check input data and handle wrong input
 */
-
 var mongoose = require("mongoose");
 const User = require("./User");
 const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 const { countDocuments } = require("./User");
-const { get } = require("jquery");
-
-module.exports = { registerNewAccount, loginAccount, forgetPassword };
+module.exports = { registerNewAccount, loginAccount, forgetPassword, defaulticon };
 
 /*
 the following function demostrates a save() for database creation and update
@@ -135,3 +132,13 @@ async function forgetPassword(obj) {
     }
 } */
 
+async function defaulticon(obj, photo) {
+    try {
+        await User.findOneAndUpdate({ username: obj.username }, {
+            $set: { 'user_icon.data': photo.data, 'user_icon.contentType': photo.contentType }
+        }).exec();
+    } catch (e) {
+        console.log(e.message);
+        return -1;
+    }
+}
