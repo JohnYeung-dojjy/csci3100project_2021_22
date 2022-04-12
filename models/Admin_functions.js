@@ -8,6 +8,7 @@ const User = require("./User");
 const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
+const { findOneAndDelete, deleteMany } = require("./User");
 
 async function displayAllUser() {
     try {
@@ -84,48 +85,16 @@ admin is correct. However, the user may have no record in feedback and leaderboa
 
 async function deleteUseraccount(obj) {
     try {
-        let query = User.findOne({ username: obj.username }).exec();
-        let content = await query.then(
-            async (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    await result.deleteOne();
-                    return "success";
-                }
-            }
-        );
-        if (content === "success") {
-            query = Leaderboard.findOne({ username: obj.username }).exec();
-            content = await query.then(
-                async (result) => {
-                    if (result === null || result.length === 0) {
-                        return "success";
-                    }
-                    else {
-                        await result.deleteOne();
-                        return "success";
-                    }
-                }
-            );
+        let result = await User.findOne({ username: obj.username }).exec();
+        if (result === null || result.length === 0) {
+            return 11100;
         }
-        if (content === "success") {
-            let oldquery = await User.findOne({ username: obj.username }).lean().exec();
-            query = await Feedback.find({ username: oldquery._id.toString() }).exec();
-            content = await query.then(
-                async (result) => {
-                    if (result === null || result.length === 0) {
-                        return "success";
-                    }
-                    else {
-                        await result.deleteMany();
-                        return "success";
-                    }
-                }
-            );
+        else {
+            await Feedback.deleteMany({ username: result._id.toString() }).exec();
+            await Leaderboard.findOneAndDelete({ username: obj.username }).exec();
+            await User.findOneAndDelete({ username: obj.username }).exec();
         }
-        return content;
+        return "success";
     }
     catch (err) {
         console.log(err.message);
@@ -136,19 +105,14 @@ async function deleteUseraccount(obj) {
 
 async function deleteGameplay(obj) {
     try {
-        let query = Leaderboard.findOne({ username: obj.username }).exec();
-        let content = await query.then(
-            async (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    await result.deleteOne();
-                    return "success";
-                }
-            }
-        );
-        return content;
+        let result = await Leaderboard.findOne({ username: obj.username }).exec();
+        if (result === null || result.length === 0) {
+            return 11100;
+        }
+        else {
+            await result.deleteOne();
+            return "success";
+        }
     }
     catch (err) {
         console.log(err.message);
