@@ -1,7 +1,16 @@
-let time;
-let timer_started = false;
-let update_location = '';
-let timer_link;
+/**
+ * timer: This file contains functions that act as a timer and display the timer at the inputted location.
+ * 
+ * Author: Ho Hong Pan
+ * 
+ * Version 1: Written 8 April 2022
+ */
+
+
+let time; // store the remaining time (int)
+let timer_started = false; // store if the timer has started (boolean)
+let update_location = ''; // store the location the timer will display (string)
+let timer_link; // store the link for the timer (pointer)
 
 const time_allowed = 15;
 // initialize the timer
