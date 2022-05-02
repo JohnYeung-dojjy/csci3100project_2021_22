@@ -4,6 +4,16 @@
  * Author: Ho Hong Pan
  * 
  * Version 1: Written 8 April 2022
+ * 
+ * function:
+ *  initialize_timer(duration, id)  : Initialize the timer with the duration and the location of the timer.
+ *  start_timer()                   : Start the countdown of the timer.
+ *  stop_timer()                    : Stop the countdown of the timer.
+ *  check_start_timer()             : Return if the timer has started or not.
+ *  check_time_remain()             : Return the remaining time.
+ *  check_game_ended()              : Return if the countdown has ended or not.
+ *  count_down()                    : Countdowning the timer.
+ *  update_timer()                  : Update the timer in the location.
  */
 
 
