@@ -1,3 +1,18 @@
+/**
+ * Admin_function: This file contains all the database function for admins
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ * function:
+ *  displayAllUser(Obj)   : Returns all Users from the database
+ *  displayLeaderboard(Obj)  : Returns the top 10 scores from the database
+ *  resetPassword(Obj)    : Resets the password of the specified user
+ *  deleteUserAccount(Obj)  : Deletes the specified user from the database
+ *  deleteGameplay(Obj)   : Deletes the gameplay record of the specified user in the leaderboard
+ */
+
 /*In this file the connection to the database it established.
 
 It is used to call fuctions to manipulate the database or retrieve data with the functions in the
@@ -49,7 +64,7 @@ conncetToCloudDB();
 /*
 !!!! do not try to use the database function to directly create the data
 */
-//System_functions.registerNewAccount("Bryan", 4321, "./test.jpeg", "fake@gmail.com", true );
+//System_functions.registerNewAccount({username: "1234", password:"1234", user_email: "1234@gmail.com", admin: true} );
 //disconnectDB();
 //System_functions.loginAccount("Bryan", 43216);
 //User_functions.forgetPassword("621cc3e99e3dc13084e5c19e");

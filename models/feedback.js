@@ -1,11 +1,15 @@
+/**
+ * feedback: This file contains the feedback data schema
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ */
+
 const express = require("express");
 const { MongoNetworkError } = require("mongodb");
-
-/* Feedback Data Schema
-*/
-
 var mongoose = require("mongoose");
-//const express = require("express");
 
 var FeedbackSchema = mongoose.Schema({
 	feedback_id: { type: Number, required: true, unique: true },

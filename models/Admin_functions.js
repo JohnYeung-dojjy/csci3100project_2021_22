@@ -1,11 +1,21 @@
-/* This file contains all the database function for admins
-completed!!!
-*/
+/**
+ * Admin_function: This file contains all the database function for admins
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ * function:
+ *  displayAllUser(Obj)   : Returns all Users from the database
+ *  displayLeaderboard(Obj)  : Returns the top 10 scores from the database
+ *  resetPassword(Obj)    : Resets the password of the specified user
+ *  deleteUserAccount(Obj)  : Deletes the specified user from the database
+ *  deleteGameplay(Obj)   : Deletes the gameplay record of the specified user in the leaderboard
+ */
 
 var mongoose = require("mongoose");
 const express = require("express");
 const User = require("./User");
-const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 const { findOneAndDelete, deleteMany } = require("./User");
@@ -32,7 +42,7 @@ async function displayAllUser() {
     }
 }
 
-//modified!!!!
+
 async function displayLeaderboard() {
     try {
         let result = await Leaderboard.find().sort("-score").limit(10).lean().exec();
@@ -54,7 +64,7 @@ async function displayLeaderboard() {
     }
 }
 
-//!!modified
+
 async function resetPassword(obj) {
     try {
         let query = User.findOne({ username: obj.username }).exec();
@@ -78,10 +88,6 @@ async function resetPassword(obj) {
     }
 }
 
-/* 
-logic is similar, delete the user record in all collections, if first one is success, then, username input by the
-admin is correct. However, the user may have no record in feedback and leaderboard(no feedback left,no game played)
-*/
 
 async function deleteUseraccount(obj) {
     try {
