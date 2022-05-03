@@ -1,30 +1,11 @@
 /**
- * Admin_function: This file contains all the database function for admins
+ * testdb: This file is only to test statements in the database
  * 
  * Author: Patrick Gottschling
  * 
  * Version 1: Written 10 April 2022
- * 
- * function:
- *  displayAllUser(Obj)   : Returns all Users from the database
- *  displayLeaderboard(Obj)  : Returns the top 10 scores from the database
- *  resetPassword(Obj)    : Resets the password of the specified user
- *  deleteUserAccount(Obj)  : Deletes the specified user from the database
- *  deleteGameplay(Obj)   : Deletes the gameplay record of the specified user in the leaderboard
+
  */
-
-/*In this file the connection to the database it established.
-
-It is used to call fuctions to manipulate the database or retrieve data with the functions in the
-System_functions, Admin_functions and User_functions class.
-The data schemas are defined in individual classes (User, map, feedback, leader_board)
-
-Update: Currently I implement all these functions. The error handling with false input data and
- several checks are not finally implemented in the existing functions.
-
-*/
-
-
 
 var mongoose = require("mongoose");
 const express = require("express");
@@ -56,9 +37,6 @@ async function disconnectDB() {
 //call functions for testing
 
 conncetToCloudDB();
-
-
-
 
 
 /*

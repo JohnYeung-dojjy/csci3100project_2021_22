@@ -1,16 +1,18 @@
 /**
  * User_functions: This file contains all the database function for users
  * 
- * Author: Patrick Gottschling
+ * Authors: Patrick Gottschling,  Xiao Qiang
  * 
  * Version 1: Written 10 April 2022
  * 
  * function:
- *  displayAllUser(Obj)   : Returns all Users from the database
- *  displayLeaderboard(Obj)  : Returns the top 10 scores from the database
- *  resetPassword(Obj)    : Resets the password of the specified user
- *  deleteUserAccount(Obj)  : Deletes the specified user from the database
- *  deleteGameplay(Obj)   : Deletes the gameplay record of the specified user in the leaderboard
+ *  displayInfo(Obj)   : Returns the user data from the database
+ *  displayBestScore(Obj)  : Returns the user's best score
+ *  updateInfo(Obj)    : modifies the user data from the specified information
+ *  updateLeaderboard(Obj)  : adds the new score to the leaderboard, if it is better than the best previous score
+ *  showFeedback(Obj)   : Returns the 5 latest feedbacks from the database
+ *  updateFeedback(Obj)   : Adds the feedback to the database
+ *  changePassword(Obj)   : Changes the user's password
  */
 
 var mongoose = require("mongoose");
@@ -22,39 +24,7 @@ const Feedback = require("./feedback");
 module.exports = { displayInfo, displayBestScore, updateInfo, updateLeaderboard, showFeedback, updateFeedback, changepassword };
 
 
-/* //display functions,for now, we may not need this
-async function displayUsername(obj) {
-    try {
-        const username = await User.find({ _id: obj._id }).select("username");
-        console.log(username);
-        return username;
-    } catch (err) {
-        console.log(err.message);
-    }
-}
 
-//for now, we may not need this either
-async function displayEmail(obj) {
-    try {
-        const email = await User.find({ _id: obj._id }).select("user_email");
-        console.log(email);
-        let content = email.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
-
-//!!!only display info is needed.
 //!!! try to tell the server if the user has updated the icon(if the logic is too complex to implement with 
 //single function, then add  one more displayicon() is ok, same, only object or number(for error) should be returned)
 async function displayInfo(obj) {
@@ -67,28 +37,8 @@ async function displayInfo(obj) {
     }
 }
 
-/* //display functions,for now, we may not need this
-async function displayUsername(obj) {
-    try {
-        const query = await User.find({ _id: obj._id }).select("username");
-        console.log(query);
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
 
-//!!!completed
+
 async function displayBestScore(obj) {
     try {
         let query = Leaderboard.findOne({ username: obj.username }).select("score").sort({ "score": 1 }).limit(1).lean().exec();
@@ -135,7 +85,6 @@ async function displayBestScore(obj) {
 } */
 
 
-//i will pass you the username and  the image in the obj
 async function updateInfo(obj, photo) {
     try {
         let content = "success";
@@ -216,8 +165,7 @@ async function updateInfo(obj, photo) {
     }
 } */
 
-//completed, but need checking
-// as login verification is done, the user must exist
+
 async function updateLeaderboard(obj) {
     try {
         let query = Leaderboard.findOne({ username: obj.username }).select("score").sort({ "score": 1 }).limit(1).exec();
@@ -265,8 +213,7 @@ async function changepassword(obj) {
     }
 }
 //Feedback functions
-//make sure that you return the lastest 5 feedback, as they haven't finished the feedback system yet, you can use
-// the database function to create the feedback and then use showfeedback() to list the latest 5. 
+
 async function showFeedback() {
     try {
         let result = await Feedback.find().sort({ "_id": -1 }).limit(5).populate({
@@ -283,12 +230,6 @@ async function showFeedback() {
         return -1;
     }
 }
-
-
-//for the updatfeedback(), I will pass you the username and the feedback content only,
-//the feedbackid should not be provided by me
-// you can do the find() first to get the lastest id, or change another method.
-//updateFeedback({username:"Patrick" , feedback:"Amazing game!"});
 
 async function updateFeedback(obj) {
     try {

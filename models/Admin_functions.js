@@ -1,7 +1,7 @@
 /**
  * Admin_function: This file contains all the database function for admins
  * 
- * Author: Patrick Gottschling
+ * Authors: Patrick Gottschling, Xiao Qiang
  * 
  * Version 1: Written 10 April 2022
  * 

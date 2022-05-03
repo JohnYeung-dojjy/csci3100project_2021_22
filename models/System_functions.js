@@ -1,7 +1,7 @@
 /**
  * System_functions: This file contains all the database function for the system
  * 
- * Author: Patrick Gottschling
+ * Authors: Patrick Gottschling,  Xiao Qiang
  * 
  * Version 1: Written 10 April 2022
  * 
