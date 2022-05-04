@@ -1,7 +1,17 @@
-/* This file contains all the database function of the system
+/**
+ * System_functions: This file contains all the database function for the system
+ * 
+ * Authors: Patrick Gottschling,  Xiao Qiang
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ * function:
+ *  registerNewAccount(Obj)   : Registers a new user account in the database
+ *  loginAccount(Obj)  : Verifies login data and logs user in
+ *  forgetPassword(Obj)    : Finds the user in the database to process a forget password machanism
+ *  defaultIcon(Obj)  : Sets the default icon for an account 
+ */
 
-! not yet completed, functions need to be modified to check input data and handle wrong input
-*/
 const User = require("./User");
 module.exports = { registerNewAccount, loginAccount, defaulticon };
 

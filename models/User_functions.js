@@ -1,12 +1,20 @@
-/* This file contains all the database function for users
-
-! not yet completed, functions need to be modified to check input data and handle wrong input
-*/
-
-var mongoose = require("mongoose");
-const express = require("express");
+/**
+ * User_functions: This file contains all the database function for users
+ * 
+ * Authors: Patrick Gottschling,  Xiao Qiang
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ * function:
+ *  displayInfo(Obj)   : Returns the user data from the database
+ *  displayBestScore(Obj)  : Returns the user's best score
+ *  updateInfo(Obj)    : modifies the user data from the specified information
+ *  updateLeaderboard(Obj)  : adds the new score to the leaderboard, if it is better than the best previous score
+ *  showFeedback(Obj)   : Returns the 5 latest feedbacks from the database
+ *  updateFeedback(Obj)   : Adds the feedback to the database
+ *  changePassword(Obj)   : Changes the user's password
+ */
 const User = require("./User");
-const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
@@ -47,7 +55,6 @@ async function displayBestScore(obj) {
 }
 
 
-//i will pass you the username and  the image in the obj
 async function updateInfo(obj, photo) {
     try {
         let content = "success";
@@ -55,16 +62,7 @@ async function updateInfo(obj, photo) {
         if (obj.newusername !== '') {
             let result = await User.findOne({ username: obj.newusername }).exec();
             if (result === null || result.length === 0) {
-                let olduser = await User.findOne({ username: obj.oldusername }).lean().exec();
-                let olduserid = olduser._id.toString();
-                let newuser = await User.findOneAndUpdate({ username: obj.oldusername }, {
-                    username: obj.newusername
-                }, options).lean().exec();
-                let newuserid = newuser._id.toString();
-                await Feedback.findOneAndUpdate({ username: olduserid }, {
-                    username: newuserid
-                }, options).exec();
-                await Leaderboard.findOneAndUpdate({ username: obj.oldusername }, {
+                await User.findOneAndUpdate({ username: obj.oldusername }, {
                     username: obj.newusername
                 }, options).exec();
                 obj.oldusername = obj.newusername;
@@ -144,10 +142,8 @@ async function changepassword(obj) {
         return -1;
     }
 }
-
 //Feedback functions
-//make sure that you return the lastest 5 feedback, as they haven't finished the feedback system yet, you can use
-// the database function to create the feedback and then use showfeedback() to list the latest 5. 
+
 async function showFeedback() {
     try {
         let result = await Feedback.find().sort({ "_id": -1 }).limit(5).populate({
@@ -165,16 +161,10 @@ async function showFeedback() {
     }
 }
 
-
-//for the updatfeedback(), I will pass you the username and the feedback content only,
-//the feedbackid should not be provided by me
-// you can do the find() first to get the lastest id, or change another method.
-//updateFeedback({username:"Patrick" , feedback:"Amazing game!"});
-
 async function updateFeedback(obj) {
     try {
         let info = await User.findOne({ username: obj.username }).lean().exec();
-        let result = await Feedback.find().lean().exec();
+        let result = await Feedback.find({ username: info._id.toString() }).lean().exec();
         let length = (result.length > 0) ? result.length + 1 : 1;
         const instance = new Feedback({
             feedback_id: length,

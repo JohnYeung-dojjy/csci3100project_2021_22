@@ -1,5 +1,11 @@
-/* User Data schema 
-*/
+/**
+ * User: This file contains the user data schema
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ */
 
 var mongoose = require("mongoose");
 

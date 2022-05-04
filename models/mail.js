@@ -1,7 +1,9 @@
 const nodemailer = require('nodemailer');
+
 async function mailing(obj, option) {
     if (option === 0) {
         try {
+            // setting server email
             const serveremail = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -9,12 +11,14 @@ async function mailing(obj, option) {
                     pass: 'holeinthewall'
                 }
             })
+            // input email details
             let congratulations = {
                 from: 'HoleInTheWall-Official',
                 to: obj.user_email,
                 subject: 'Congratulations!',
                 html: '<b>' + 'Dear ' + obj.username + ',</b><br/><br/>&emsp;&emsp;You have successfully completed the registration and become our member!'
             }
+            // sending email
             serveremail.sendMail(congratulations, function (error, info) {
                 if (error) {
                     console.log(error);
@@ -33,6 +37,7 @@ async function mailing(obj, option) {
 async function reset(obj, option) {
     if (option === 0) {
         try {
+            // setting server email
             const serveremail = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -40,12 +45,14 @@ async function reset(obj, option) {
                     pass: 'holeinthewall'
                 }
             })
+            // input email details
             let congratulations = {
                 from: 'HoleInTheWall-Official',
                 to: obj.user_email,
                 subject: 'Your password has been reset',
                 html: '<b>' + 'Dear ' + obj.username + ',</b><br/><br/>&emsp;&emsp;Your password has been reset!!!' + '<br/><br/>Your default password now is { xxxx0000 }' + '<br/><br/>Please modify your password in your user page as soon as possible!'
             }
+            // sending email
             serveremail.sendMail(congratulations, function (error, info) {
                 if (error) {
                     console.log(error);

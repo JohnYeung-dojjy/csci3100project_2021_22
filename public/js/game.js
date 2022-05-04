@@ -44,6 +44,8 @@ const countdown = new Image(); // initialize the countdown image to be displayed
 // will be updated in the game_countdown function
 countdown.src = `static/img/count_down/${game_countdown_second - 1}_flip.png`; 
 
+const time_allowed = 15; /* the time allowed for the player to play one round */
+
 let is_lboard_displayed = false; /* checks if the leaderboard should be displayed
                                   set to true when game is ended, set back to false when user clicks reply button*/
 

@@ -1,4 +1,23 @@
-
+/**
+ * Game: This file contains functions that handles all operations that can be done when leaderboard is displayed.
+ * 
+ * Author: YEUNG Ching Fung
+ * 
+ * Version 1: Written 8 April 2022
+ * 
+ * functions: 
+ *    play_again(): this function is called after the replay button is clicked, which will reset all game settings and restart the game.
+ * 
+ *    Show_lboard(): this function is called when game is ended (15 seconds passed), which will then display the leaderboard.
+ * 
+ *    reset_game_parameter(): this function resets all game parameters when called
+ * 
+ *    reset_game_display(): this function resets the display of the game, i.e. display the game canvas again
+ * 
+ *    get_lboard(): this function adds the obtained leaderboard information to the leaderboard display
+ * 
+ *    add_lboard(): this function fetches and retruns the leaderboard information from the database   
+ */
 replay_buttonElement.addEventListener("click", () => {
   play_again();
 

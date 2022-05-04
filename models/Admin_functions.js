@@ -27,7 +27,7 @@ async function displayAllUser() {
     }
 }
 
-//modified!!!!
+
 async function displayLeaderboard() {
     try {
         let result = await Leaderboard.find().sort("-score").limit(10).lean().exec();
@@ -49,7 +49,7 @@ async function displayLeaderboard() {
     }
 }
 
-//!!modified
+
 async function resetPassword(obj) {
     try {
         let query = User.findOne({ username: obj.username }).exec();
@@ -73,10 +73,6 @@ async function resetPassword(obj) {
     }
 }
 
-/* 
-logic is similar, delete the user record in all collections, if first one is success, then, username input by the
-admin is correct. However, the user may have no record in feedback and leaderboard(no feedback left,no game played)
-*/
 
 async function deleteUseraccount(obj) {
     try {

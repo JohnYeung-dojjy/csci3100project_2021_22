@@ -1,5 +1,11 @@
-/* Leaderboard Data Schema
-*/
+/**
+ * leader_board: This file contains the leaderboard data schema
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
+ * 
+ */
 
 var mongoose = require("mongoose");
 

@@ -1,20 +1,15 @@
-/*In this file the connection to the database it established.
+/**
+ * testdb: This file is only to test statements in the database
+ * 
+ * Author: Patrick Gottschling
+ * 
+ * Version 1: Written 10 April 2022
 
-It is used to call fuctions to manipulate the database or retrieve data with the functions in the
-System_functions, Admin_functions and User_functions class.
-The data schemas are defined in individual classes (User, map, feedback, leader_board)
-
-Update: Currently I implement all these functions. The error handling with false input data and
- several checks are not finally implemented in the existing functions.
-
-*/
-
-
+ */
 
 var mongoose = require("mongoose");
 const express = require("express");
 const User = require("./User");
-const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
@@ -43,13 +38,10 @@ async function disconnectDB() {
 conncetToCloudDB();
 
 
-
-
-
 /*
 !!!! do not try to use the database function to directly create the data
 */
-//System_functions.registerNewAccount("Bryan", 4321, "./test.jpeg", "fake@gmail.com", true );
+//System_functions.registerNewAccount({username: "1234", password:"1234", user_email: "1234@gmail.com", admin: true} );
 //disconnectDB();
 //System_functions.loginAccount("Bryan", 43216);
 //User_functions.forgetPassword("621cc3e99e3dc13084e5c19e");

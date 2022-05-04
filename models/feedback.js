@@ -2,7 +2,6 @@
 */
 
 var mongoose = require("mongoose");
-//const express = require("express");
 
 var FeedbackSchema = mongoose.Schema({
 	feedback_id: { type: Number, required: true, unique: true },

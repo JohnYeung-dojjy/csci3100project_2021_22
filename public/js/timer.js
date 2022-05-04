@@ -1,9 +1,27 @@
-let time;
-let timer_started = false;
-let update_location = '';
-let timer_link;
+/**
+ * timer: This file contains functions that act as a timer and display the timer at the inputted location.
+ * 
+ * Author: Ho Hong Pan
+ * 
+ * Version 1: Written 8 April 2022
+ * 
+ * function:
+ *  initialize_timer(duration, id)  : Initialize the timer with the duration and the location of the timer.
+ *  start_timer()                   : Start the countdown of the timer.
+ *  stop_timer()                    : Stop the countdown of the timer.
+ *  check_start_timer()             : Return if the timer has started or not.
+ *  check_time_remain()             : Return the remaining time.
+ *  check_game_ended()              : Return if the countdown has ended or not.
+ *  count_down()                    : Countdowning the timer.
+ *  update_timer()                  : Update the timer in the location.
+ */
 
-const time_allowed = 15;
+
+let time; // store the remaining time (int)
+let timer_started = false; // store if the timer has started (boolean)
+let update_location = ''; // store the location the timer will display (string)
+let timer_link; // store the link for the timer (pointer)
+
 // initialize the timer
 // duration is the duration of timer (int), id is the id of the location (string)
 
