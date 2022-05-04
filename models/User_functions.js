@@ -12,39 +12,6 @@ const Feedback = require("./feedback");
 
 module.exports = { displayInfo, displayBestScore, updateInfo, updateLeaderboard, showFeedback, updateFeedback, changepassword };
 
-
-/* //display functions,for now, we may not need this
-async function displayUsername(obj) {
-    try {
-        const username = await User.find({ _id: obj._id }).select("username");
-        console.log(username);
-        return username;
-    } catch (err) {
-        console.log(err.message);
-    }
-}
-
-//for now, we may not need this either
-async function displayEmail(obj) {
-    try {
-        const email = await User.find({ _id: obj._id }).select("user_email");
-        console.log(email);
-        let content = email.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
-
 //!!!only display info is needed.
 //!!! try to tell the server if the user has updated the icon(if the logic is too complex to implement with 
 //single function, then add  one more displayicon() is ok, same, only object or number(for error) should be returned)
@@ -57,27 +24,6 @@ async function displayInfo(obj) {
         return -1;
     }
 }
-
-/* //display functions,for now, we may not need this
-async function displayUsername(obj) {
-    try {
-        const query = await User.find({ _id: obj._id }).select("username");
-        console.log(query);
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    return result;
-                }
-            }
-        )
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
 
 //!!!completed
 async function displayBestScore(obj) {
@@ -99,31 +45,6 @@ async function displayBestScore(obj) {
         return -1;
     }
 }
-
-//change functions
-
-/* async function changePassword(obj, oldpassword, newpassword) {
-    try {
-        const query = await User.findOne({ username: obj.username, password: oldpassword }); //.where("password").equals(oldPassword)
-        let content = query.then(
-            (result) => {
-                if (result === null || result.length === 0) {
-                    return 11100;
-                }
-                else {
-                    result.updateOne({ password: newpassword });
-                    return result;
-
-                }
-            }
-        )
-        return content;
-
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
 
 
 //i will pass you the username and  the image in the obj
@@ -174,47 +95,6 @@ async function updateInfo(obj, photo) {
         return -1;
     }
 }
-
-/* async function changeEmail(obj, oldEmail, newEmail) {
-    try {
-        if (oldEmail.equals(newEmail)) {
-            console.log("New Email has to be different.");
-            return 11100;
-            //no need to check the email existance as user will receive a confirmation email in the registration
-        } else {
-            const check = await User.find({ user_email: newEmail })
-            let content = check.then(
-                async (result) => {
-                    if (result === null || result.length === 0) {
-                        const query = await User.find({ _id: obj._id });
-
-                        let content = query.then(
-                            (result) => {
-                                if (result === null || result.length === 0) {
-                                    return 11100;
-                                }
-                                else {
-                                    result.updateOne({ user_email: newEmail });
-                                    return result;
-
-                                }
-                            }
-                        )
-                    }
-                    else {
-                        console.log("Email is already registered.");
-                        return 11100;
-
-                    }
-                }
-            )
-        }
-
-    } catch (err) {
-        console.log(err.message);
-        return -1;
-    }
-} */
 
 //completed, but need checking
 // as login verification is done, the user must exist

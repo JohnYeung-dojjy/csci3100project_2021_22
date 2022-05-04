@@ -1,6 +1,3 @@
-const express = require("express");
-const { MongoNetworkError } = require("mongodb");
-
 /* Feedback Data Schema
 */
 

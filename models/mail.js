@@ -1,4 +1,3 @@
-const express = require("express");
 const nodemailer = require('nodemailer');
 async function mailing(obj, option) {
     if (option === 0) {

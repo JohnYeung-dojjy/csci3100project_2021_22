@@ -2,7 +2,6 @@
 */
 
 var mongoose = require("mongoose");
-const express = require("express");
 
 var UserSchema = mongoose.Schema({
 	username: { type: String, required: true, unique: true },
