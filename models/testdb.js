@@ -10,7 +10,6 @@
 var mongoose = require("mongoose");
 const express = require("express");
 const User = require("./User");
-const Map = require("./map");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
