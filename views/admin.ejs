@@ -128,6 +128,8 @@
 
 <script>
     let all = document.querySelectorAll("#body")[0].children;
+
+    //with hide(), control which page should be displayed to the admin
     function hide() {
         for (let i = 0; i < all.length; i++) {
             if (all[i].tagName === "DIV") {
@@ -144,14 +146,13 @@
         hide();
         document.getElementById("leaderboard").style.display = "";
     }
-
-
-
     function resetUserPasswordForm() {
         hide();
         document.getElementById("resetUserPassword").style.display = "";
     }
-
+    /* 
+    verify the admin input, fetch request
+    */
     function resetUserPassword() {
         let input = document.querySelector("#inputUsername").value;
         if (input == '') {
@@ -191,7 +192,9 @@
 
         document.querySelector("form").reset();
     }
-
+    /* 
+    verify the admin input, fetch request
+    */
     function deleteGameplayRecordForm() {
         hide();
         document.getElementById("deleteGameplay").style.display = "";
@@ -247,7 +250,9 @@
         hide();
         document.getElementById("deleteUserAccpunt").style.display = "";
     }
-
+    /* 
+    verify the admin input, fetch request
+    */
     function deleteUserAccpunt() {
         let input = document.querySelector("#inputUsername2").value;
         if (input == '') {
@@ -293,6 +298,9 @@
             }
         });
     }
+    /* 
+    fetch log out request
+    */
     async function logout() {
         let request = new Request('/logout', {
             method: 'post',

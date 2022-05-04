@@ -244,6 +244,10 @@
     }
 </style>
 
+<!-- 
+html contents and alert template
+ -->
+
 <body>
     <div class="shell">
         <div class="top">
@@ -359,6 +363,9 @@
     let rules = document.querySelector('.rules');
     let topdiv = document.querySelector('.top');
     let triangle = document.querySelectorAll('.triangle');
+    /* 
+    flipped the triangles and the state of the rule div (on/off)
+    */
     function showrules() {
 
         rules.classList.toggle('closed');
@@ -368,6 +375,11 @@
     }
 
     button.onclick = function () {
+        /* 
+        determine the state of the login page,
+        if it is on the login, switch the page to the registration with animation effect
+        else, switch to the login with animation effect
+        */
         if (side == 0) {/* sign in state */
             side = 1;
             ball.style.left = '60%';
@@ -395,6 +407,9 @@
             rules.style.visibility = "hidden";
             rules.style.display = "none";
         }
+        /* 
+        clear the inputs
+        */
         for (let i = 0; i < input.length; i++) {
             input[i].value = "";
         }
@@ -402,7 +417,9 @@
 
     const emailre = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     const passwordre = /^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z0-9]{8,}$/;
-
+    /* 
+    regular expressions for the password and email
+    */
 
     /* 
     rules for the data verfication on registration phase:
@@ -419,6 +436,14 @@
     By this method, I can keep the correct input of the user and erase the error input only. 
     However, the default form submission (without ajax) is easy for the programmers as there are only few steps to deal with. 
      */
+
+
+
+    /* 
+    check the correctness of the data the user input.
+    if the data is incorrect, load the alert template
+    else, send the fetch request to the server and change the page content by the corresponding response
+    */
     document.querySelector(".signUp>button").onclick = function regverify() {
         let data = document.querySelectorAll(".signUp input");
         if (data[0].value === "" || data[0].value === null) {
@@ -552,6 +577,10 @@
             rules.style.fontSize = (signUp.clientWidth) / 10 + 'px';
         }
     }
+
+    /* 
+    initialize the elements' position
+    */
     window.onresize = function () {
 
         rules.style.top = topdiv.clientHeight * 1.2 + 'px';

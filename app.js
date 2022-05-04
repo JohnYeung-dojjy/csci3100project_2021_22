@@ -13,12 +13,10 @@ const mail = require('./models/mail');
 const check = require('./models/cookiecheck');
 const user = require('./models/User_functions');
 const admin = require('./models/Admin_functions');
-const { contentType } = require('express/lib/response');
-const { mainModule } = require('process');
-/* const { getMaxListeners } = require('process'); */
-//cookie,session format setting
+//middleware for the request content parsing 
 app.use(bodyParser.urlencoded({ type: 'application/x-www-form-urlencoded', extended: false }));
 app.use(bodyParser.json());
+//middleware for setting cookie and session
 app.use(session({
     secret: 'secret',
     saveUninitialized: true,
@@ -28,17 +26,13 @@ app.use(session({
         maxAge: 3600 * 1000 * 24
     }
 }));
-
-/* app.use(function (req, res, next) {
-    req.session._garbage = Date();
-    req.session.touch();
-    next();
-}); */
+//middleware for setting static file directory
 app.use('/static', express.static(__dirname + '/public'));
+//middleware for server-side files rendering
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-
+//middleware for server storage for the user icon upload
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
@@ -68,10 +62,18 @@ if the url in file starts with 'static', it will be redirect to the __dirname+'p
 So,all files can be seen by the user should be under the public
 */
 
-// app.get('/home', (req, res) => {
-//     res.sendFile(__dirname + '/pages/home/home.html');
-// });
 
+/* 
+  routing functions are responsible for
+  completing different actions and 
+  directing the client to the specific page
+*/
+
+/*
+ check cookie first
+if cookie is correct, fill the template page with the username, email and icon in the cookie 
+if no, the client will be redirected to the login page 
+*/
 app.get('/user', check.userneedlogin, async (req, res) => {
     let info = await user.displayInfo({ username: req.session.username });
     res.render('user.ejs', {
@@ -81,10 +83,22 @@ app.get('/user', check.userneedlogin, async (req, res) => {
     });
 });
 
+
+/*
+ //check cookie first
+//if cookie is correct,redirect the client to the corresponding pages (user/admin)
+//if no, send the login page
+ */
 app.get('/', check.noneedlogin, (req, res) => {
     res.sendFile(__dirname + '/pages/login/login.html');
 });
 
+/* 
+check cookie first
+if cookie is correct,
+use the username in the cookie to check the user's best score in the database and write them into the template page
+if no, redirect the client to the login page
+  */
 app.get('/game', check.userneedlogin, async (req, res) => {
     let obj = { username: req.session.username };
     let score = 0;
@@ -100,14 +114,13 @@ app.get('/game', check.userneedlogin, async (req, res) => {
 });
 
 
-/* app.get('/sample', (req, res) => {
-    res.render('sample.ejs', {
-        title: 'Homepage',
-        users: ['BRIan', 'TOM', 'JErrY']
-    });
- 
-}) */
-
+/*
+ check cookie first
+if cookie is correct,
+if yes, use the database function to load all the account information and leaderboard information,
+and write them into the template page
+if no, the client will be redirected to the login page 
+*/
 app.get('/admin', check.adminneedlogin, async (req, res) => {
     let leaderboard = await admin.displayLeaderboard();
     let allUsernameAndID = await admin.displayAllUser();
@@ -117,8 +130,13 @@ app.get('/admin', check.adminneedlogin, async (req, res) => {
     });
 });
 
+/* 
+check the username and password with the records in the database so as to confirm the identity,
+if the identity exists,write cookie into the client machine and redirect them into the corresponding pages
+if no, load the error login page
+ */
+
 app.post('/loginverify', async (req, res) => {
-    /* console.log(req.body.username);//req.body is already a object */
     await system.loginAccount(req.body).then((content) => {
         console.log(content);
         if (content === 11100) {
@@ -139,7 +157,12 @@ app.post('/loginverify', async (req, res) => {
     });
 });
 
-
+/* 
+verify the data submmitted.
+if ok,write the data into the database, 
+write default icon into the database,send the confirmation email to the client
+if no, send error message to the client
+*/
 app.post('/regverify', (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -171,6 +194,9 @@ app.post('/regverify', (req, res) => {
 
 });
 
+/* 
+reset password for the user, send email for notification
+*/
 app.post('/adminresetpassword', async (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -193,7 +219,9 @@ app.post('/adminresetpassword', async (req, res) => {
 
 });
 
-
+/* 
+delete the user account
+*/
 app.post('/admindeleteaccount', (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -208,7 +236,9 @@ app.post('/admindeleteaccount', (req, res) => {
 
 });
 
-
+/* 
+delete user's game record
+*/
 app.post('/admindeletegameplay', (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -224,6 +254,9 @@ app.post('/admindeletegameplay', (req, res) => {
 });
 
 
+/*
+update the leaderboard 
+ */
 app.post('/updateleaderboard', (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -238,18 +271,28 @@ app.post('/updateleaderboard', (req, res) => {
 
 });
 
+
+/*
+load the leaderboard
+ */
 app.post('/getleaderboard', async (req, res) => {
     await admin.displayLeaderboard().then((content) => {
         res.send(JSON.stringify(content));
     });
 });
 
-
+/* 
+clear cookie and logout, redirect to the login page
+*/
 app.post('/logout', async (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
+/* 
+check the information the user uploaded,
+write the database and then clear cookie and redirect the client to the login page
+*/
 app.post('/upload', upload.single('photo'), async (req, res) => {
     console.log(req.body);
     console.log(req.file)
@@ -274,7 +317,9 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
     });
 });
 
-
+/* 
+allow user to change the password,log out,clear cookie and redirect to the login page
+*/
 app.post('/changepassword', async (req, res) => {
     let data = '';
     req.on('data', chunk => {
@@ -289,7 +334,9 @@ app.post('/changepassword', async (req, res) => {
 
 })
 
-
+/* 
+get all feedbacks
+*/
 app.post('/getfeedback', async (req, res) => {
     let content = await user.showFeedback();
     console.log(content);
@@ -297,6 +344,9 @@ app.post('/getfeedback', async (req, res) => {
     res.send(result);
 });
 
+/* 
+write feedbacks into the database
+*/
 app.post('/updatefeedback', async (req, res) => {
     console.log(req.body);
     let content = await user.updateFeedback(req.body);

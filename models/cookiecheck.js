@@ -34,12 +34,14 @@ function noneedlogin(req, res, next) {
             return res.redirect('/user');
         }
     } else {
+        //continue the routing
         console.log('not authenticated');
         next();
     }
 }
 
 function cookiewrite(req, res, content) {
+    //write cookie into the client machine
     req.session.username = content.username;
     req.session.admin = content.admin;
 }

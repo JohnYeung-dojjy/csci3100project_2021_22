@@ -5,6 +5,13 @@ const User = require("./User");
 const Leaderboard = require("./leader_board");
 const Feedback = require("./feedback");
 
+/* 
+displayAllUser():Load all users information in the database
+displayLeaderboard():Load all the top 10 game record from the database
+resetPassword(obj):update the user password in the database
+deleteUseraccount(obj):delete all the user records in the database
+deleteGameplay(obj):delete the user's game record in the database
+*/
 async function displayAllUser() {
     try {
         let query = User.find().lean().exec();
